@@ -2,7 +2,8 @@ import { RenderPosition, renderTemplate } from './render.js';
 import { renderProfileTemplate } from './view/profile-view.js';
 import { renderMenuTemplate } from './view/menu-view.js';
 import { renderSortTemplate } from './view/sort-view.js';
-import { renderFilmsListTemplate, renderFilCardTemplate } from './view/film-card-view.js';
+import { renderFilmsListTemplate } from './view/film-list-view.js';
+import { renderFilCardTemplate } from './view/film-card-view.js';
 import { renderPopupTemplate } from './view/popup-view.js';
 
 const FILMS_COUNT = 5;
