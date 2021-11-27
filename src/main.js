@@ -4,9 +4,19 @@ import { renderMenuTemplate } from './view/menu-view.js';
 import { renderSortTemplate } from './view/sort-view.js';
 import { renderFilmsListTemplate } from './view/film-list-view.js';
 import { renderFilCardTemplate } from './view/film-card-view.js';
-import { renderPopupTemplate } from './view/popup-view.js';
+import { renderPopupTemplate } from './view/film-popup-view.js';
+import { generateFilmCard } from './mock/film-card-mock.js';
 
 const FILMS_COUNT = 5;
+
+const renderCards = () => {
+  const array = [];
+  for (let i = 0; i < FILMS_COUNT - 1; i++) {
+    array.push(generateFilmCard(i));
+  }
+  return array;
+};
+console.log(renderCards());
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
