@@ -7,16 +7,17 @@ import { renderFilCardTemplate } from './view/film-card-view.js';
 import { renderPopupTemplate } from './view/film-popup-view.js';
 import { generateFilmCard } from './mock/film-card-mock.js';
 
-const FILMS_COUNT = 5;
+const FILMS_COUNT = 15;
 
 const renderCards = () => {
   const array = [];
-  for (let i = 0; i < FILMS_COUNT - 1; i++) {
+  for (let i = 0; i < FILMS_COUNT; i++) {
     array.push(generateFilmCard(i));
   }
   return array;
 };
-console.log(renderCards());
+const filmCards = renderCards();
+console.log(filmCards);
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
@@ -29,9 +30,9 @@ renderTemplate(siteMainElement, renderFilmsListTemplate(), RenderPosition.BEFORE
 const filmsListContainer = siteMainElement.querySelector('.films-list__container');
 
 for (let i = 0; i < FILMS_COUNT; i++) {
-  renderTemplate(filmsListContainer, renderFilCardTemplate(), RenderPosition.BEFOREEND);
+  renderTemplate(filmsListContainer, renderFilCardTemplate(filmCards[i]), RenderPosition.BEFOREEND);
 }
 
 const siteFooterElement = document.querySelector('.footer');
 
-renderTemplate(siteFooterElement, renderPopupTemplate(), RenderPosition.BEFOREEND);
+// renderTemplate(siteFooterElement, renderPopupTemplate(), RenderPosition.BEFOREEND);

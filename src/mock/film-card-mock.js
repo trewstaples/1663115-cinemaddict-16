@@ -1,11 +1,13 @@
+import dayjs from 'dayjs';
+
 const POSTERS = [
-  'made-for-each-other',
-  'popeye-meets-sinbad',
-  'sagebrush-trail',
-  'santa-claus-conquers-the-martians',
-  'the-dance-of-life',
-  'the-great-flamarion',
-  'the-man-with-the-golden-arm',
+  'made-for-each-other.png',
+  'popeye-meets-sinbad.png',
+  'sagebrush-trail.jpg',
+  'santa-claus-conquers-the-martians.jpg',
+  'the-dance-of-life.jpg',
+  'the-great-flamarion.jpg',
+  'the-man-with-the-golden-arm.jpg',
 ];
 
 const TITLES = [
@@ -42,6 +44,7 @@ const COMMENTS_MAX = 5;
 const Rating = {
   MIN: 0,
   MAX: 10,
+  DECIMALS: 1,
 };
 
 const Release = {
@@ -52,6 +55,7 @@ const Release = {
 const Runtime = {
   MIN: 50,
   MAX: 180,
+  MINUTES_IN_HOUR: 60,
 };
 
 const getRandomInteger = (min, max) => {
@@ -84,28 +88,55 @@ const generateOneComment = (id) => ({
   id,
   author: getRandomElement(AUTHORS),
   comment: getRandomElement(MESSAGES),
-  date: '2019-05-11T16:12:32.554Z', //с помощью dayjs()
   emotion: getRandomElement(EMOTIONS),
 });
 
 const generateComments = () => {
   const array = [];
-  for (let i = 0; i < getRandomInteger(0, COMMENTS_MAX - 1); i++) {
+  for (let i = 0; i < getRandomInteger(0, COMMENTS_MAX); i++) {
     array.push(generateOneComment(i));
   }
   return array;
 };
 
-export const generateFilmCard = (id) => ({
-  id,
-  filmInfo: {
-    poster: `images/posters/${getRandomElement(POSTERS)}.png`,
+const generateReleaseYear = () => {
+  const currentYear = dayjs().year();
+
+  const maxYearsGap = currentYear - Release.MIN;
+
+  const yearsGap = getRandomInteger(0, maxYearsGap);
+
+  return dayjs().add(-yearsGap, 'year').year();
+};
+
+const generateRuntime = () => {
+  const duration = require('dayjs/plugin/duration');
+  dayjs.extend(duration);
+
+  let formatString = 'mm[M]';
+
+  const minutesDuration = getRandomInteger(Runtime.MIN, Runtime.MAX);
+
+  if (minutesDuration >= Runtime.MINUTES_IN_HOUR) {
+    formatString = 'H[h] mm[m]';
+  }
+
+  const runtime = dayjs.duration(minutesDuration, 'm').format(formatString);
+  return runtime;
+};
+
+export const generateFilmCard = (id) => {
+  const releaseYear = generateReleaseYear();
+
+  return {
+    id,
+    poster: `./images/posters/${getRandomElement(POSTERS)}`,
     title: TITLES[getRandomInteger(0, TITLES.length - 1)],
-    totalRating: getRandomPositiveFloat(Rating.MIN, Rating.MAX),
-    release: getRandomInteger(Release.MIN, Release.MAX), // с помощью dayjs()
-    runtime: getRandomInteger(Runtime.MIN, Runtime.MAX), // с помощью dayjs
+    totalRating: getRandomPositiveFloat(Rating.MIN, Rating.MAX, Rating.DECIMALS),
+    release: releaseYear,
+    runtime: generateRuntime(),
     genre: getRandomElement(GENRES),
     description: getRandomElement(DESCRIPTIONS),
-  },
-  comments: generateComments(),
-});
+    commentsLength: generateComments().length,
+  };
+};
