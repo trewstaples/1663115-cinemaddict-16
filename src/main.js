@@ -5,7 +5,7 @@ import { renderSortTemplate } from './view/sort-view.js';
 import { renderFilmsListTemplate } from './view/film-list-view.js';
 import { renderFilCardTemplate } from './view/film-card-view.js';
 import { renderPopupTemplate } from './view/film-popup-view.js';
-import { generateFilmCard } from './mock/film-card-mock.js';
+import { generateFilmCard } from './mock/film-card.js';
 
 const FILMS_COUNT = 15;
 
@@ -35,4 +35,4 @@ for (let i = 0; i < FILMS_COUNT; i++) {
 
 const siteFooterElement = document.querySelector('.footer');
 
-// renderTemplate(siteFooterElement, renderPopupTemplate(), RenderPosition.BEFOREEND);
+renderTemplate(siteFooterElement, renderPopupTemplate(), RenderPosition.BEFOREEND);

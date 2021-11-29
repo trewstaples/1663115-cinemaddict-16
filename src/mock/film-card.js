@@ -1,5 +1,15 @@
 import dayjs from 'dayjs';
 
+const TITLES = [
+  'Made for Each Other',
+  'Popeye the Sailor meets Sinbad the Sailor',
+  'Sagebrush Trail',
+  'Santa Claus Conquers the Martians',
+  'The Dance of Life',
+  'The Great Flamarion',
+  'The Man with the Golden Arm',
+];
+
 const POSTERS = [
   'made-for-each-other.png',
   'popeye-meets-sinbad.png',
@@ -10,15 +20,15 @@ const POSTERS = [
   'the-man-with-the-golden-arm.jpg',
 ];
 
-const TITLES = [
-  'Made for Each Other',
-  'Popeye the Sailor meets Sinbad the Sailor',
-  'Sagebrush Trail',
-  'Santa Claus Conquers the Martians',
-  'The Dance of Life',
-  'The Great Flamarion',
-  'The Man with the Golden Arm',
-];
+const AGE_RATINGS = ['0+', '12+', '16+', '18+'];
+
+const DIRECTORS = ['Christopher Nolan', 'Steven Spielberg', 'Charles Chaplin', 'Vince Gilligan,', 'James Cameron'];
+
+const WRITERS = ['Billy Wilder', 'Sam Esmail', 'David Mamet', 'Frank Darabont', 'Chuck Palahniuk'];
+
+const ACTORS = ['Julia Roberts', 'Aaron Paul', 'Bryan Cranston', 'Rami Malek', 'Kate Winslet'];
+
+const RELEASE_COUNTRIES = ['USA', 'India', 'Australia', 'France', 'Italy'];
 
 const GENRES = ['Musical', 'Western', 'Drama', 'Comedy', 'Cartoon'];
 
@@ -127,16 +137,33 @@ const generateRuntime = () => {
 
 export const generateFilmCard = (id) => {
   const releaseYear = generateReleaseYear();
+  const title = TITLES[getRandomInteger(0, TITLES.length - 1)];
 
   return {
     id,
-    poster: `./images/posters/${getRandomElement(POSTERS)}`,
-    title: TITLES[getRandomInteger(0, TITLES.length - 1)],
-    totalRating: getRandomPositiveFloat(Rating.MIN, Rating.MAX, Rating.DECIMALS),
-    release: releaseYear,
-    runtime: generateRuntime(),
-    genre: getRandomElement(GENRES),
-    description: getRandomElement(DESCRIPTIONS),
-    commentsLength: generateComments().length,
+    comments: generateComments(),
+    filmInfo: {
+      title,
+      alternativeTitle: title,
+      totalRating: getRandomPositiveFloat(Rating.MIN, Rating.MAX, Rating.DECIMALS),
+      poster: `./images/posters/${getRandomElement(POSTERS)}`,
+      ageRating: getRandomElement(AGE_RATINGS),
+      director: getRandomElement(DIRECTORS),
+      writers: DIRECTORS.slice(getRandomInteger(0, DIRECTORS.length - 1)),
+      actors: ACTORS.slice(getRandomInteger(0, ACTORS.length - 1)),
+      release: {
+        date: releaseYear,
+        releaseCountry: getRandomElement(RELEASE_COUNTRIES),
+      },
+      runtime: generateRuntime(),
+      genre: GENRES.slice(getRandomInteger(0, GENRES.length - 1)),
+      description: getRandomElement(DESCRIPTIONS),
+    },
+    userDetails: {
+      watchlist: false,
+      alreadyWatched: true,
+      watchingDate: '2019-04-12T16:12:32.554Z',
+      favorite: false,
+    },
   };
 };
