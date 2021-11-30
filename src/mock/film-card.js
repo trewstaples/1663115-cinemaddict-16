@@ -51,13 +51,13 @@ const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
 const COMMENTS_MAX = 5;
 
-const Rating = {
+const totalRating = {
   MIN: 0,
   MAX: 10,
   DECIMALS: 1,
 };
 
-const Release = {
+const ReleaseYear = {
   MIN: 1895,
   MAX: 2021,
 };
@@ -80,8 +80,6 @@ const getRandomInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
-const getRandomElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
-
 const getRandomPositiveFloat = (min, max, decimalCount) => {
   if (min < 0 || max < 0) {
     return -1;
@@ -94,9 +92,26 @@ const getRandomPositiveFloat = (min, max, decimalCount) => {
   return number.toFixed(decimalCount);
 };
 
+const getRandomElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
+
+const getRandomElementsList = (elements) => elements.slice(getRandomInteger(0, elements.length - 1));
+
+const getRandomBoolean = () => Boolean(getRandomInteger(0, 1));
+
+const getRandomDate = () => {
+  const maxDaysGap = 360;
+
+  const daysGap = getRandomInteger(0, maxDaysGap);
+
+  const formatString = 'YYYY/M/D HH:mm';
+
+  return dayjs().add(-daysGap, 'day').format(formatString);
+};
+
 const generateOneComment = (id) => ({
   id,
   author: getRandomElement(AUTHORS),
+  date: getRandomDate(),
   comment: getRandomElement(MESSAGES),
   emotion: getRandomElement(EMOTIONS),
 });
@@ -109,15 +124,18 @@ const generateComments = () => {
   return array;
 };
 
-const generateReleaseYear = () => {
+const generateReleaseDate = () => {
   const currentYear = dayjs().year();
 
-  const maxYearsGap = currentYear - Release.MIN;
-
+  const maxYearsGap = currentYear - ReleaseYear.MIN;
   const yearsGap = getRandomInteger(0, maxYearsGap);
+  const maxDaysGap = 30;
+  const daysGap = getRandomInteger(0, maxDaysGap);
 
-  return dayjs().add(-yearsGap, 'year').year();
+  return dayjs().add(-yearsGap, 'year').add(daysGap, 'day').format('DD MMMM YYYY');
 };
+
+console.log(generateReleaseDate());
 
 const generateRuntime = () => {
   const duration = require('dayjs/plugin/duration');
@@ -136,7 +154,6 @@ const generateRuntime = () => {
 };
 
 export const generateFilmCard = (id) => {
-  const releaseYear = generateReleaseYear();
   const title = TITLES[getRandomInteger(0, TITLES.length - 1)];
 
   return {
@@ -145,25 +162,33 @@ export const generateFilmCard = (id) => {
     filmInfo: {
       title,
       alternativeTitle: title,
-      totalRating: getRandomPositiveFloat(Rating.MIN, Rating.MAX, Rating.DECIMALS),
+      totalRating: getRandomPositiveFloat(totalRating.MIN, totalRating.MAX, totalRating.DECIMALS),
       poster: `./images/posters/${getRandomElement(POSTERS)}`,
       ageRating: getRandomElement(AGE_RATINGS),
       director: getRandomElement(DIRECTORS),
-      writers: DIRECTORS.slice(getRandomInteger(0, DIRECTORS.length - 1)),
-      actors: ACTORS.slice(getRandomInteger(0, ACTORS.length - 1)),
+      writers: getRandomElementsList(WRITERS),
+      actors: getRandomElementsList(ACTORS),
       release: {
-        date: releaseYear,
+        date: generateReleaseDate(),
         releaseCountry: getRandomElement(RELEASE_COUNTRIES),
       },
       runtime: generateRuntime(),
-      genre: GENRES.slice(getRandomInteger(0, GENRES.length - 1)),
+      genre: getRandomElementsList(GENRES),
       description: getRandomElement(DESCRIPTIONS),
     },
     userDetails: {
-      watchlist: false,
-      alreadyWatched: true,
-      watchingDate: '2019-04-12T16:12:32.554Z',
-      favorite: false,
+      watchlist: getRandomBoolean(),
+      alreadyWatched: getRandomBoolean(),
+      watchingDate: getRandomDate(),
+      favorite: getRandomBoolean(),
     },
   };
 };
+
+//Наполнить данными шаблон карточки
+//Наполнить данными шаблон попапа
+//Просмотреть подробнее тз, прокомментировать
+//Просмотреть тз и найти упущенные компоненты. Настроить их поведение (данные, обработчики событий, счётчики)
+//Объеденить константы в enum-объекты
+//Проверить проект на наличие магических значений
+//Проверить полностью домашнее задание и сдать

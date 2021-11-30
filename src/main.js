@@ -35,4 +35,4 @@ for (let i = 0; i < FILMS_COUNT; i++) {
 
 const siteFooterElement = document.querySelector('.footer');
 
-renderTemplate(siteFooterElement, renderPopupTemplate(), RenderPosition.BEFOREEND);
+// renderTemplate(siteFooterElement, renderPopupTemplate(), RenderPosition.BEFOREEND);
