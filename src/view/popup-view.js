@@ -1,5 +1,5 @@
 export const renderPopupTemplate = (film) => {
-  const { comments, info, userDeatils } = film;
+  const { comments, info, userDetails } = film;
 
   const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
   const createGenresListTemplate = (genres) => genres.map((genre) => createGenreTemplate(genre)).join('');
@@ -18,6 +18,9 @@ export const renderPopupTemplate = (film) => {
   </div>
 </li>`;
   const createCommentListTemplate = (commentsList) => commentsList.map((comment) => createCommentTemplate(comment)).join('');
+
+  const watchedButtonClassName = userDetails.alreadyWatched ? 'active' : '';
+  const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
 
   return `
 <section class="film-details">
@@ -71,7 +74,7 @@ export const renderPopupTemplate = (film) => {
               <td class="film-details__cell">${info.release.country}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">Genres</td>
+              <td class="film-details__term">${genresNaming}</td>
               <td class="film-details__cell">
                 ${createGenresListTemplate(info.genre)}
             </tr>
@@ -85,7 +88,7 @@ export const renderPopupTemplate = (film) => {
 
       <section class="film-details__controls">
         <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-        <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
+        <button type="button" class="film-details__control-button film-details__control-button--${watchedButtonClassName} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
         <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
       </section>
     </div>

@@ -3,7 +3,7 @@ import { renderProfileTemplate } from './view/profile-view.js';
 import { renderMenuTemplate } from './view/menu-view.js';
 import { renderSortTemplate } from './view/sort-view.js';
 import { renderFilmsListTemplate } from './view/list-view.js';
-import { renderFilCardTemplate } from './view/card-view.js';
+import { renderFilCardTemplate } from './view/film-view.js';
 import { renderPopupTemplate } from './view/popup-view.js';
 import { generateFilm } from './mock/film-mock.js';
 
@@ -31,7 +31,7 @@ const filmsListContainer = siteMainElement.querySelector('.films-list__container
 
 const siteFooterElement = document.querySelector('.footer');
 
-renderTemplate(siteFooterElement, renderPopupTemplate(films[0]), RenderPosition.BEFOREEND);
+// renderTemplate(siteFooterElement, renderPopupTemplate(films[0]), RenderPosition.BEFOREEND);
 
 for (let i = 1; i < FILMS_COUNT; i++) {
   renderTemplate(filmsListContainer, renderFilCardTemplate(films[i]), RenderPosition.BEFOREEND);
