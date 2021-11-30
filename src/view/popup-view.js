@@ -1,8 +1,10 @@
 export const renderPopupTemplate = (film) => {
   const { comments, info, userDetails } = film;
 
+  const createTemplateFromArray = (array, cb) => array.map((item) => cb(item)).join('');
+
+  const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
   const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
-  const createGenresListTemplate = (genres) => genres.map((genre) => createGenreTemplate(genre)).join('');
 
   const createCommentTemplate = (comment) => ` <li class="film-details__comment">
   <span class="film-details__comment-emoji">
@@ -17,13 +19,11 @@ export const renderPopupTemplate = (film) => {
     </p>
   </div>
 </li>`;
-  const createCommentListTemplate = (commentsList) => commentsList.map((comment) => createCommentTemplate(comment)).join('');
 
-  const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
-
-  const watchlistClassName = userDetails.watchlist ? 'film-details__control-button--active' : '';
-  const wactchedButtonClassName = userDetails.alreadyWatched ? 'film-details__control-button--active' : '';
-  const favoriteClassName = userDetails.favorite ? 'film-details__control-button--active' : '';
+  const getClassName = (element) => (element ? 'film-details__control-button--active' : '');
+  const watchlistClassName = getClassName(userDetails.watchlist);
+  const wactchedButtonClassName = getClassName(userDetails.alreadyWatched);
+  const favoriteClassName = getClassName(userDetails.favorite);
 
   return `
 <section class="film-details">
@@ -79,7 +79,7 @@ export const renderPopupTemplate = (film) => {
             <tr class="film-details__row">
               <td class="film-details__term">${genresNaming}</td>
               <td class="film-details__cell">
-                ${createGenresListTemplate(info.genre)}
+                ${createTemplateFromArray(info.genre, createGenreTemplate)}
             </tr>
           </table>
 
@@ -101,7 +101,7 @@ export const renderPopupTemplate = (film) => {
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
         <ul class="film-details__comments-list">
-        ${createCommentListTemplate(comments)}
+        ${createTemplateFromArray(comments, createCommentTemplate)}
         </ul>
 
         <div class="film-details__new-comment">

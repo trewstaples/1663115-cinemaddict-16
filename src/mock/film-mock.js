@@ -20,36 +20,31 @@ const Posters = {
   'the-man-with-the-golden-arm': 'jpg',
 };
 
-const AGE_RATINGS = ['0+', '12+', '16+', '18+'];
+const Film = {
+  AGE_RATINGS: ['0+', '12+', '16+', '18+'],
+  DIRECTORS: ['Christopher Nolan', 'Steven Spielberg', 'Charles Chaplin', 'Vince Gilligan,', 'James Cameron'],
+  WRITERS: ['Billy Wilder', 'Sam Esmail', 'David Mamet', 'Frank Darabont', 'Chuck Palahniuk'],
+  ACTORS: ['Julia Roberts', 'Aaron Paul', 'Bryan Cranston', 'Rami Malek', 'Kate Winslet'],
+  RELEASE_COUNTRIES: ['USA', 'India', 'Australia', 'France', 'Italy'],
+  GENRES: ['Drama', 'Comedy', 'Cartoon'],
+  DESCRIPTIONS:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.'.split(
+      '.',
+    ),
+};
 
-const DIRECTORS = ['Christopher Nolan', 'Steven Spielberg', 'Charles Chaplin', 'Vince Gilligan,', 'James Cameron'];
-
-const WRITERS = ['Billy Wilder', 'Sam Esmail', 'David Mamet', 'Frank Darabont', 'Chuck Palahniuk'];
-
-const ACTORS = ['Julia Roberts', 'Aaron Paul', 'Bryan Cranston', 'Rami Malek', 'Kate Winslet'];
-
-const RELEASE_COUNTRIES = ['USA', 'India', 'Australia', 'France', 'Italy'];
-
-const GENRES = ['Drama', 'Comedy', 'Cartoon'];
-
-const TEXT =
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.';
-
-const DESCRIPTIONS = TEXT.split('.');
-
-const AUTHORS = ['Alexander Sushko', 'Igor Antonov', 'Evgeniy Lepeshkin', 'Igor Alekseenko', 'Lera Zelenaya'];
-
-const MESSAGES = [
-  'Interesting setting and a good cast',
-  'Booooooooooring',
-  'Very very old. Meh',
-  'Almost two hours? Seriously?',
-  'A film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
-];
-
-const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
-
-const COMMENTS_MAX = 5;
+const Comments = {
+  AUTHORS: ['Alexander Sushko', 'Igor Antonov', 'Evgeniy Lepeshkin', 'Igor Alekseenko', 'Lera Zelenaya'],
+  MESSAGES: [
+    'Interesting setting and a good cast',
+    'Booooooooooring',
+    'Very very old. Meh',
+    'Almost two hours? Seriously?',
+    'A film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
+  ],
+  EMOTIONS: ['smile', 'sleeping', 'puke', 'angry'],
+  MAX: 5,
+};
 
 const totalRating = {
   MIN: 0,
@@ -110,15 +105,15 @@ const getRandomDate = () => {
 
 const generateOneComment = (id) => ({
   id,
-  author: getRandomElement(AUTHORS),
+  author: getRandomElement(Comments.AUTHORS),
   date: getRandomDate(),
-  comment: getRandomElement(MESSAGES),
-  emotion: getRandomElement(EMOTIONS),
+  comment: getRandomElement(Comments.MESSAGES),
+  emotion: getRandomElement(Comments.EMOTIONS),
 });
 
 const generateComments = () => {
   const array = [];
-  for (let i = 0; i < getRandomInteger(0, COMMENTS_MAX); i++) {
+  for (let i = 0; i < getRandomInteger(0, Comments.MAX); i++) {
     array.push(generateOneComment(i));
   }
   return array;
@@ -165,17 +160,17 @@ export const generateFilm = (id) => {
       alternativeTitle: title,
       totalRating: getRandomPositiveFloat(totalRating.MIN, totalRating.MAX, totalRating.DECIMALS),
       poster: `./images/posters/${posterUrl}.${Posters[posterUrl]}`,
-      ageRating: getRandomElement(AGE_RATINGS),
-      director: getRandomElement(DIRECTORS),
-      writers: getRandomElementsList(WRITERS),
-      actors: getRandomElementsList(ACTORS),
+      ageRating: getRandomElement(Film.AGE_RATINGS),
+      director: getRandomElement(Film.DIRECTORS),
+      writers: getRandomElementsList(Film.WRITERS),
+      actors: getRandomElementsList(Film.ACTORS),
       release: {
         date: generateReleaseDate(),
-        country: getRandomElement(RELEASE_COUNTRIES),
+        country: getRandomElement(Film.RELEASE_COUNTRIES),
       },
       runtime: generateRuntime(),
-      genre: getRandomElementsList(GENRES),
-      description: getRandomElement(DESCRIPTIONS),
+      genre: getRandomElementsList(Film.GENRES),
+      description: getRandomElement(Film.DESCRIPTIONS),
     },
     userDetails: {
       watchlist: getRandomBoolean(),
@@ -185,9 +180,3 @@ export const generateFilm = (id) => {
     },
   };
 };
-
-//Просмотреть подробнее тз, прокомментировать
-//Просмотреть тз и найти упущенные компоненты. Настроить их поведение (данные, обработчики событий, счётчики)
-//Объеденить константы в enum-объекты
-//Проверить проект на наличие магических значений
-//Проверить полностью домашнее задание и сдать
