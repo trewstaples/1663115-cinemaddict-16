@@ -19,8 +19,11 @@ export const renderPopupTemplate = (film) => {
 </li>`;
   const createCommentListTemplate = (commentsList) => commentsList.map((comment) => createCommentTemplate(comment)).join('');
 
-  const watchedButtonClassName = userDetails.alreadyWatched ? 'active' : '';
   const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
+
+  const watchlistClassName = userDetails.watchlist ? 'film-details__control-button--active' : '';
+  const wactchedButtonClassName = userDetails.alreadyWatched ? 'film-details__control-button--active' : '';
+  const favoriteClassName = userDetails.favorite ? 'film-details__control-button--active' : '';
 
   return `
 <section class="film-details">
@@ -87,9 +90,9 @@ export const renderPopupTemplate = (film) => {
       </div>
 
       <section class="film-details__controls">
-        <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-        <button type="button" class="film-details__control-button film-details__control-button--${watchedButtonClassName} film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-        <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+        <button type="button" class="film-details__control-button film-details__control-button--watchlist ${watchlistClassName}" id="watchlist" name="watchlist">Add to watchlist</button>
+        <button type="button" class="film-details__control-button film-details__control-button--watched ${wactchedButtonClassName}" id="watched" name="watched">Already watched</button>
+        <button type="button" class="film-details__control-button film-details__control-button--favorite ${favoriteClassName}" id="favorite" name="favorite">Add to favorites</button>
       </section>
     </div>
 
