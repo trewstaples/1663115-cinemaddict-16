@@ -103,7 +103,7 @@ const getRandomDate = () => {
 
   const daysGap = getRandomInteger(0, maxDaysGap);
 
-  const formatString = 'YYYY/M/D HH:mm';
+  const formatString = 'YYYY/MM/D HH:mm';
 
   return dayjs().add(-daysGap, 'day').format(formatString);
 };
@@ -171,7 +171,7 @@ export const generateFilm = (id) => {
       actors: getRandomElementsList(ACTORS),
       release: {
         date: generateReleaseDate(),
-        releaseCountry: getRandomElement(RELEASE_COUNTRIES),
+        country: getRandomElement(RELEASE_COUNTRIES),
       },
       runtime: generateRuntime(),
       genre: getRandomElementsList(GENRES),
@@ -186,7 +186,6 @@ export const generateFilm = (id) => {
   };
 };
 
-//Наполнить данными шаблон карточки
 //Наполнить данными шаблон попапа
 //Просмотреть подробнее тз, прокомментировать
 //Просмотреть тз и найти упущенные компоненты. Настроить их поведение (данные, обработчики событий, счётчики)

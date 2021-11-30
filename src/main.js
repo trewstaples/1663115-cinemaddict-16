@@ -2,10 +2,10 @@ import { RenderPosition, renderTemplate } from './render.js';
 import { renderProfileTemplate } from './view/profile-view.js';
 import { renderMenuTemplate } from './view/menu-view.js';
 import { renderSortTemplate } from './view/sort-view.js';
-import { renderFilmsListTemplate } from './view/film-list-view.js';
-import { renderFilCardTemplate } from './view/film-card-view.js';
-import { renderPopupTemplate } from './view/film-popup-view.js';
-import { generateFilm } from './mock/film-card.js';
+import { renderFilmsListTemplate } from './view/list-view.js';
+import { renderFilCardTemplate } from './view/card-view.js';
+import { renderPopupTemplate } from './view/popup-view.js';
+import { generateFilm } from './mock/film-mock.js';
 
 const FILMS_COUNT = 15;
 
@@ -29,10 +29,10 @@ renderTemplate(siteMainElement, renderFilmsListTemplate(), RenderPosition.BEFORE
 
 const filmsListContainer = siteMainElement.querySelector('.films-list__container');
 
-for (let i = 0; i < FILMS_COUNT; i++) {
-  renderTemplate(filmsListContainer, renderFilCardTemplate(films[i]), RenderPosition.BEFOREEND);
-}
-
 const siteFooterElement = document.querySelector('.footer');
 
-// renderTemplate(siteFooterElement, renderPopupTemplate(), RenderPosition.BEFOREEND);
+renderTemplate(siteFooterElement, renderPopupTemplate(films[0]), RenderPosition.BEFOREEND);
+
+for (let i = 1; i < FILMS_COUNT; i++) {
+  renderTemplate(filmsListContainer, renderFilCardTemplate(films[i]), RenderPosition.BEFOREEND);
+}
