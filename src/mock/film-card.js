@@ -10,15 +10,15 @@ const TITLES = [
   'The Man with the Golden Arm',
 ];
 
-const POSTERS = [
-  'made-for-each-other.png',
-  'popeye-meets-sinbad.png',
-  'sagebrush-trail.jpg',
-  'santa-claus-conquers-the-martians.jpg',
-  'the-dance-of-life.jpg',
-  'the-great-flamarion.jpg',
-  'the-man-with-the-golden-arm.jpg',
-];
+const Posters = {
+  'made-for-each-other': 'png',
+  'popeye-the-sailor-meets-sinbad-the-sailor': 'png',
+  'sagebrush-trail': 'jpg',
+  'santa-claus-conquers-the-martians': 'jpg',
+  'the-dance-of-life': 'jpg',
+  'the-great-flamarion': 'jpg',
+  'the-man-with-the-golden-arm': 'jpg',
+};
 
 const AGE_RATINGS = ['0+', '12+', '16+', '18+'];
 
@@ -30,7 +30,7 @@ const ACTORS = ['Julia Roberts', 'Aaron Paul', 'Bryan Cranston', 'Rami Malek', '
 
 const RELEASE_COUNTRIES = ['USA', 'India', 'Australia', 'France', 'Italy'];
 
-const GENRES = ['Musical', 'Western', 'Drama', 'Comedy', 'Cartoon'];
+const GENRES = ['Drama', 'Comedy', 'Cartoon'];
 
 const TEXT =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.';
@@ -124,6 +124,8 @@ const generateComments = () => {
   return array;
 };
 
+const convertTitleIntoPoster = (string) => string.replace(/\s+/g, '-').toLowerCase();
+
 const generateReleaseDate = () => {
   const currentYear = dayjs().year();
 
@@ -134,8 +136,6 @@ const generateReleaseDate = () => {
 
   return dayjs().add(-yearsGap, 'year').add(daysGap, 'day').format('DD MMMM YYYY');
 };
-
-console.log(generateReleaseDate());
 
 const generateRuntime = () => {
   const duration = require('dayjs/plugin/duration');
@@ -153,17 +153,18 @@ const generateRuntime = () => {
   return runtime;
 };
 
-export const generateFilmCard = (id) => {
+export const generateFilm = (id) => {
   const title = TITLES[getRandomInteger(0, TITLES.length - 1)];
+  const posterUrl = convertTitleIntoPoster(title);
 
   return {
     id,
     comments: generateComments(),
-    filmInfo: {
+    info: {
       title,
       alternativeTitle: title,
       totalRating: getRandomPositiveFloat(totalRating.MIN, totalRating.MAX, totalRating.DECIMALS),
-      poster: `./images/posters/${getRandomElement(POSTERS)}`,
+      poster: `./images/posters/${posterUrl}.${Posters[posterUrl]}`,
       ageRating: getRandomElement(AGE_RATINGS),
       director: getRandomElement(DIRECTORS),
       writers: getRandomElementsList(WRITERS),

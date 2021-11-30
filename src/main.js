@@ -5,19 +5,19 @@ import { renderSortTemplate } from './view/sort-view.js';
 import { renderFilmsListTemplate } from './view/film-list-view.js';
 import { renderFilCardTemplate } from './view/film-card-view.js';
 import { renderPopupTemplate } from './view/film-popup-view.js';
-import { generateFilmCard } from './mock/film-card.js';
+import { generateFilm } from './mock/film-card.js';
 
 const FILMS_COUNT = 15;
 
 const renderCards = () => {
   const array = [];
   for (let i = 0; i < FILMS_COUNT; i++) {
-    array.push(generateFilmCard(i));
+    array.push(generateFilm(i));
   }
   return array;
 };
-const filmCards = renderCards();
-console.log(filmCards);
+const films = renderCards();
+console.log(films);
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
@@ -30,7 +30,7 @@ renderTemplate(siteMainElement, renderFilmsListTemplate(), RenderPosition.BEFORE
 const filmsListContainer = siteMainElement.querySelector('.films-list__container');
 
 for (let i = 0; i < FILMS_COUNT; i++) {
-  renderTemplate(filmsListContainer, renderFilCardTemplate(filmCards[i]), RenderPosition.BEFOREEND);
+  renderTemplate(filmsListContainer, renderFilCardTemplate(films[i]), RenderPosition.BEFOREEND);
 }
 
 const siteFooterElement = document.querySelector('.footer');
