@@ -1,14 +1,14 @@
 import dayjs from 'dayjs';
+import { getClassName } from './utils.js';
 
 export const renderFilCardTemplate = (film) => {
   const { comments, info, userDetails } = film;
   const description = info.description.length > 140 ? info.description.slice(0, 139).concat('...') : info.description;
   const date = dayjs(info.release.date).format('YYYY');
 
-  const getClassName = (element) => (element ? 'film-card__controls-item--active' : '');
-  const watchlistClassName = getClassName(userDetails.watchlist);
-  const wactchedButtonClassName = getClassName(userDetails.alreadyWatched);
-  const favoriteClassName = getClassName(userDetails.favorite);
+  const watchlistClassName = getClassName(userDetails.watchlist, 'film-card__controls-item--active');
+  const wactchedButtonClassName = getClassName(userDetails.alreadyWatched, 'film-card__controls-item--active');
+  const favoriteClassName = getClassName(userDetails.favorite, 'film-card__controls-item--active');
 
   return `
   <article class="film-card">

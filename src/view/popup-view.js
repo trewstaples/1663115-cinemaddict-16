@@ -1,7 +1,7 @@
+import { getClassName, createTemplateFromArray } from './utils.js';
+
 export const renderPopupTemplate = (film) => {
   const { comments, info, userDetails } = film;
-
-  const createTemplateFromArray = (array, cb) => array.map((item) => cb(item)).join('');
 
   const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
   const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
@@ -20,10 +20,9 @@ export const renderPopupTemplate = (film) => {
   </div>
 </li>`;
 
-  const getClassName = (element) => (element ? 'film-details__control-button--active' : '');
-  const watchlistClassName = getClassName(userDetails.watchlist);
-  const wactchedButtonClassName = getClassName(userDetails.alreadyWatched);
-  const favoriteClassName = getClassName(userDetails.favorite);
+  const watchlistClassName = getClassName(userDetails.watchlist, 'film-details__control-button--active');
+  const wactchedButtonClassName = getClassName(userDetails.alreadyWatched, 'film-details__control-button--active');
+  const favoriteClassName = getClassName(userDetails.favorite, 'film-details__control-button--active');
 
   return `
 <section class="film-details">

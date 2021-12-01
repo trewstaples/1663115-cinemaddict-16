@@ -35,7 +35,7 @@ const filmsListContainer = siteMainElement.querySelector('.films-list__container
 
 const siteFooterElement = document.querySelector('.footer');
 
-renderTemplate(siteFooterElement, renderPopupTemplate(films[0]), RenderPosition.BEFOREEND);
+// renderTemplate(siteFooterElement, renderPopupTemplate(films[0]), RenderPosition.BEFOREEND);
 
 for (let i = 1; i < Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
   renderTemplate(filmsListContainer, renderFilCardTemplate(films[i]), RenderPosition.BEFOREEND);
