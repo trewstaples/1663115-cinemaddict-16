@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration.js';
 
 const TITLES = [
   'Made for Each Other',
@@ -133,7 +134,6 @@ const generateReleaseDate = () => {
 };
 
 const generateRuntime = () => {
-  const duration = require('dayjs/plugin/duration');
   dayjs.extend(duration);
 
   let formatString = 'mm[M]';
