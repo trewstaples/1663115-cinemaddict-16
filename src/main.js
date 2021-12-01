@@ -1,11 +1,12 @@
 import { RenderPosition, renderTemplate } from './render.js';
 import { renderProfileTemplate } from './view/profile-view.js';
-import { renderMenuTemplate } from './view/menu-view.js';
+import { renderFilterTemplate } from './view/filter-view.js';
 import { renderSortTemplate } from './view/sort-view.js';
 import { renderFilmsListTemplate } from './view/list-view.js';
 import { renderFilCardTemplate } from './view/film-view.js';
 import { renderPopupTemplate } from './view/popup-view.js';
 import { generateFilm } from './mock/film-mock.js';
+import { generateFilter } from './mock/filters-mock.js';
 
 const FILMS_COUNT = 15;
 
@@ -17,13 +18,13 @@ const renderCards = () => {
   return array;
 };
 const films = renderCards();
-console.log(films);
+const filters = generateFilter(films);
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 
 renderTemplate(siteHeaderElement, renderProfileTemplate(), RenderPosition.BEFOREEND);
-renderTemplate(siteMainElement, renderMenuTemplate(), RenderPosition.BEFOREEND);
+renderTemplate(siteMainElement, renderFilterTemplate(filters), RenderPosition.BEFOREEND);
 renderTemplate(siteMainElement, renderSortTemplate(), RenderPosition.BEFOREEND);
 renderTemplate(siteMainElement, renderFilmsListTemplate(), RenderPosition.BEFOREEND);
 
