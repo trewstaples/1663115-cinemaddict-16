@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getClassName } from './utils.js';
+import { getClassName } from '../utils.js';
 
 export const renderFilCardTemplate = (film) => {
   const { comments, info, userDetails } = film;

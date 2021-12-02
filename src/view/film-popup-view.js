@@ -1,4 +1,4 @@
-import { getClassName, createTemplateFromArray } from './utils.js';
+import { getClassName, createTemplateFromArray } from '../utils.js';
 
 export const renderPopupTemplate = (film) => {
   const { comments, info, userDetails } = film;

@@ -2,13 +2,13 @@ import { RenderPosition, renderTemplate } from './render.js';
 import { renderProfileTemplate } from './view/profile-view.js';
 import { renderFilterTemplate } from './view/filter-view.js';
 import { renderSortTemplate } from './view/sort-view.js';
-import { renderFilmsListTemplate } from './view/list-view.js';
+import { renderFilmsListTemplate } from './view/film-list-view.js';
 import { renderFilCardTemplate } from './view/film-view.js';
-import { renderPopupTemplate } from './view/popup-view.js';
-import { renderShowMoreButtonTemplate } from './view/show-button-view.js';
+import { renderPopupTemplate } from './view/film-popup-view.js';
+import { renderShowMoreButtonTemplate } from './view/show-more-button-view.js';
 import { renderFooterTemplate } from './view/footer-view.js';
-import { generateFilm } from './mock/film-mock.js';
-import { generateFilter } from './mock/filters-mock.js';
+import { generateFilm } from './mock/film.js';
+import { generateFilter } from './mock/filters.js';
 
 const FILMS_COUNT = 15;
 const FILMS_COUNT_PER_STEP = 5;

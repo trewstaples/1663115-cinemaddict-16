@@ -1,4 +1,4 @@
-import { createTemplateFromArray } from './utils.js';
+import { createTemplateFromArray } from '../utils.js';
 
 const createFilterTemplate = (filter) => {
   const { name, count } = filter;
