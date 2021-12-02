@@ -1,11 +1,11 @@
-import { RenderPosition, renderTemplate } from './render.js';
-import { renderProfileTemplate } from './view/profile-view.js';
+import { renderElement, RenderPosition, renderTemplate } from './render.js';
+import ProfileView from './view/profile-view.js';
 import { renderFilterTemplate } from './view/filter-view.js';
-import { renderSortTemplate } from './view/sort-view.js';
-import { renderFilmsListTemplate } from './view/film-list-view.js';
+import SortView from './view/sort-view.js';
+import FilmListView from './view/film-list-view.js';
 import { renderFilCardTemplate } from './view/film-view.js';
 import { renderPopupTemplate } from './view/film-popup-view.js';
-import { renderShowMoreButtonTemplate } from './view/show-more-button-view.js';
+import ShowMoreButtonView from './view/show-more-button-view.js';
 import { renderFooterTemplate } from './view/footer-view.js';
 import { generateFilm } from './mock/film.js';
 import { generateFilter } from './mock/filters.js';
@@ -26,10 +26,10 @@ const filters = generateFilter(films);
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 
-renderTemplate(siteHeaderElement, renderProfileTemplate(), RenderPosition.BEFOREEND);
+renderElement(siteHeaderElement, new ProfileView().element, RenderPosition.BEFOREEND);
 renderTemplate(siteMainElement, renderFilterTemplate(filters), RenderPosition.BEFOREEND);
-renderTemplate(siteMainElement, renderSortTemplate(), RenderPosition.BEFOREEND);
-renderTemplate(siteMainElement, renderFilmsListTemplate(), RenderPosition.BEFOREEND);
+renderElement(siteMainElement, new SortView().element, RenderPosition.BEFOREEND);
+renderElement(siteMainElement, new FilmListView().element, RenderPosition.BEFOREEND);
 
 const filmsListContainer = siteMainElement.querySelector('.films-list__container');
 
@@ -44,7 +44,7 @@ for (let i = 1; i < Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
 if (films.length > FILMS_COUNT_PER_STEP) {
   let renderedFilmsCount = FILMS_COUNT_PER_STEP;
 
-  renderTemplate(siteMainElement, renderShowMoreButtonTemplate(), RenderPosition.BEFOREEND);
+  renderElement(siteMainElement, new ShowMoreButtonView().element, RenderPosition.BEFOREEND);
 
   const showMoreButton = siteMainElement.querySelector('.films-list__show-more');
 
