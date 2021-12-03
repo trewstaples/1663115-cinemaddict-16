@@ -1,6 +1,7 @@
-export const renderStatsTemplate = () =>
-  `
-  <section class="statistic">
+import { createElement } from '../render.js';
+
+const renderStatsTemplate = () =>
+  `<section class="statistic">
     <p class="statistic__rank">
       Your rank
       <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
@@ -50,3 +51,23 @@ export const renderStatsTemplate = () =>
 
   </section>
   `;
+
+export default class StatsView {
+  #element = null;
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return renderStatsTemplate();
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
