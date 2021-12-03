@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 
-const renderStatsTemplate = () =>
+const renderStatsRankTemplate = () =>
   `<section class="statistic">
     <p class="statistic__rank">
       Your rank
@@ -52,7 +52,7 @@ const renderStatsTemplate = () =>
   </section>
   `;
 
-export default class StatsView {
+export default class StatsRankView {
   #element = null;
 
   get element() {
@@ -64,7 +64,7 @@ export default class StatsView {
   }
 
   get template() {
-    return renderStatsTemplate();
+    return renderStatsRankTemplate();
   }
 
   removeElement() {

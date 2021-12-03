@@ -1,16 +1,15 @@
 import { createElement } from '../render.js';
 
-const renderFilmListTemplate = () =>
-  `<section class="films">
-    <section class="films-list">
+const renderFilmsListTemplate = () =>
+  `<section class="films-list">
     <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
     <div class="films-list__container"></div>
     </section>
-    </section?
 `;
 
-export default class FilmListView {
+export default class FilmsListView {
   #element = null;
+  #container = null;
 
   get element() {
     if (!this.#element) {
@@ -21,7 +20,13 @@ export default class FilmListView {
   }
 
   get template() {
-    return renderFilmListTemplate();
+    return renderFilmsListTemplate();
+  }
+
+  get container() {
+    this.#container = this.element.querySelector('.films-list__container');
+
+    return this.#container;
   }
 
   removeElement() {

@@ -33,9 +33,10 @@ const renderFilmTemplate = (film) => {
   `;
 };
 
-export default class FilmView {
+export default class FilmCardView {
   #element = null;
   #films = null;
+  #filmCardLink = null;
 
   constructor(films) {
     this.#films = films;
@@ -51,6 +52,12 @@ export default class FilmView {
 
   get template() {
     return renderFilmTemplate(this.#films);
+  }
+
+  get filmCardLink() {
+    this.#filmCardLink = this.element.querySelector('.film-card__link');
+
+    return this.#filmCardLink;
   }
 
   removeElement() {
