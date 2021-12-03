@@ -26,7 +26,6 @@ const filters = generateFilter(films);
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
-const siteFooterElement = document.querySelector('.footer');
 
 const renderFilm = (filmListElement, film) => {
   const filmCardComponent = new FilmCardView(film);
@@ -46,7 +45,7 @@ const renderFilm = (filmListElement, film) => {
   };
 
   const replaceCardToPopup = () => {
-    render(siteFooterElement, filmPopupComponent.element, RenderPosition.AFTEREND);
+    document.body.appendChild(filmPopupComponent.element);
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', onEscKeyDown);
   };
