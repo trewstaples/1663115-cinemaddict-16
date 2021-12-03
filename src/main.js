@@ -32,12 +32,23 @@ const renderFilm = (filmListElement, film) => {
   const filmCardComponent = new FilmCardView(film);
   const filmPopupComponent = new FilmPopupView(film);
 
-  const replaceCardToPopup = () => {
-    render(siteFooterElement, filmPopupComponent.element, RenderPosition.AFTEREND);
-  };
-
   const replacePopupToCard = () => {
     document.body.removeChild(filmPopupComponent.element);
+    document.body.classList.remove('hide-overflow');
+  };
+
+  const onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      replacePopupToCard();
+      document.removeEventListener('keydown', onEscKeyDown);
+    }
+  };
+
+  const replaceCardToPopup = () => {
+    render(siteFooterElement, filmPopupComponent.element, RenderPosition.AFTEREND);
+    document.body.classList.add('hide-overflow');
+    document.addEventListener('keydown', onEscKeyDown);
   };
 
   filmCardComponent.filmCardLink.addEventListener('click', () => {
@@ -47,6 +58,7 @@ const renderFilm = (filmListElement, film) => {
   filmPopupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) => {
     evt.preventDefault();
     replacePopupToCard();
+    document.removeEventListener('keydown', onEscKeyDown);
   });
 
   render(filmListElement, filmCardComponent.element, RenderPosition.BEFOREEND);
