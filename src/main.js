@@ -45,6 +45,9 @@ const renderFilm = (filmListElement, film) => {
   };
 
   const replaceCardToPopup = () => {
+    if (document.body.querySelector('.film-details')) {
+      document.body.querySelector('.film-details').remove();
+    }
     document.body.appendChild(filmPopupComponent.element);
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', onEscKeyDown);
