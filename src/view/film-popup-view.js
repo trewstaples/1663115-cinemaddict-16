@@ -1,6 +1,7 @@
-import { getClassName, createTemplateFromArray } from './utils.js';
+import { getClassName, createTemplateFromArray } from '../utils.js';
+import { createElement } from '../render.js';
 
-export const renderPopupTemplate = (film) => {
+const renderFilmPopupTemplate = (film) => {
   const { comments, info, userDetails } = film;
 
   const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
@@ -24,8 +25,7 @@ export const renderPopupTemplate = (film) => {
   const wactchedButtonClassName = getClassName(userDetails.alreadyWatched, 'film-details__control-button--active');
   const favoriteClassName = getClassName(userDetails.favorite, 'film-details__control-button--active');
 
-  return `
-<section class="film-details">
+  return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
@@ -138,3 +138,28 @@ export const renderPopupTemplate = (film) => {
 </section>
 `;
 };
+
+export default class FilmPopupView {
+  #element = null;
+  #films = null;
+
+  constructor(films) {
+    this.#films = films;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return renderFilmPopupTemplate(this.#films);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
-import { getClassName } from './utils.js';
+import { getClassName } from '../utils.js';
+import { createElement } from '../render.js';
 
-export const renderFilCardTemplate = (film) => {
+const renderFilmTemplate = (film) => {
   const { comments, info, userDetails } = film;
   const description = info.description.length > 140 ? info.description.slice(0, 139).concat('...') : info.description;
   const date = dayjs(info.release.date).format('YYYY');
@@ -10,8 +11,7 @@ export const renderFilCardTemplate = (film) => {
   const wactchedButtonClassName = getClassName(userDetails.alreadyWatched, 'film-card__controls-item--active');
   const favoriteClassName = getClassName(userDetails.favorite, 'film-card__controls-item--active');
 
-  return `
-  <article class="film-card">
+  return `<article class="film-card">
   <a class="film-card__link">
     <h3 class="film-card__title">${info.title}</h3>
     <p class="film-card__rating">${info.totalRating}</p>
@@ -32,3 +32,35 @@ export const renderFilCardTemplate = (film) => {
 </article>
   `;
 };
+
+export default class FilmCardView {
+  #element = null;
+  #films = null;
+  #filmCardLink = null;
+
+  constructor(films) {
+    this.#films = films;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return renderFilmTemplate(this.#films);
+  }
+
+  get filmCardLink() {
+    this.#filmCardLink = this.element.querySelector('.film-card__link');
+
+    return this.#filmCardLink;
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
