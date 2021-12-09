@@ -12,7 +12,7 @@ import FilmPopupView from './view/film-popup-view.js';
 import ShowMoreButtonView from './view/show-more-button-view.js';
 import FooterView from './view/footer-stats-view.js';
 
-const FILMS_COUNT = 10;
+const FILMS_COUNT = 15;
 const FILMS_COUNT_PER_STEP = 5;
 
 const renderCards = () => {
@@ -54,12 +54,11 @@ const renderFilm = (filmListElement, film) => {
     document.addEventListener('keydown', onEscKeyDown);
   };
 
-  filmCardComponent.filmCardLink.addEventListener('click', () => {
+  filmCardComponent.setEditClickHandler(() => {
     replaceCardToPopup();
   });
 
-  filmPopupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', (evt) => {
-    evt.preventDefault();
+  filmPopupComponent.setEditClickHandler(() => {
     replacePopupToCard();
     document.removeEventListener('keydown', onEscKeyDown);
   });
@@ -79,6 +78,7 @@ if (films.length === 0) {
   render(filmsComponent.element, new SortView().element, RenderPosition.BEFOREBEGIN);
   const filmsListComponent = new FilmsListView();
   render(filmsComponent.element, filmsListComponent.element, RenderPosition.BEFOREEND);
+
   for (let i = 0; i < Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
     renderFilm(filmsListComponent.container, films[i]);
   }
@@ -86,12 +86,12 @@ if (films.length === 0) {
   if (films.length > FILMS_COUNT_PER_STEP) {
     let renderedFilmsCount = FILMS_COUNT_PER_STEP;
 
-    render(filmsListComponent.element, new ShowMoreButtonView().element, RenderPosition.BEFOREEND);
+    const showMoreButtonComponent = new ShowMoreButtonView();
+    render(filmsListComponent.element, showMoreButtonComponent.element, RenderPosition.BEFOREEND);
 
     const showMoreButton = siteMainElement.querySelector('.films-list__show-more');
 
-    showMoreButton.addEventListener('click', (evt) => {
-      evt.preventDefault();
+    showMoreButtonComponent.setClickHandler(() => {
       films.slice(renderedFilmsCount, renderedFilmsCount + FILMS_COUNT_PER_STEP).forEach((film) => renderFilm(filmsListComponent.container, film));
       renderedFilmsCount += FILMS_COUNT_PER_STEP;
 
