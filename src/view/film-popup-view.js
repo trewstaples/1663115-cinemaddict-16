@@ -1,4 +1,4 @@
-import { getClassName, createTemplateFromArray } from '../utils.js';
+import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import AbstractView from './abstract-view.js';
 
 const renderFilmPopupTemplate = (film) => {

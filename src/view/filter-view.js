@@ -1,4 +1,4 @@
-import { createTemplateFromArray } from '../utils.js';
+import { createTemplateFromArray } from '../utils/films.js';
 import AbstractView from './abstract-view.js';
 
 const createFilterTemplate = (filter) => {
