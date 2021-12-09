@@ -12,7 +12,7 @@ import FilmPopupView from './view/film-popup-view.js';
 import ShowMoreButtonView from './view/show-more-button-view.js';
 import FooterView from './view/footer-stats-view.js';
 
-const FILMS_COUNT = 0;
+const FILMS_COUNT = 15;
 const FILMS_COUNT_PER_STEP = 5;
 
 const renderCards = () => {
@@ -76,7 +76,7 @@ if (films.length === 0) {
   render(filmsComponent.element, new NoFilmView().element, RenderPosition.BEFOREEND);
 } else {
   render(siteHeaderElement, new ProfileView().element, RenderPosition.BEFOREEND);
-  render(siteMainElement, new SortView().element, RenderPosition.BEFOREEND);
+  render(filmsComponent.element, new SortView().element, RenderPosition.BEFOREBEGIN);
   const filmsListComponent = new FilmsListView();
   render(filmsComponent.element, filmsListComponent.element, RenderPosition.BEFOREEND);
   for (let i = 0; i < Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
