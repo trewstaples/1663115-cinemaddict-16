@@ -1,5 +1,5 @@
-import { getClassName, createTemplateFromArray } from '../utils.js';
-import { createElement } from '../render.js';
+import { getClassName, createTemplateFromArray } from '../utils/films.js';
+import AbstractView from './abstract-view.js';
 
 const renderFilmPopupTemplate = (film) => {
   const { comments, info, userDetails } = film;
@@ -139,27 +139,25 @@ const renderFilmPopupTemplate = (film) => {
 `;
 };
 
-export default class FilmPopupView {
-  #element = null;
+export default class FilmPopupView extends AbstractView {
   #films = null;
 
   constructor(films) {
+    super();
     this.#films = films;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return renderFilmPopupTemplate(this.#films);
   }
 
-  removeElement() {
-    this.#element = null;
-  }
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#editClickHandler);
+  };
+
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
+  };
 }
