@@ -1,5 +1,5 @@
 import { createTemplateFromArray } from '../utils.js';
-import { createElement } from '../render.js';
+import AbstractView from './abstract-view.js';
 
 const createFilterTemplate = (filter) => {
   const { name, count } = filter;
@@ -18,27 +18,15 @@ const renderFilterTemplate = (filters) => `<nav class="main-navigation">
   </nav>
   `;
 
-export default class FilterView {
-  #element = null;
+export default class FilterView extends AbstractView {
   #filters = null;
 
   constructor(filters) {
+    super();
     this.#filters = filters;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return renderFilterTemplate(this.#filters);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

@@ -12,7 +12,7 @@ import FilmPopupView from './view/film-popup-view.js';
 import ShowMoreButtonView from './view/show-more-button-view.js';
 import FooterView from './view/footer-stats-view.js';
 
-const FILMS_COUNT = 15;
+const FILMS_COUNT = 10;
 const FILMS_COUNT_PER_STEP = 5;
 
 const renderCards = () => {
