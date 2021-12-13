@@ -66,7 +66,7 @@ render(siteMainElement, new FilterView(filters), RenderPosition.BEFOREEND);
 const filmsComponent = new FilmsView();
 render(siteMainElement, filmsComponent, RenderPosition.BEFOREEND);
 
-const renderBoardFilms = (boardFilms) => {
+const renderFilmsBoard = (boardFilms) => {
   if (boardFilms.length === 0) {
     render(filmsComponent, new NoFilmView(), RenderPosition.BEFOREEND);
   } else {
@@ -102,7 +102,7 @@ const renderBoardFilms = (boardFilms) => {
   }
 };
 
-renderBoardFilms(films);
+renderFilmsBoard(films);
 
 const footerStatistics = document.querySelector('.footer__statistics');
 render(footerStatistics, new FooterView(films), RenderPosition.BEFOREEND);
