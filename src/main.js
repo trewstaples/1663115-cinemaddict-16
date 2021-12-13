@@ -66,34 +66,43 @@ render(siteMainElement, new FilterView(filters), RenderPosition.BEFOREEND);
 const filmsComponent = new FilmsView();
 render(siteMainElement, filmsComponent, RenderPosition.BEFOREEND);
 
-if (films.length === 0) {
-  render(filmsComponent, new NoFilmView(), RenderPosition.BEFOREEND);
-} else {
-  render(siteHeaderElement, new ProfileView(), RenderPosition.BEFOREEND);
-  render(filmsComponent, new SortView(), RenderPosition.BEFOREBEGIN);
-  const filmsListComponent = new FilmsListView();
-  render(filmsComponent, filmsListComponent, RenderPosition.BEFOREEND);
+const renderBoardFilms = (boardFilms) => {
+  if (boardFilms.length === 0) {
+    render(filmsComponent, new NoFilmView(), RenderPosition.BEFOREEND);
+  } else {
+    render(siteHeaderElement, new ProfileView(), RenderPosition.BEFOREEND);
+    render(filmsComponent, new SortView(), RenderPosition.BEFOREBEGIN);
+    const filmsListComponent = new FilmsListView();
+    render(filmsComponent, filmsListComponent, RenderPosition.BEFOREEND);
 
-  for (let i = 0; i < Math.min(films.length, FILMS_COUNT_PER_STEP); i++) {
-    renderFilm(filmsListComponent.container, films[i]);
+    boardFilms
+      .slice(0, Math.min(boardFilms.length, FILMS_COUNT_PER_STEP))
+      .forEach((boardFilm) => renderFilm(filmsListComponent.container, boardFilm));
+    /*  for (let i = 0; i < Math.min(boardFilms.length, FILMS_COUNT_PER_STEP); i++) {
+      renderFilm(filmsListComponent.container, boardFilms[i]);
+    } */
+
+    if (boardFilms.length > FILMS_COUNT_PER_STEP) {
+      let renderedFilmsCount = FILMS_COUNT_PER_STEP;
+
+      const showMoreButtonComponent = new ShowMoreButtonView();
+      render(filmsListComponent, showMoreButtonComponent, RenderPosition.BEFOREEND);
+
+      showMoreButtonComponent.setClickHandler(() => {
+        boardFilms
+          .slice(renderedFilmsCount, renderedFilmsCount + FILMS_COUNT_PER_STEP)
+          .forEach((film) => renderFilm(filmsListComponent.container, film));
+        renderedFilmsCount += FILMS_COUNT_PER_STEP;
+
+        if (renderedFilmsCount >= boardFilms.length) {
+          remove(showMoreButtonComponent);
+        }
+      });
+    }
   }
+};
 
-  if (films.length > FILMS_COUNT_PER_STEP) {
-    let renderedFilmsCount = FILMS_COUNT_PER_STEP;
-
-    const showMoreButtonComponent = new ShowMoreButtonView();
-    render(filmsListComponent, showMoreButtonComponent, RenderPosition.BEFOREEND);
-
-    showMoreButtonComponent.setClickHandler(() => {
-      films.slice(renderedFilmsCount, renderedFilmsCount + FILMS_COUNT_PER_STEP).forEach((film) => renderFilm(filmsListComponent.container, film));
-      renderedFilmsCount += FILMS_COUNT_PER_STEP;
-
-      if (renderedFilmsCount >= films.length) {
-        remove(showMoreButtonComponent);
-      }
-    });
-  }
-}
+renderBoardFilms(films);
 
 const footerStatistics = document.querySelector('.footer__statistics');
 render(footerStatistics, new FooterView(films), RenderPosition.BEFOREEND);
