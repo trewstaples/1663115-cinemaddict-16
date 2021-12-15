@@ -21,10 +21,12 @@ export default class FilmPresenter {
   #sortComponent = new SortView();
   #filmsComponent = new FilmsView();
   #filmsListComponent = new FilmsListView();
+  #showMoreButtonComponent = new ShowMoreButtonView();
   #footerComponent = new FooterView();
 
   #boardFilms = [];
   #filters = [];
+  #renderedFilmsCount = FILMS_COUNT_PER_STEP;
 
   constructor(mainContainer, headerContainer) {
     this.#mainContainer = mainContainer;
@@ -94,6 +96,21 @@ export default class FilmPresenter {
     this.#boardFilms.slice(from, to).forEach((boardFilm) => this.#renderFilm(boardFilm));
   };
 
+  #handleShowMoreButtonClick = () => {
+    this.#boardFilms.slice(this.#renderedFilmsCount, this.#renderedFilmsCount + FILMS_COUNT_PER_STEP).forEach((film) => this.#renderFilm(film));
+    this.#renderedFilmsCount += FILMS_COUNT_PER_STEP;
+
+    if (this.#renderedFilmsCount >= this.#boardFilms.length) {
+      remove(this.#showMoreButtonComponent);
+    }
+  };
+
+  #renderShowMoreButton = () => {
+    render(this.#filmsListComponent, this.#showMoreButtonComponent, RenderPosition.BEFOREEND);
+
+    this.#showMoreButtonComponent.setClickHandler(this.#handleShowMoreButtonClick);
+  };
+
   #renderFilmsBoard = () => {
     if (this.#boardFilms.length === 0) {
       this.#renderNoFilm();
@@ -105,19 +122,7 @@ export default class FilmPresenter {
       this.#renderFilms(0, Math.min(this.#boardFilms.length, FILMS_COUNT_PER_STEP));
 
       if (this.#boardFilms.length > FILMS_COUNT_PER_STEP) {
-        let renderedFilmsCount = FILMS_COUNT_PER_STEP;
-
-        const showMoreButtonComponent = new ShowMoreButtonView();
-        render(this.#filmsListComponent, showMoreButtonComponent, RenderPosition.BEFOREEND);
-
-        showMoreButtonComponent.setClickHandler(() => {
-          this.#boardFilms.slice(renderedFilmsCount, renderedFilmsCount + FILMS_COUNT_PER_STEP).forEach((film) => this.#renderFilm(film));
-          renderedFilmsCount += FILMS_COUNT_PER_STEP;
-
-          if (renderedFilmsCount >= this.#boardFilms.length) {
-            remove(showMoreButtonComponent);
-          }
-        });
+        this.#renderShowMoreButton();
       }
       this.#renderFooter();
     }
