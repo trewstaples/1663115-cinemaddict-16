@@ -1,4 +1,4 @@
-import { render, remove, RenderPosition, renderCard, renderPopup } from '../utils/render.js';
+import { render, remove, replace, RenderPosition, renderCard, renderPopup } from '../utils/render.js';
 import NoFilmView from '../view/no-film.js';
 import ProfileView from '../view/profile-view.js';
 import FilterView from '../view/filter-view.js';
@@ -15,6 +15,8 @@ const FILMS_COUNT_PER_STEP = 5;
 export default class FilmPresenter {
   #mainContainer = null;
   #headerContainer = null;
+  #filmCardComponent = null;
+  #filmPopupComponent = null;
 
   #noFilmComponent = new NoFilmView();
   #profileComponent = new ProfileView();
@@ -41,6 +43,25 @@ export default class FilmPresenter {
     render(this.#mainContainer, this.#filmsComponent, RenderPosition.BEFOREEND);
 
     this.#renderFilmsBoard();
+
+    const prevFilmCardComponent = this.#filmCardComponent;
+    const prevFilmPopupComponent = this.#filmPopupComponent;
+
+    if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
+      this.#renderFilms(0, Math.min(this.#boardFilms.length, FILMS_COUNT_PER_STEP));
+      return;
+    }
+
+    if (this.#filmsListComponent.element.contains(prevFilmCardComponent.element)) {
+      replace(this.filmCardComponent, prevFilmCardComponent);
+    }
+
+    if (this.#filmsListComponent.element.contains(prevFilmPopupComponent.element)) {
+      replace(this.#filmPopupComponent, prevFilmPopupComponent);
+    }
+
+    remove(prevFilmCardComponent);
+    remove(prevFilmPopupComponent);
   };
 
   #renderNoFilm = () => {
@@ -60,11 +81,11 @@ export default class FilmPresenter {
   };
 
   #renderFilm = (film) => {
-    const filmCardComponent = new FilmCardView(film);
-    const filmPopupComponent = new FilmPopupView(film);
+    this.#filmCardComponent = new FilmCardView(film);
+    this.#filmPopupComponent = new FilmPopupView(film);
 
     const replacePopupToCard = () => {
-      renderCard(filmPopupComponent);
+      renderCard(this.#filmPopupComponent);
     };
 
     const onEscKeyDown = (evt) => {
@@ -76,20 +97,20 @@ export default class FilmPresenter {
     };
 
     const replaceCardToPopup = () => {
-      renderPopup(filmPopupComponent);
+      renderPopup(this.#filmPopupComponent);
       document.addEventListener('keydown', onEscKeyDown);
     };
 
-    filmCardComponent.setEditClickHandler(() => {
+    this.#filmCardComponent.setEditClickHandler(() => {
       replaceCardToPopup();
     });
 
-    filmPopupComponent.setEditClickHandler(() => {
+    this.#filmPopupComponent.setEditClickHandler(() => {
       replacePopupToCard();
       document.removeEventListener('keydown', onEscKeyDown);
     });
 
-    render(this.#filmsListComponent.container, filmCardComponent, RenderPosition.BEFOREEND);
+    render(this.#filmsListComponent.container, this.#filmCardComponent, RenderPosition.BEFOREEND);
   };
 
   #renderFilms = (from, to) => {
@@ -118,8 +139,6 @@ export default class FilmPresenter {
       this.#renderProfile();
       this.#renderSort();
       this.#renderFilmsList();
-
-      this.#renderFilms(0, Math.min(this.#boardFilms.length, FILMS_COUNT_PER_STEP));
 
       if (this.#boardFilms.length > FILMS_COUNT_PER_STEP) {
         this.#renderShowMoreButton();
