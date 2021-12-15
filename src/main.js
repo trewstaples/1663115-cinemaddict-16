@@ -7,7 +7,7 @@ const FILMS_COUNT = 15;
 const renderCards = () => {
   const array = [];
   for (let i = 0; i < FILMS_COUNT; i++) {
-    array.push(generateFilm(i));
+    array.push(generateFilm());
   }
   return array;
 };

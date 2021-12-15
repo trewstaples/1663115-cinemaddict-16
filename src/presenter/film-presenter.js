@@ -64,6 +64,11 @@ export default class FilmPresenter {
     remove(prevFilmPopupComponent);
   };
 
+  destroy = () => {
+    remove(this.#filmCardComponent);
+    remove(this.#filmPopupComponent);
+  };
+
   #renderNoFilm = () => {
     render(this.#filmsComponent, this.#noFilmComponent, RenderPosition.BEFOREEND);
   };

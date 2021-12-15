@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 import duration from 'dayjs/plugin/duration.js';
 
 const TITLES = [
@@ -148,12 +149,12 @@ const generateRuntime = () => {
   return runtime;
 };
 
-export const generateFilm = (id) => {
+export const generateFilm = () => {
   const title = TITLES[getRandomInteger(0, TITLES.length - 1)];
   const posterUrl = convertTitleIntoPoster(title);
 
   return {
-    id,
+    id: nanoid(),
     comments: generateComments(),
     info: {
       title,
