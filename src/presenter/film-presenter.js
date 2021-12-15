@@ -10,7 +10,6 @@ import FilmPopupView from './view/film-popup-view.js';
 import ShowMoreButtonView from './view/show-more-button-view.js';
 import FooterView from './view/footer-stats-view.js';
 
-const FILMS_COUNT = 15;
 const FILMS_COUNT_PER_STEP = 5;
 
 export default class FilmPresenter {
@@ -27,16 +26,18 @@ export default class FilmPresenter {
   #footerComponent = new FooterView();
 
   #boardFilms = [];
+  #filters = [];
 
   constructor(mainContainer, headerContainer) {
     this.#mainContainer = mainContainer;
     this.#headerContainer = headerContainer;
   }
 
-  init = (boardFilms) => {
+  init = (boardFilms, filters) => {
     this.#boardFilms = [...boardFilms];
+    this.#filters = [...filters];
 
-    render(this.#mainContainer, this.#filterComponent, RenderPosition.BEFOREEND);
+    render(this.#mainContainer, this.#filterComponent(this.#filters), RenderPosition.BEFOREEND);
     render(this.#mainContainer, this.#filmsComponent, RenderPosition.BEFOREEND);
 
     this.#renderFilmsBoard();
@@ -122,11 +123,12 @@ export default class FilmPresenter {
           }
         });
       }
+      this.#renderFooter();
     }
   };
 
   #renderFooter = () => {
     const footerStatistics = document.querySelector('.footer__statistics');
-    render(footerStatistics, this.#footerComponent, RenderPosition.BEFOREEND);
+    render(footerStatistics, this.#footerComponent(this.#boardFilms), RenderPosition.BEFOREEND);
   };
 }
