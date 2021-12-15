@@ -1,14 +1,14 @@
-import { render, remove, RenderPosition, renderPopup, renderCard } from './utils/render.js';
-import NoFilmView from './view/no-film.js';
-import ProfileView from './view/profile-view.js';
-import FilterView from './view/filter-view.js';
-import SortView from './view/sort-view.js';
-import FilmsView from './view/films-view.js';
-import FilmsListView from './view/films-list-view.js';
-import FilmCardView from './view/film-card-view.js';
-import FilmPopupView from './view/film-popup-view.js';
-import ShowMoreButtonView from './view/show-more-button-view.js';
-import FooterView from './view/footer-stats-view.js';
+import { render, remove, RenderPosition, renderCard, renderPopup } from '../utils/render.js';
+import NoFilmView from '../view/no-film.js';
+import ProfileView from '../view/profile-view.js';
+import FilterView from '../view/filter-view.js';
+import SortView from '../view/sort-view.js';
+import FilmsView from '../view/films-view.js';
+import FilmsListView from '../view/films-list-view.js';
+import FilmCardView from '../view/film-card-view.js';
+import FilmPopupView from '../view/film-popup-view.js';
+import ShowMoreButtonView from '../view/show-more-button-view.js';
+import FooterView from '../view/footer-stats-view.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
@@ -17,12 +17,10 @@ export default class FilmPresenter {
   #headerContainer = null;
 
   #noFilmComponent = new NoFilmView();
-  #filterComponent = new FilterView();
   #profileComponent = new ProfileView();
   #sortComponent = new SortView();
   #filmsComponent = new FilmsView();
   #filmsListComponent = new FilmsListView();
-  #showMoreButtonComponent = new ShowMoreButtonView();
   #footerComponent = new FooterView();
 
   #boardFilms = [];
@@ -37,7 +35,7 @@ export default class FilmPresenter {
     this.#boardFilms = [...boardFilms];
     this.#filters = [...filters];
 
-    render(this.#mainContainer, this.#filterComponent(this.#filters), RenderPosition.BEFOREEND);
+    render(this.#mainContainer, new FilterView(filters), RenderPosition.BEFOREEND);
     render(this.#mainContainer, this.#filmsComponent, RenderPosition.BEFOREEND);
 
     this.#renderFilmsBoard();
@@ -110,12 +108,10 @@ export default class FilmPresenter {
         let renderedFilmsCount = FILMS_COUNT_PER_STEP;
 
         const showMoreButtonComponent = new ShowMoreButtonView();
-        render(this.#filmsListComponent, this.#showMoreButtonComponent, RenderPosition.BEFOREEND);
+        render(this.#filmsListComponent, showMoreButtonComponent, RenderPosition.BEFOREEND);
 
         showMoreButtonComponent.setClickHandler(() => {
-          this.#boardFilms
-            .slice(renderedFilmsCount, renderedFilmsCount + FILMS_COUNT_PER_STEP)
-            .forEach((film) => this.#renderFilm(this.#filmsListComponent.container, film));
+          this.#boardFilms.slice(renderedFilmsCount, renderedFilmsCount + FILMS_COUNT_PER_STEP).forEach((film) => this.#renderFilm(film));
           renderedFilmsCount += FILMS_COUNT_PER_STEP;
 
           if (renderedFilmsCount >= this.#boardFilms.length) {
@@ -129,6 +125,6 @@ export default class FilmPresenter {
 
   #renderFooter = () => {
     const footerStatistics = document.querySelector('.footer__statistics');
-    render(footerStatistics, this.#footerComponent(this.#boardFilms), RenderPosition.BEFOREEND);
+    render(footerStatistics, new FooterView(this.#boardFilms), RenderPosition.BEFOREEND);
   };
 }
