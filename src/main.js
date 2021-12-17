@@ -1,6 +1,6 @@
 import { generateFilm } from './mock/film.js';
 import { generateFilter } from './mock/filters.js';
-import FilmPresenter from './presenter/film-presenter.js';
+import FilmListPresenter from './presenter/films-list-presenter.js';
 
 const FILMS_COUNT = 15;
 
@@ -17,5 +17,5 @@ const filters = generateFilter(films);
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 
-const filmPresenter = new FilmPresenter(siteMainElement, siteHeaderElement);
-filmPresenter.init(films, filters);
+const filmListPresenter = new FilmListPresenter(siteMainElement, siteHeaderElement);
+filmListPresenter.init(films, filters);

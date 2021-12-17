@@ -12,7 +12,7 @@ import FooterView from '../view/footer-stats-view.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
-export default class FilmPresenter {
+export default class FilmListPresenter {
   #mainContainer = null;
   #headerContainer = null;
 
@@ -24,7 +24,7 @@ export default class FilmPresenter {
   #showMoreButtonComponent = new ShowMoreButtonView();
   #footerComponent = new FooterView();
 
-  #boardFilms = [];
+  #listFilms = [];
   #filters = [];
   #renderedFilmsCount = FILMS_COUNT_PER_STEP;
 
@@ -33,8 +33,8 @@ export default class FilmPresenter {
     this.#headerContainer = headerContainer;
   }
 
-  init = (boardFilms, filters) => {
-    this.#boardFilms = [...boardFilms];
+  init = (listFilms, filters) => {
+    this.#listFilms = [...listFilms];
     this.#filters = [...filters];
 
     render(this.#mainContainer, new FilterView(filters), RenderPosition.BEFOREEND);
@@ -93,14 +93,14 @@ export default class FilmPresenter {
   };
 
   #renderFilms = (from, to) => {
-    this.#boardFilms.slice(from, to).forEach((boardFilm) => this.#renderFilm(boardFilm));
+    this.#listFilms.slice(from, to).forEach((boardFilm) => this.#renderFilm(boardFilm));
   };
 
   #handleShowMoreButtonClick = () => {
-    this.#boardFilms.slice(this.#renderedFilmsCount, this.#renderedFilmsCount + FILMS_COUNT_PER_STEP).forEach((film) => this.#renderFilm(film));
+    this.#listFilms.slice(this.#renderedFilmsCount, this.#renderedFilmsCount + FILMS_COUNT_PER_STEP).forEach((film) => this.#renderFilm(film));
     this.#renderedFilmsCount += FILMS_COUNT_PER_STEP;
 
-    if (this.#renderedFilmsCount >= this.#boardFilms.length) {
+    if (this.#renderedFilmsCount >= this.#listFilms.length) {
       remove(this.#showMoreButtonComponent);
     }
   };
@@ -112,16 +112,16 @@ export default class FilmPresenter {
   };
 
   #renderFilmsBoard = () => {
-    if (this.#boardFilms.length === 0) {
+    if (this.#listFilms.length === 0) {
       this.#renderNoFilm();
     } else {
       this.#renderProfile();
       this.#renderSort();
       this.#renderFilmsList();
 
-      this.#renderFilms(0, Math.min(this.#boardFilms.length, FILMS_COUNT_PER_STEP));
+      this.#renderFilms(0, Math.min(this.#listFilms.length, FILMS_COUNT_PER_STEP));
 
-      if (this.#boardFilms.length > FILMS_COUNT_PER_STEP) {
+      if (this.#listFilms.length > FILMS_COUNT_PER_STEP) {
         this.#renderShowMoreButton();
       }
       this.#renderFooter();
@@ -130,6 +130,6 @@ export default class FilmPresenter {
 
   #renderFooter = () => {
     const footerStatistics = document.querySelector('.footer__statistics');
-    render(footerStatistics, new FooterView(this.#boardFilms), RenderPosition.BEFOREEND);
+    render(footerStatistics, new FooterView(this.#listFilms), RenderPosition.BEFOREEND);
   };
 }
