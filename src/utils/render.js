@@ -29,7 +29,7 @@ export const render = (container, element, place) => {
 
 export const replace = (newElement, oldElement) => {
   if (newElement === null || oldElement === null) {
-    throw new Error("Can't replace unexisting elements");
+    throw new Error('Cannot replace unexisting elements');
   }
 
   const newChild = newElement instanceof AbstractView ? newElement.element : newElement;
@@ -38,7 +38,7 @@ export const replace = (newElement, oldElement) => {
   const parent = oldChild.parentElement;
 
   if (parent === null) {
-    throw new Error("Parent element doesn't exist");
+    throw new Error('Parent element does not exist');
   }
 
   parent.replaceChild(newChild, oldChild);
