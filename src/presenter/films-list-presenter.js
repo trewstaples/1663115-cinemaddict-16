@@ -26,6 +26,7 @@ export default class FilmListPresenter {
   #renderedFilmsCount = FILMS_COUNT_PER_STEP;
   #listFilms = [];
   #filters = [];
+  #filmPresenter = new Map();
 
   constructor(mainContainer, headerContainer) {
     this.#mainContainer = mainContainer;
@@ -54,6 +55,13 @@ export default class FilmListPresenter {
     render(this.#filmsComponent, this.#sortComponent, RenderPosition.BEFOREBEGIN);
   };
 
+  #clearTaskList = () => {
+    this.#filmPresenter.forEach((presenter) => presenter.destroy());
+    this.#filmPresenter.clear();
+    this.#renderedFilmsCount = FILMS_COUNT_PER_STEP;
+    remove(this.#showMoreButtonComponent);
+  };
+
   #renderFilmsList = () => {
     render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
   };
@@ -61,6 +69,7 @@ export default class FilmListPresenter {
   #renderFilm = (film) => {
     const filmPresenter = new FilmPresenter(this.#filmsListComponent);
     filmPresenter.init(film);
+    this.#filmPresenter.set(film.id, filmPresenter);
   };
 
   #renderFilms = (from, to) => {
