@@ -32,6 +32,8 @@ export default class FilmPresenter {
     });
 
     this.#filmCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#filmCardComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#filmCardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
 
     if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
       render(this.#filmsListComponent.container, this.#filmCardComponent, RenderPosition.BEFOREEND);
@@ -82,7 +84,29 @@ export default class FilmPresenter {
         favorite: !this.#film.userDetails.favorite,
       },
     });
+  };
 
-    console.log(this.#film.userDetails.favorite);
+  #handleAlreadyWatchedClick = () => {
+    this.#changeData({
+      ...this.#film,
+      userDetails: {
+        watchlist: this.#film.userDetails.watchlist,
+        alreadyWatched: !this.#film.userDetails.alreadyWatched,
+        watchingDate: this.#film.userDetails.watchingDate,
+        favorite: this.#film.userDetails.favorite,
+      },
+    });
+  };
+
+  #handleWatchlistClick = () => {
+    this.#changeData({
+      ...this.#film,
+      userDetails: {
+        watchlist: !this.#film.userDetails.watchlist,
+        alreadyWatched: this.#film.userDetails.alreadyWatched,
+        watchingDate: this.#film.userDetails.watchingDate,
+        favorite: this.#film.userDetails.favorite,
+      },
+    });
   };
 }
