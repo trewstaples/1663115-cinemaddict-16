@@ -67,12 +67,18 @@ export default class FilmListPresenter {
     remove(this.#showMoreButtonComponent);
   };
 
+  #removePopup = () => {
+    if (document.body.querySelector('.film-details')) {
+      document.body.querySelector('.film-details').remove();
+    }
+  };
+
   #renderFilmsList = () => {
     render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
   };
 
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleFilmChange);
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleFilmChange, this.#removePopup);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };

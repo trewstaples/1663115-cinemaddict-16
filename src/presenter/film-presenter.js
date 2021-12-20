@@ -1,19 +1,22 @@
 import FilmCardView from '../view/film-card-view.js';
 import FilmPopupView from '../view/film-popup-view.js';
-import { render, replace, remove, renderCard, renderPopup, RenderPosition } from '../utils/render.js';
+import { render, replace, remove, renderCard, RenderPosition } from '../utils/render.js';
+import AbstractView from '../view/abstract-view.js';
 
 export default class FilmPresenter {
   #filmsListComponent = null;
   #changeData = null;
+  #removePrevPopup = null;
 
   #filmCardComponent = null;
   #filmPopupComponent = null;
 
   #film = null;
 
-  constructor(filmListComponent, changeData) {
+  constructor(filmListComponent, changeData, removePrevPopup) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
+    this.#removePrevPopup = removePrevPopup;
   }
 
   init = (film) => {
@@ -70,7 +73,10 @@ export default class FilmPresenter {
   };
 
   #replaceCardToPopup = () => {
-    renderPopup(this.#filmPopupComponent);
+    this.#removePrevPopup();
+    const popup = this.#filmPopupComponent instanceof AbstractView ? this.#filmPopupComponent.element : this.#filmPopupComponent;
+    document.body.appendChild(popup);
+    document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#onEscKeyDown);
   };
 
