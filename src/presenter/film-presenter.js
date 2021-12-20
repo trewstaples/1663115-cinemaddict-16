@@ -4,14 +4,16 @@ import { render, replace, remove, renderCard, renderPopup, RenderPosition } from
 
 export default class FilmPresenter {
   #filmsListComponent = null;
+  #changeData = null;
 
   #filmCardComponent = null;
   #filmPopupComponent = null;
 
   #film = null;
 
-  constructor(filmListComponent) {
+  constructor(filmListComponent, changeData) {
     this.#filmsListComponent = filmListComponent;
+    this.#changeData = changeData;
   }
 
   init = (film) => {
@@ -28,6 +30,8 @@ export default class FilmPresenter {
       this.#replacePopupToCard();
       document.removeEventListener('keydown', this.#onEscKeyDown);
     });
+
+    this.#filmCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
 
     if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
       render(this.#filmsListComponent.container, this.#filmCardComponent, RenderPosition.BEFOREEND);
@@ -66,5 +70,19 @@ export default class FilmPresenter {
   #replaceCardToPopup = () => {
     renderPopup(this.#filmPopupComponent);
     document.addEventListener('keydown', this.#onEscKeyDown);
+  };
+
+  #handleFavoriteClick = () => {
+    this.#changeData({
+      ...this.#film,
+      userDetails: {
+        watchlist: this.#film.userDetails.watchlist,
+        alreadyWatched: this.#film.userDetails.alreadyWatched,
+        watchingDate: this.#film.userDetails.watchingDate,
+        favorite: !this.#film.userDetails.favorite,
+      },
+    });
+
+    console.log(this.#film.userDetails.favorite);
   };
 }

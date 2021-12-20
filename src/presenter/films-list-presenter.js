@@ -1,4 +1,4 @@
-import { render, remove, RenderPosition } from '../utils/render.js';
+import { render, remove, RenderPosition, updateItem } from '../utils/render.js';
 import NoFilmView from '../view/no-film.js';
 import ProfileView from '../view/profile-view.js';
 import FilterView from '../view/filter-view.js';
@@ -51,11 +51,16 @@ export default class FilmListPresenter {
     render(this.#headerContainer, this.#profileComponent, RenderPosition.BEFOREEND);
   };
 
+  #handleFilmChange = (updatedFilm) => {
+    this.#listFilms = updateItem(this.#listFilms, updatedFilm);
+    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+  };
+
   #renderSort = () => {
     render(this.#filmsComponent, this.#sortComponent, RenderPosition.BEFOREBEGIN);
   };
 
-  #clearTaskList = () => {
+  #clearFilmsList = () => {
     this.#filmPresenter.forEach((presenter) => presenter.destroy());
     this.#filmPresenter.clear();
     this.#renderedFilmsCount = FILMS_COUNT_PER_STEP;
@@ -67,7 +72,7 @@ export default class FilmListPresenter {
   };
 
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent);
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleFilmChange);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };
