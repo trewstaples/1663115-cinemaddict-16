@@ -3,6 +3,11 @@ import FilmPopupView from '../view/film-popup-view.js';
 import { render, replace, remove, renderCard, RenderPosition } from '../utils/render.js';
 import AbstractView from '../view/abstract-view.js';
 
+const EvtKey = {
+  ESCAPE: 'Escape',
+  ESC: 'Esc',
+};
+
 export default class FilmPresenter {
   #filmsListComponent = null;
   #changeData = null;
@@ -65,7 +70,7 @@ export default class FilmPresenter {
   };
 
   #onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (evt.key === EvtKey.ESCAPE || evt.key === EvtKey.ESC) {
       evt.preventDefault();
       this.#replacePopupToCard();
       document.removeEventListener('keydown', this.#onEscKeyDown);
