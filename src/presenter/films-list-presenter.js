@@ -46,7 +46,6 @@ export default class FilmListPresenter {
     render(this.#mainContainer, this.#filmsComponent, RenderPosition.BEFOREEND);
 
     this.#renderFilmsBoard();
-    console.log(sortFilmsByRating(this.#listFilms));
   };
 
   #renderNoFilm = () => {
@@ -64,9 +63,6 @@ export default class FilmListPresenter {
   };
 
   #sortFilms = (sortType) => {
-    // 2. Этот исходный массив фильмов необходим,
-    // потому что для сортировки мы будем мутировать
-    // массив в свойстве _boardTasks
     switch (sortType) {
       case SortType.BY_DATE:
         this.#listFilms.sort(sortFilmsByDate);
@@ -75,8 +71,6 @@ export default class FilmListPresenter {
         this.#listFilms.sort(sortFilmsByRating);
         break;
       default:
-        // 3. А когда пользователь захочет "вернуть всё, как было",
-        // мы просто запишем в _boardTasks исходный массив
         this.#listFilms = [...this.#sourcedListFilms];
     }
 
@@ -89,8 +83,8 @@ export default class FilmListPresenter {
     }
 
     this.#sortFilms(sortType);
-    // - Очищаем список
-    // - Рендерим список заново
+    this.#clearFilmsList();
+    this.#renderFilmsList();
   };
 
   #renderSort = () => {
@@ -112,7 +106,11 @@ export default class FilmListPresenter {
   };
 
   #renderFilmsList = () => {
-    render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
+    this.#renderFilms(0, Math.min(this.#listFilms.length, FILMS_COUNT_PER_STEP));
+
+    if (this.#listFilms.length > FILMS_COUNT_PER_STEP) {
+      this.#renderShowMoreButton();
+    }
   };
 
   #renderFilm = (film) => {
@@ -146,13 +144,10 @@ export default class FilmListPresenter {
     } else {
       this.#renderProfile();
       this.#renderSort();
+      render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
+
       this.#renderFilmsList();
 
-      this.#renderFilms(0, Math.min(this.#listFilms.length, FILMS_COUNT_PER_STEP));
-
-      if (this.#listFilms.length > FILMS_COUNT_PER_STEP) {
-        this.#renderShowMoreButton();
-      }
       this.#renderFooter();
     }
   };
