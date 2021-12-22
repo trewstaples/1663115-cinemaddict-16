@@ -1,4 +1,6 @@
 import { render, remove, RenderPosition, updateItem } from '../utils/render.js';
+import { sortFilmsByDate, sortFilmsByRating } from '../utils/films.js';
+import { SortType } from '../view/sort-view.js';
 import NoFilmView from '../view/no-film.js';
 import ProfileView from '../view/profile-view.js';
 import FilterView from '../view/filter-view.js';
@@ -27,6 +29,8 @@ export default class FilmListPresenter {
   #listFilms = [];
   #filters = [];
   #filmPresenter = new Map();
+  #currentSortType = SortType.DEFAULT;
+  #sourcedListFilms = [];
 
   constructor(mainContainer, headerContainer) {
     this.#mainContainer = mainContainer;
@@ -36,11 +40,13 @@ export default class FilmListPresenter {
   init = (listFilms, filters) => {
     this.#listFilms = [...listFilms];
     this.#filters = [...filters];
+    this.#sourcedListFilms = [...listFilms];
 
     render(this.#mainContainer, new FilterView(filters), RenderPosition.BEFOREEND);
     render(this.#mainContainer, this.#filmsComponent, RenderPosition.BEFOREEND);
 
     this.#renderFilmsBoard();
+    console.log(sortFilmsByRating(this.#listFilms));
   };
 
   #renderNoFilm = () => {
@@ -53,11 +59,36 @@ export default class FilmListPresenter {
 
   #handleFilmChange = (updatedFilm) => {
     this.#listFilms = updateItem(this.#listFilms, updatedFilm);
+    this.#sourcedListFilms = updateItem(this.#sourcedListFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
   };
 
+  #sortFilms = (sortType) => {
+    // 2. Этот исходный массив фильмов необходим,
+    // потому что для сортировки мы будем мутировать
+    // массив в свойстве _boardTasks
+    switch (sortType) {
+      case SortType.BY_DATE:
+        this.#listFilms.sort(sortFilmsByDate);
+        break;
+      case SortType.BY_RATING:
+        this.#listFilms.sort(sortFilmsByRating);
+        break;
+      default:
+        // 3. А когда пользователь захочет "вернуть всё, как было",
+        // мы просто запишем в _boardTasks исходный массив
+        this.#listFilms = [...this.#sourcedListFilms];
+    }
+
+    this.#currentSortType = sortType;
+  };
+
   #handleSortTypeChange = (sortType) => {
-    // - Сортируем задачи
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortFilms(sortType);
     // - Очищаем список
     // - Рендерим список заново
   };
