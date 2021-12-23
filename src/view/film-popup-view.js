@@ -1,5 +1,5 @@
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view.js';
 
 const renderFilmPopupTemplate = (film) => {
   const { comments, info, userDetails } = film;
@@ -139,8 +139,9 @@ const renderFilmPopupTemplate = (film) => {
 `;
 };
 
-export default class FilmPopupView extends AbstractView {
+export default class FilmPopupView extends SmartView {
   #films = null;
+  #emoji = null;
 
   constructor(films) {
     super();
@@ -158,6 +159,9 @@ export default class FilmPopupView extends AbstractView {
 
   #closeClickHandler = (evt) => {
     evt.preventDefault();
+    console.log(this.element.querySelector('.film-details__add-emoji-label').innerHTML);
+    this.element.querySelector('.film-details__add-emoji-label').innerHTML = '';
+    this.element.querySelector('.film-details__comment-input').innerHTML = '';
     this._callback.editClick();
   };
 
@@ -199,7 +203,10 @@ export default class FilmPopupView extends AbstractView {
 
   #emojiClickHandler = (evt) => {
     evt.preventDefault();
-    this.element.querySelector('.film-details__add-emoji-label').appendChild(this.#createEmojiTemplate(evt.target.value, evt.target.id));
+    this.#emoji = null;
+    this.#emoji = this.#createEmojiTemplate(evt.target.value, evt.target.id);
+    this.element.querySelector('.film-details__add-emoji-label').innerHTML = '';
+    this.element.querySelector('.film-details__add-emoji-label').appendChild(this.#emoji);
     this._callback.emoji();
   };
 
