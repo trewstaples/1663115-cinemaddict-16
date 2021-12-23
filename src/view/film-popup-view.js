@@ -190,4 +190,15 @@ export default class FilmPopupView extends AbstractView {
     evt.preventDefault();
     this._callback.watchlist();
   };
+
+  setEmojiClickHandler = (callback) => {
+    this._callback.emoji = callback;
+    const emojies = document.querySelectorAll('.film-details__emoji-list input[name=name="comment-emoji"]');
+    emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler));
+  };
+
+  #emojiClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.emoji();
+  };
 }

@@ -47,7 +47,7 @@ export default class FilmPresenter {
     this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
 
     if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
-      render(this.#filmsListComponent.container, this.#filmPopupComponent, RenderPosition.BEFOREEND);
+      render(this.#filmsListComponent.container, this.#filmCardComponent, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -86,6 +86,7 @@ export default class FilmPresenter {
     document.body.appendChild(popup);
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#onEscKeyDown);
+    this.#filmPopupComponent.setEmojiClickHandler();
   };
 
   #handleFavoriteClick = () => {
