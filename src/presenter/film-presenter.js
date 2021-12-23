@@ -34,14 +34,17 @@ export default class FilmPresenter {
     this.#filmPopupComponent = new FilmPopupView(film);
 
     this.#filmCardComponent.setEditClickHandler(this.#replaceCardToPopup);
-    this.#filmPopupComponent.setEditClickHandler(() => {
+    this.#filmPopupComponent.setCloseClickHandler(() => {
       this.#replacePopupToCard();
       document.removeEventListener('keydown', this.#onEscKeyDown);
     });
 
     this.#filmCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#filmCardComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#filmCardComponent.setWatchedClickHandler(this.#handleAlreadyWatchedClick);
     this.#filmCardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+    this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#filmPopupComponent.setWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
 
     if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
       render(this.#filmsListComponent.container, this.#filmCardComponent, RenderPosition.BEFOREEND);
