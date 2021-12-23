@@ -47,7 +47,7 @@ export default class FilmPresenter {
     this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
 
     if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
-      render(this.#filmsListComponent.container, this.#filmCardComponent, RenderPosition.BEFOREEND);
+      render(this.#filmsListComponent.container, this.#filmPopupComponent, RenderPosition.BEFOREEND);
       return;
     }
 
