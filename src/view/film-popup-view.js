@@ -193,12 +193,22 @@ export default class FilmPopupView extends AbstractView {
 
   setEmojiClickHandler = (callback) => {
     this._callback.emoji = callback;
-    const emojies = document.querySelectorAll('.film-details__emoji-list input[name=name="comment-emoji"]');
+    const emojies = document.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
     emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler));
   };
 
   #emojiClickHandler = (evt) => {
     evt.preventDefault();
+    this.element.querySelector('.film-details__add-emoji-label').appendChild(this.#createEmojiTemplate(evt.target.value, evt.target.id));
     this._callback.emoji();
+  };
+
+  #createEmojiTemplate = (emotion, alt) => {
+    const emoji = document.querySelector('.film-details__emoji-label img').cloneNode(true);
+    emoji.src = `./images/emoji/${emotion}.png`;
+    emoji.width = 52;
+    emoji.height = 52;
+    emoji.alt = alt;
+    return emoji;
   };
 }
