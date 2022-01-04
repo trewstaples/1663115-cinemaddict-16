@@ -140,16 +140,16 @@ const renderFilmPopupTemplate = (film) => {
 };
 
 export default class FilmPopupView extends SmartView {
-  #films = null;
+  #film = null;
   #emoji = null;
 
-  constructor(films) {
+  constructor(film) {
     super();
-    this.#films = films;
+    this.#film = film;
   }
 
   get template() {
-    return renderFilmPopupTemplate(this.#films);
+    return renderFilmPopupTemplate(this.#film);
   }
 
   setCloseClickHandler = (callback) => {
@@ -159,9 +159,6 @@ export default class FilmPopupView extends SmartView {
 
   #closeClickHandler = (evt) => {
     evt.preventDefault();
-    console.log(this.element.querySelector('.film-details__add-emoji-label').innerHTML);
-    this.element.querySelector('.film-details__add-emoji-label').innerHTML = '';
-    this.element.querySelector('.film-details__comment-input').innerHTML = '';
     this._callback.editClick();
   };
 
@@ -195,27 +192,37 @@ export default class FilmPopupView extends SmartView {
     this._callback.watchlist();
   };
 
-  setEmojiClickHandler = (callback) => {
-    this._callback.emoji = callback;
-    const emojies = document.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
-    emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler));
-  };
+  static parseFilmToData = (film) => ({ ...film /* isDueDate: film.dueDate !== null, isRepeating: isTaskRepeating(film.repeating) */ });
 
-  #emojiClickHandler = (evt) => {
-    evt.preventDefault();
-    this.#emoji = null;
-    this.#emoji = this.#createEmojiTemplate(evt.target.value, evt.target.id);
-    this.element.querySelector('.film-details__add-emoji-label').innerHTML = '';
-    this.element.querySelector('.film-details__add-emoji-label').appendChild(this.#emoji);
-    this._callback.emoji();
-  };
+  static parseDataToTask = (data) => {
+    const film = { ...data };
 
-  #createEmojiTemplate = (emotion, alt) => {
-    const emoji = document.querySelector('.film-details__emoji-label img').cloneNode(true);
-    emoji.src = `./images/emoji/${emotion}.png`;
-    emoji.width = 52;
-    emoji.height = 52;
-    emoji.alt = alt;
-    return emoji;
+    /*   if (!film.isDueDate) {
+      film.dueDate = null;
+    }
+
+    if (!film.isRepeating) {
+      film.repeating = {
+        mo: false,
+        tu: false,
+        we: false,
+        th: false,
+        fr: false,
+        sa: false,
+        su: false,
+      };
+    }
+
+    delete film.isDueDate;
+    delete film.isRepeating; */
+
+    return film;
   };
 }
+
+//Перевести попап в умный компонент. Попап принимает состояние
+//По умолчанию в данных нету нового комментария, соответственно флаг для нового комментария === null;
+//Если пользователь добавляет комментарий, то изменется состояние, но не данные
+//Если пользователь отправил комментарий, нажав кнопку ENTER, тогда изменяются данные
+
+//1. Перевести попап в умный компонент и добавить флаги
