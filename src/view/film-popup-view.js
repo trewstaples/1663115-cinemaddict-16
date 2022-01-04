@@ -1,8 +1,8 @@
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import SmartView from './smart-view.js';
 
-const renderFilmPopupTemplate = (film) => {
-  const { comments, info, userDetails } = film;
+const renderFilmPopupTemplate = (data) => {
+  const { comments, info, userDetails, isEmoji, isCommentText, isEmojiChecked } = data;
 
   const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
   const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
@@ -104,29 +104,30 @@ const renderFilmPopupTemplate = (film) => {
         </ul>
 
         <div class="film-details__new-comment">
-          <div class="film-details__add-emoji-label"></div>
+          <div class="film-details__add-emoji-label">${isEmoji}
+          </div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${isCommentText}</textarea>
           </label>
 
           <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile"  ${isEmojiChecked}>
             <label class="film-details__emoji-label" for="emoji-smile">
               <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${isEmojiChecked}>
             <label class="film-details__emoji-label" for="emoji-sleeping">
               <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke"     ${isEmojiChecked}>
             <label class="film-details__emoji-label" for="emoji-puke">
               <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry"    ${isEmojiChecked}>
             <label class="film-details__emoji-label" for="emoji-angry">
               <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
             </label>
@@ -145,11 +146,11 @@ export default class FilmPopupView extends SmartView {
 
   constructor(film) {
     super();
-    this.#film = film;
+    this._data = FilmPopupView.parseFilmToData(film);
   }
 
   get template() {
-    return renderFilmPopupTemplate(this.#film);
+    return renderFilmPopupTemplate(this._data);
   }
 
   setCloseClickHandler = (callback) => {
@@ -159,6 +160,7 @@ export default class FilmPopupView extends SmartView {
 
   #closeClickHandler = (evt) => {
     evt.preventDefault();
+    FilmPopupView.parseDataToFilm(this._data);
     this._callback.editClick();
   };
 
@@ -192,29 +194,14 @@ export default class FilmPopupView extends SmartView {
     this._callback.watchlist();
   };
 
-  static parseFilmToData = (film) => ({ ...film /* isDueDate: film.dueDate !== null, isRepeating: isTaskRepeating(film.repeating) */ });
+  static parseFilmToData = (film) => ({ ...film, isEmoji: '', isCommentText: '', isEmojiChecked: '' });
 
-  static parseDataToTask = (data) => {
+  static parseDataToFilm = (data) => {
     const film = { ...data };
 
-    /*   if (!film.isDueDate) {
-      film.dueDate = null;
-    }
-
-    if (!film.isRepeating) {
-      film.repeating = {
-        mo: false,
-        tu: false,
-        we: false,
-        th: false,
-        fr: false,
-        sa: false,
-        su: false,
-      };
-    }
-
-    delete film.isDueDate;
-    delete film.isRepeating; */
+    delete film.isEmoji;
+    delete film.isCommentText;
+    delete film.isEmojiChecked;
 
     return film;
   };
@@ -225,4 +212,9 @@ export default class FilmPopupView extends SmartView {
 //Если пользователь добавляет комментарий, то изменется состояние, но не данные
 //Если пользователь отправил комментарий, нажав кнопку ENTER, тогда изменяются данные
 
-//1. Перевести попап в умный компонент и добавить флаги
+//1. Перевести попап в умный компонент
+//2. Добавить флаги
+//Для эмоджи <img src="images/emoji/smile.png" width="55" height="55" alt="emoji-smile">;
+//Для текста - textContent поля ввода
+//Для выбранной эмоджи - атрибут checked
+//3.

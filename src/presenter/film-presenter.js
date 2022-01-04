@@ -87,7 +87,6 @@ export default class FilmPresenter {
     document.body.appendChild(popup);
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#onEscKeyDown);
-    this.#filmPopupComponent.setEmojiClickHandler();
   };
 
   #handleFavoriteClick = () => {
