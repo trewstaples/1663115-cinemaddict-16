@@ -75,7 +75,6 @@ export default class FilmPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === EvtKey.ESCAPE || evt.key === EvtKey.ESC) {
       evt.preventDefault();
-      document.querySelector('.film-details__add-emoji-label').innerHTML = '';
       this.#replacePopupToCard();
       document.removeEventListener('keydown', this.#onEscKeyDown);
     }
