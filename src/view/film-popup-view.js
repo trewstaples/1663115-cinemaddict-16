@@ -1,6 +1,6 @@
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
-import { Comments } from '../mock/film.js';
 import SmartView from './smart-view.js';
+import { EvtKey, EMOTIONS } from '../utils/const.js';
 
 const renderFilmPopupTemplate = (data) => {
   const { comments, info, userDetails, isEmoji, isMessage, isEmojiChecked } = data;
@@ -119,7 +119,7 @@ const renderFilmPopupTemplate = (data) => {
           </label>
 
           <div class="film-details__emoji-list">
-          ${createTemplateFromArray(Comments.EMOTIONS, createEmojiTemplate)}
+          ${createTemplateFromArray(EMOTIONS, createEmojiTemplate)}
           </div>
         </div>
       </section>
@@ -157,6 +157,7 @@ export default class FilmPopupView extends SmartView {
     const emojies = this.element.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
     emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler));
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#messageInputHandler);
+    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#onEnterKeyDown);
   };
 
   #emojiClickHandler = (evt) => {
@@ -175,6 +176,12 @@ export default class FilmPopupView extends SmartView {
       },
       true,
     );
+  };
+
+  #onEnterKeyDown = (evt) => {
+    if ((evt.ctrlKey || evt.metaKey) && evt.code === EvtKey.ENTER) {
+      evt.preventDefault();
+    }
   };
 
   setCloseClickHandler = (callback) => {

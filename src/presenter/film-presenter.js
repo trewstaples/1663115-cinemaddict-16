@@ -1,12 +1,8 @@
 import FilmCardView from '../view/film-card-view.js';
 import FilmPopupView from '../view/film-popup-view.js';
+import { EvtKey } from '../utils/const.js';
 import { render, replace, remove, renderCard, RenderPosition } from '../utils/render.js';
 import AbstractView from '../view/abstract-view.js';
-
-const EvtKey = {
-  ESCAPE: 'Escape',
-  ESC: 'Esc',
-};
 
 export default class FilmPresenter {
   #filmsListComponent = null;
