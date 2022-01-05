@@ -1,6 +1,8 @@
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import SmartView from './smart-view.js';
 
+const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
+
 const renderFilmPopupTemplate = (data) => {
   const { comments, info, userDetails, isEmoji, isCommentText, isEmojiChecked } = data;
 
@@ -112,25 +114,19 @@ const renderFilmPopupTemplate = (data) => {
           </label>
 
           <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${isEmojiChecked}>
-            <label class="film-details__emoji-label" for="emoji-smile">
-              <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${isEmojiChecked}>
-            <label class="film-details__emoji-label" for="emoji-sleeping">
-              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${isEmojiChecked}>
-            <label class="film-details__emoji-label" for="emoji-puke">
-              <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${isEmojiChecked}>
-            <label class="film-details__emoji-label" for="emoji-angry">
-              <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-            </label>
+          ${EMOTIONS.map(
+            (emoji) => `
+          <input class="film-details__emoji-item visually-hidden"
+          name="comment-emoji"
+          type="radio"
+          id="emoji-${emoji}"
+          value="${emoji}"
+          ${isEmojiChecked === `emoji-${emoji}` ? 'checked' : ''}>
+          <label class="film-details__emoji-label" for="emoji-${emoji}">
+            <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
+          </label>
+        `,
+          ).join('')}
           </div>
         </div>
       </section>
@@ -148,8 +144,9 @@ export default class FilmPopupView extends SmartView {
     super();
     this._data = FilmPopupView.parseFilmToData(film);
 
-    const emojies = this.element.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
-    emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler));
+    this.#setInnerHandlers();
+    /* const emojies = this.element.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
+    emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler)); */
     /* this.element.querySelector('.card__date-deadline-toggle')
     .addEventListener('click', this.#dueDateToggleHandler);
   this.element.querySelector('.card__repeat-toggle')
@@ -178,25 +175,37 @@ export default class FilmPopupView extends SmartView {
     const newElement = this.element;
 
     parent.replaceChild(newElement, prevElement);
+
+    this.restoreHandlers();
+  };
+
+  restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setCloseClickHandler(this._callback.closeClick);
+  };
+
+  #setInnerHandlers = () => {
+    const emojies = this.element.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
+    emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler));
   };
 
   #emojiClickHandler = (evt) => {
     evt.preventDefault();
-    console.log(evt.target);
+    console.log(evt.target.id);
     this.updateData({
       isEmoji: `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`,
+      isEmojiChecked: evt.target.id,
     });
   };
 
   setCloseClickHandler = (callback) => {
-    this._callback.editClick = callback;
+    this._callback.closeClick = callback;
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeClickHandler);
   };
 
   #closeClickHandler = (evt) => {
     evt.preventDefault();
-    FilmPopupView.parseDataToFilm(this._data);
-    this._callback.editClick();
+    this._callback.closeClick(FilmPopupView.parseDataToFilm(this._data));
   };
 
   setFavoriteClickHandler = (callback) => {
