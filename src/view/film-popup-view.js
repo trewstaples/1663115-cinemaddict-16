@@ -4,7 +4,7 @@ import SmartView from './smart-view.js';
 const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
 const renderFilmPopupTemplate = (data) => {
-  const { comments, info, userDetails, isEmoji, isCommentText, isEmojiChecked } = data;
+  const { comments, info, userDetails, isEmoji, isMessage, isEmojiChecked } = data;
 
   const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
   const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
@@ -110,7 +110,7 @@ const renderFilmPopupTemplate = (data) => {
           </div>
 
           <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${isCommentText}</textarea>
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${isMessage}</textarea>
           </label>
 
           <div class="film-details__emoji-list">
@@ -145,12 +145,6 @@ export default class FilmPopupView extends SmartView {
     this._data = FilmPopupView.parseFilmToData(film);
 
     this.#setInnerHandlers();
-    /* const emojies = this.element.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
-    emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler)); */
-    /* this.element.querySelector('.card__date-deadline-toggle')
-    .addEventListener('click', this.#dueDateToggleHandler);
-  this.element.querySelector('.card__repeat-toggle')
-    .addEventListener('click', this.#repeatingToggleHandler); */
   }
 
   get template() {
@@ -187,15 +181,25 @@ export default class FilmPopupView extends SmartView {
   #setInnerHandlers = () => {
     const emojies = this.element.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
     emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler));
+    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#messageInputHandler);
   };
 
   #emojiClickHandler = (evt) => {
     evt.preventDefault();
-    console.log(evt.target.id);
     this.updateData({
       isEmoji: `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`,
       isEmojiChecked: evt.target.id,
     });
+  };
+
+  #messageInputHandler = (evt) => {
+    evt.preventDefault();
+    this.updateData(
+      {
+        isMessage: evt.target.value,
+      },
+      true,
+    );
   };
 
   setCloseClickHandler = (callback) => {
@@ -205,7 +209,8 @@ export default class FilmPopupView extends SmartView {
 
   #closeClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.closeClick(FilmPopupView.parseDataToFilm(this._data));
+    FilmPopupView.parseDataToFilm(this._data);
+    this._callback.closeClick();
   };
 
   setFavoriteClickHandler = (callback) => {
@@ -238,27 +243,15 @@ export default class FilmPopupView extends SmartView {
     this._callback.watchlist();
   };
 
-  static parseFilmToData = (film) => ({ ...film, isEmoji: '', isCommentText: '', isEmojiChecked: '' });
+  static parseFilmToData = (film) => ({ ...film, isEmoji: '', isMessage: '', isEmojiChecked: '' });
 
   static parseDataToFilm = (data) => {
     const film = { ...data };
 
     delete film.isEmoji;
-    delete film.isCommentText;
+    delete film.isMessage;
     delete film.isEmojiChecked;
 
     return film;
   };
 }
-
-//Перевести попап в умный компонент. Попап принимает состояние
-//По умолчанию в данных нету нового комментария, соответственно флаг для нового комментария === null;
-//Если пользователь добавляет комментарий, то изменется состояние, но не данные
-//Если пользователь отправил комментарий, нажав кнопку ENTER, тогда изменяются данные
-
-//1. Перевести попап в умный компонент
-//2. Добавить флаги
-//Для эмоджи <img src="images/emoji/smile.png" width="55" height="55" alt="emoji-smile">;
-//Для текста - textContent поля ввода
-//Для выбранной эмоджи - атрибут checked
-//3.
