@@ -35,6 +35,7 @@ export default class FilmPresenter {
 
     this.#filmCardComponent.setEditClickHandler(this.#replaceCardToPopup);
     this.#filmPopupComponent.setCloseClickHandler(() => {
+      this.#filmPopupComponent.reset(this.#film);
       this.#replacePopupToCard();
       document.removeEventListener('keydown', this.#onEscKeyDown);
     });
@@ -75,6 +76,7 @@ export default class FilmPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === EvtKey.ESCAPE || evt.key === EvtKey.ESC) {
       evt.preventDefault();
+      this.#filmPopupComponent.reset(this.#film);
       this.#replacePopupToCard();
       document.removeEventListener('keydown', this.#onEscKeyDown);
     }

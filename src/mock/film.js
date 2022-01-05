@@ -35,7 +35,7 @@ const Film = {
     ),
 };
 
-const Comments = {
+export const Comments = {
   AUTHORS: ['Alexander Sushko', 'Igor Antonov', 'Evgeniy Lepeshkin', 'Igor Alekseenko', 'Lera Zelenaya'],
   MESSAGES: [
     'Interesting setting and a good cast',

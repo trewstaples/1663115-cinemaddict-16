@@ -1,7 +1,6 @@
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
+import { Comments } from '../mock/film.js';
 import SmartView from './smart-view.js';
-
-const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
 const renderFilmPopupTemplate = (data) => {
   const { comments, info, userDetails, isEmoji, isMessage, isEmojiChecked } = data;
@@ -22,6 +21,12 @@ const renderFilmPopupTemplate = (data) => {
     </p>
   </div>
 </li>`;
+
+  const createEmojiTemplate = (emoji) => `<input class="film-details__emoji-item visually-hidden"
+  name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${isEmojiChecked === `emoji-${emoji}` ? 'checked' : ''}>
+<label class="film-details__emoji-label" for="emoji-${emoji}">
+  <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
+</label>`;
 
   const watchlistClassName = getClassName(userDetails.watchlist, 'film-details__control-button--active');
   const wactchedButtonClassName = getClassName(userDetails.alreadyWatched, 'film-details__control-button--active');
@@ -114,19 +119,7 @@ const renderFilmPopupTemplate = (data) => {
           </label>
 
           <div class="film-details__emoji-list">
-          ${EMOTIONS.map(
-            (emoji) => `
-          <input class="film-details__emoji-item visually-hidden"
-          name="comment-emoji"
-          type="radio"
-          id="emoji-${emoji}"
-          value="${emoji}"
-          ${isEmojiChecked === `emoji-${emoji}` ? 'checked' : ''}>
-          <label class="film-details__emoji-label" for="emoji-${emoji}">
-            <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
-          </label>
-        `,
-          ).join('')}
+          ${createTemplateFromArray(Comments.EMOTIONS, createEmojiTemplate)}
           </div>
         </div>
       </section>
@@ -151,30 +144,8 @@ export default class FilmPopupView extends SmartView {
     return renderFilmPopupTemplate(this._data);
   }
 
-  updateData = (update, justDataUpdating) => {
-    if (!update) {
-      return;
-    }
-
-    this._data = { ...this._data, ...update };
-
-    if (justDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  };
-
-  updateElement = () => {
-    const prevElement = this.element;
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.element;
-
-    parent.replaceChild(newElement, prevElement);
-
-    this.restoreHandlers();
+  reset = (film) => {
+    this.updateData(FilmPopupView.parseFilmToData(film));
   };
 
   restoreHandlers = () => {
