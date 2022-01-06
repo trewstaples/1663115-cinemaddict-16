@@ -25,7 +25,7 @@ const Posters = {
 
 const Film = {
   AGE_RATINGS: ['0+', '12+', '16+', '18+'],
-  DIRECTORS: ['Christopher Nolan', 'Steven Spielberg', 'Charles Chaplin', 'Vince Gilligan,', 'James Cameron'],
+  DIRECTORS: ['Дядя Женя'],
   WRITERS: ['Billy Wilder', 'Sam Esmail', 'David Mamet', 'Frank Darabont', 'Chuck Palahniuk'],
   ACTORS: ['Julia Roberts', 'Aaron Paul', 'Bryan Cranston', 'Rami Malek', 'Kate Winslet'],
   RELEASE_COUNTRIES: ['USA', 'India', 'Australia', 'France', 'Italy'],
@@ -181,3 +181,5 @@ export const generateFilm = () => {
     },
   };
 };
+
+// fsdkfksdmfksmflmslfmklsmfklsdlkf
