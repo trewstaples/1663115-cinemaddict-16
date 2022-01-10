@@ -1,12 +1,8 @@
 import FilmCardView from '../view/film-card-view.js';
 import FilmPopupView from '../view/film-popup-view.js';
+import { EvtKey } from '../utils/const.js';
 import { render, replace, remove, renderCard, RenderPosition } from '../utils/render.js';
 import AbstractView from '../view/abstract-view.js';
-
-const EvtKey = {
-  ESCAPE: 'Escape',
-  ESC: 'Esc',
-};
 
 export default class FilmPresenter {
   #filmsListComponent = null;
@@ -34,14 +30,18 @@ export default class FilmPresenter {
     this.#filmPopupComponent = new FilmPopupView(film);
 
     this.#filmCardComponent.setEditClickHandler(this.#replaceCardToPopup);
-    this.#filmPopupComponent.setEditClickHandler(() => {
+    this.#filmPopupComponent.setCloseClickHandler(() => {
+      this.#filmPopupComponent.reset(this.#film);
       this.#replacePopupToCard();
       document.removeEventListener('keydown', this.#onEscKeyDown);
     });
 
     this.#filmCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#filmCardComponent.setAlreadyWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#filmCardComponent.setWatchedClickHandler(this.#handleAlreadyWatchedClick);
     this.#filmCardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+    this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#filmPopupComponent.setWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
 
     if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
       render(this.#filmsListComponent.container, this.#filmCardComponent, RenderPosition.BEFOREEND);
@@ -53,7 +53,9 @@ export default class FilmPresenter {
     }
 
     if (document.body.contains(prevFilmPopupComponent.element)) {
+      const scrollPosition = prevFilmPopupComponent.element.scrollTop;
       replace(this.#filmPopupComponent, prevFilmPopupComponent);
+      this.#filmPopupComponent.element.scrollTop = scrollPosition;
     }
 
     remove(prevFilmCardComponent);
@@ -72,6 +74,7 @@ export default class FilmPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === EvtKey.ESCAPE || evt.key === EvtKey.ESC) {
       evt.preventDefault();
+      this.#filmPopupComponent.reset(this.#film);
       this.#replacePopupToCard();
       document.removeEventListener('keydown', this.#onEscKeyDown);
     }

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import duration from 'dayjs/plugin/duration.js';
+import { EMOTIONS } from '../utils/const';
 
 const TITLES = [
   'Made for Each Other',
@@ -35,7 +36,7 @@ const Film = {
     ),
 };
 
-const Comments = {
+export const Comments = {
   AUTHORS: ['Alexander Sushko', 'Igor Antonov', 'Evgeniy Lepeshkin', 'Igor Alekseenko', 'Lera Zelenaya'],
   MESSAGES: [
     'Interesting setting and a good cast',
@@ -44,7 +45,6 @@ const Comments = {
     'Almost two hours? Seriously?',
     'A film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
   ],
-  EMOTIONS: ['smile', 'sleeping', 'puke', 'angry'],
   MAX: 5,
 };
 
@@ -110,7 +110,7 @@ const generateOneComment = (id) => ({
   author: getRandomElement(Comments.AUTHORS),
   date: getRandomDate(),
   comment: getRandomElement(Comments.MESSAGES),
-  emotion: getRandomElement(Comments.EMOTIONS),
+  emotion: getRandomElement(EMOTIONS),
 });
 
 const generateComments = () => {
