@@ -53,7 +53,9 @@ export default class FilmPresenter {
     }
 
     if (document.body.contains(prevFilmPopupComponent.element)) {
+      const scrollPosition = prevFilmPopupComponent.element.scrollTop;
       replace(this.#filmPopupComponent, prevFilmPopupComponent);
+      this.#filmPopupComponent.element.scrollTop = scrollPosition;
     }
 
     remove(prevFilmCardComponent);

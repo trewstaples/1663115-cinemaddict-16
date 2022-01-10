@@ -151,6 +151,9 @@ export default class FilmPopupView extends SmartView {
   restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setCloseClickHandler(this._callback.closeClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setWatchlistClickHandler(this._callback.watchlistClick);
   };
 
   #setInnerHandlers = () => {
@@ -206,23 +209,23 @@ export default class FilmPopupView extends SmartView {
   };
 
   setWatchedClickHandler = (callback) => {
-    this._callback.alreadyWatched = callback;
+    this._callback.watchedClick = callback;
     this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#watchedClickHandler);
   };
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.alreadyWatched();
+    this._callback.watchedClick();
   };
 
   setWatchlistClickHandler = (callback) => {
-    this._callback.watchlist = callback;
+    this._callback.watchlistClick = callback;
     this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#watchlistClickHandler);
   };
 
   #watchlistClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.watchlist();
+    this._callback.watchlistClick();
   };
 
   static parseFilmToData = (film) => ({ ...film, isEmoji: '', isMessage: '', isEmojiChecked: '' });
