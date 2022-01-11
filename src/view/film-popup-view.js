@@ -21,6 +21,8 @@ const renderFilmPopupTemplate = (data) => {
     return runtime;
   };
 
+  const formatReleaseDate = (releaseDate) => dayjs(releaseDate).format(StringFormats.RELEASE_DATE);
+
   const createCommentTemplate = (comment) => ` <li class="film-details__comment">
   <span class="film-details__comment-emoji">
     <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-smile">
@@ -85,7 +87,7 @@ const renderFilmPopupTemplate = (data) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${info.release.date}</td>
+              <td class="film-details__cell">${formatReleaseDate(info.release.date)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>

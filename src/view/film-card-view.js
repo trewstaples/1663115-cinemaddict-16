@@ -7,7 +7,7 @@ import duration from 'dayjs/plugin/duration.js';
 const renderFilmTemplate = (film) => {
   const { comments, info, userDetails } = film;
   const description = info.description.length > 140 ? info.description.slice(0, 139).concat('...') : info.description;
-  const date = dayjs(info.release.date).format('YYYY');
+  const date = dayjs(info.release.date).format(StringFormats.RELEASE_YEAR);
 
   const watchlistClassName = getClassName(userDetails.watchlist, 'film-card__controls-item--active');
   const wactchedButtonClassName = getClassName(userDetails.alreadyWatched, 'film-card__controls-item--active');

@@ -124,7 +124,7 @@ const generateReleaseDate = () => {
   const maxDaysGap = 30;
   const daysGap = getRandomInteger(0, maxDaysGap);
 
-  return dayjs().add(-yearsGap, 'year').add(daysGap, 'day').format('DD MMMM YYYY');
+  return dayjs().add(-yearsGap, 'year').add(daysGap, 'day');
 };
 
 const generateRuntime = () => {

@@ -10,6 +10,7 @@ export const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
 export const StringFormats = {
   RELEASE_DATE: 'DD MMMM YYYY',
+  RELEASE_YEAR: 'YYYY',
   COMMENT_DATE: 'YYYY/MM/D HH:mm',
   RUNTIME_MINUTES: 'mm[M]',
   RUNTIME_HOURS: 'H[h] mm[m]',
