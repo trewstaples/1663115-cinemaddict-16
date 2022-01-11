@@ -7,17 +7,15 @@ import AbstractView from '../view/abstract-view.js';
 export default class FilmPresenter {
   #filmsListComponent = null;
   #changeData = null;
-  #removePrevPopup = null;
 
   #filmCardComponent = null;
   #filmPopupComponent = null;
 
   #film = null;
 
-  constructor(filmListComponent, changeData, removePrevPopup) {
+  constructor(filmListComponent, changeData) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
-    this.#removePrevPopup = removePrevPopup;
   }
 
   init = (film) => {
@@ -51,7 +49,6 @@ export default class FilmPresenter {
     if (this.#filmsListComponent.element.contains(prevFilmCardComponent.element)) {
       replace(this.#filmCardComponent, prevFilmCardComponent);
     }
-
     if (document.body.contains(prevFilmPopupComponent.element)) {
       const scrollPosition = prevFilmPopupComponent.element.scrollTop;
       replace(this.#filmPopupComponent, prevFilmPopupComponent);
@@ -80,12 +77,19 @@ export default class FilmPresenter {
     }
   };
 
+  #removePrevPopup = () => {
+    if (document.body.querySelector('.film-details')) {
+      document.body.querySelector('.film-details').remove();
+      document.removeEventListener('keydown', this.#onEscKeyDown);
+    }
+  };
+
   #replaceCardToPopup = () => {
+    document.addEventListener('keydown', this.#onEscKeyDown);
     this.#removePrevPopup();
     const popup = this.#filmPopupComponent instanceof AbstractView ? this.#filmPopupComponent.element : this.#filmPopupComponent;
     document.body.appendChild(popup);
     document.body.classList.add('hide-overflow');
-    document.addEventListener('keydown', this.#onEscKeyDown);
   };
 
   #handleFavoriteClick = () => {

@@ -99,12 +99,6 @@ export default class FilmListPresenter {
     remove(this.#showMoreButtonComponent);
   };
 
-  #removePopup = () => {
-    if (document.body.querySelector('.film-details')) {
-      document.body.querySelector('.film-details').remove();
-    }
-  };
-
   #renderFilmsList = () => {
     this.#renderFilms(0, Math.min(this.#listFilms.length, FILMS_COUNT_PER_STEP));
 
@@ -114,7 +108,7 @@ export default class FilmListPresenter {
   };
 
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleFilmChange, this.#removePopup);
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleFilmChange);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };

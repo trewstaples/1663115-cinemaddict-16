@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
-import duration from 'dayjs/plugin/duration.js';
-import { EMOTIONS } from '../utils/const';
+import { EMOTIONS, Runtime } from '../utils/const';
 
 const TITLES = [
   'Made for Each Other',
@@ -59,12 +58,6 @@ const ReleaseYear = {
   MAX: 2021,
 };
 
-const Runtime = {
-  MIN: 50,
-  MAX: 180,
-  MINUTES_IN_HOUR: 60,
-};
-
 const getRandomInteger = (min, max) => {
   if (min < 0 || max < 0) {
     return -1;
@@ -100,9 +93,7 @@ const getRandomDate = () => {
 
   const daysGap = getRandomInteger(0, maxDaysGap);
 
-  const formatString = 'YYYY/MM/D HH:mm';
-
-  return dayjs().add(-daysGap, 'day').format(formatString);
+  return dayjs().add(-daysGap, 'day');
 };
 
 const generateOneComment = (id) => ({
@@ -131,22 +122,12 @@ const generateReleaseDate = () => {
   const maxDaysGap = 30;
   const daysGap = getRandomInteger(0, maxDaysGap);
 
-  return dayjs().add(-yearsGap, 'year').add(daysGap, 'day').format('DD MMMM YYYY');
+  return dayjs().add(-yearsGap, 'year').add(daysGap, 'day');
 };
 
 const generateRuntime = () => {
-  dayjs.extend(duration);
-
-  let formatString = 'mm[M]';
-
   const minutesDuration = getRandomInteger(Runtime.MIN, Runtime.MAX);
-
-  if (minutesDuration >= Runtime.MINUTES_IN_HOUR) {
-    formatString = 'H[h] mm[m]';
-  }
-
-  const runtime = dayjs.duration(minutesDuration, 'm').format(formatString);
-  return runtime;
+  return minutesDuration;
 };
 
 export const generateFilm = () => {
