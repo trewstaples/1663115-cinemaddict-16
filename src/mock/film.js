@@ -93,9 +93,7 @@ const getRandomDate = () => {
 
   const daysGap = getRandomInteger(0, maxDaysGap);
 
-  const formatString = 'YYYY/MM/D HH:mm';
-
-  return dayjs().add(-daysGap, 'day').format(formatString);
+  return dayjs().add(-daysGap, 'day');
 };
 
 const generateOneComment = (id) => ({

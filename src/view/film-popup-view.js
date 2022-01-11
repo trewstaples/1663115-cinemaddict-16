@@ -23,6 +23,8 @@ const renderFilmPopupTemplate = (data) => {
 
   const formatReleaseDate = (releaseDate) => dayjs(releaseDate).format(StringFormats.RELEASE_DATE);
 
+  const formatCommentDate = (commentDate) => dayjs(commentDate).format(StringFormats.COMMENT_DATE);
+
   const createCommentTemplate = (comment) => ` <li class="film-details__comment">
   <span class="film-details__comment-emoji">
     <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-smile">
@@ -31,7 +33,7 @@ const renderFilmPopupTemplate = (data) => {
     <p class="film-details__comment-text">${comment.comment}</p>
     <p class="film-details__comment-info">
       <span class="film-details__comment-author">${comment.author}</span>
-      <span class="film-details__comment-day">${comment.date}</span>
+      <span class="film-details__comment-day">${formatCommentDate(comment.date)}</span>
       <button class="film-details__comment-delete">Delete</button>
     </p>
   </div>
