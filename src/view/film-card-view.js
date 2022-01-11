@@ -1,6 +1,8 @@
-import dayjs from 'dayjs';
+import { Runtime, StringFormats } from '../utils/const.js';
 import { getClassName } from '../utils/films.js';
 import AbstractView from './abstract-view.js';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration.js';
 
 const renderFilmTemplate = (film) => {
   const { comments, info, userDetails } = film;
@@ -11,13 +13,24 @@ const renderFilmTemplate = (film) => {
   const wactchedButtonClassName = getClassName(userDetails.alreadyWatched, 'film-card__controls-item--active');
   const favoriteClassName = getClassName(userDetails.favorite, 'film-card__controls-item--active');
 
+  const formatRuntime = (minutesDuration) => {
+    dayjs.extend(duration);
+    let formatString = StringFormats.RUNTIME_MINUTES;
+    if (minutesDuration >= Runtime.MINUTES_IN_HOUR) {
+      formatString = StringFormats.RUNTIME_HOURS;
+    }
+
+    const runtime = dayjs.duration(minutesDuration, 'm').format(formatString);
+    return runtime;
+  };
+
   return `<article class="film-card">
   <a class="film-card__link">
     <h3 class="film-card__title">${info.title}</h3>
     <p class="film-card__rating">${info.totalRating}</p>
     <p class="film-card__info">
       <span class="film-card__year">${date}</span>
-      <span class="film-card__duration">${info.runtime}</span>
+      <span class="film-card__duration">${formatRuntime(info.runtime)}</span>
       <span class="film-card__genre">${info.genre.join(', ')}</span>
     </p>
     <img src=${info.poster} alt="" class="film-card__poster">

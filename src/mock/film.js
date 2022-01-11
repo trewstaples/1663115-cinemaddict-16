@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
-import duration from 'dayjs/plugin/duration.js';
-import { EMOTIONS } from '../utils/const';
+import { EMOTIONS, Runtime } from '../utils/const';
 
 const TITLES = [
   'Made for Each Other',
@@ -57,12 +56,6 @@ const totalRating = {
 const ReleaseYear = {
   MIN: 1895,
   MAX: 2021,
-};
-
-const Runtime = {
-  MIN: 50,
-  MAX: 180,
-  MINUTES_IN_HOUR: 60,
 };
 
 const getRandomInteger = (min, max) => {
@@ -135,18 +128,8 @@ const generateReleaseDate = () => {
 };
 
 const generateRuntime = () => {
-  dayjs.extend(duration);
-
-  let formatString = 'mm[M]';
-
   const minutesDuration = getRandomInteger(Runtime.MIN, Runtime.MAX);
-
-  if (minutesDuration >= Runtime.MINUTES_IN_HOUR) {
-    formatString = 'H[h] mm[m]';
-  }
-
-  const runtime = dayjs.duration(minutesDuration, 'm').format(formatString);
-  return runtime;
+  return minutesDuration;
 };
 
 export const generateFilm = () => {

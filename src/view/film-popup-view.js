@@ -1,12 +1,25 @@
+import { EvtKey, EMOTIONS, Runtime, StringFormats } from '../utils/const.js';
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration.js';
 import SmartView from './smart-view.js';
-import { EvtKey, EMOTIONS } from '../utils/const.js';
 
 const renderFilmPopupTemplate = (data) => {
   const { comments, info, userDetails, isEmoji, isMessage, isEmojiChecked } = data;
 
   const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
   const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
+
+  const formatRuntime = (minutesDuration) => {
+    dayjs.extend(duration);
+    let formatString = StringFormats.RUNTIME_MINUTES;
+    if (minutesDuration >= Runtime.MINUTES_IN_HOUR) {
+      formatString = StringFormats.RUNTIME_HOURS;
+    }
+
+    const runtime = dayjs.duration(minutesDuration, 'm').format(formatString);
+    return runtime;
+  };
 
   const createCommentTemplate = (comment) => ` <li class="film-details__comment">
   <span class="film-details__comment-emoji">
@@ -76,7 +89,7 @@ const renderFilmPopupTemplate = (data) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${info.runtime}</td>
+              <td class="film-details__cell">${formatRuntime(info.runtime)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
