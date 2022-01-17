@@ -16,6 +16,7 @@ const FILMS_COUNT_PER_STEP = 5;
 export default class FilmListPresenter {
   #mainContainer = null;
   #headerContainer = null;
+  #filmsModel = null;
 
   #noFilmComponent = new NoFilmView();
   #profileComponent = new ProfileView();
@@ -32,9 +33,10 @@ export default class FilmListPresenter {
   #currentSortType = SortType.DEFAULT;
   #sourcedListFilms = [];
 
-  constructor(mainContainer, headerContainer) {
+  constructor(mainContainer, headerContainer, filmsModel) {
     this.#mainContainer = mainContainer;
     this.#headerContainer = headerContainer;
+    this.#filmsModel = filmsModel;
   }
 
   init = (listFilms, filters) => {
@@ -47,6 +49,10 @@ export default class FilmListPresenter {
 
     this.#renderFilmsBoard();
   };
+
+  get films() {
+    return this.#filmsModel.films;
+  }
 
   #renderNoFilm = () => {
     render(this.#filmsComponent, this.#noFilmComponent, RenderPosition.BEFOREEND);
