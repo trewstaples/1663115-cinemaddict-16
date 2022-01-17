@@ -11,6 +11,7 @@ import FilmsListView from '../view/films-list-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FooterView from '../view/footer-stats-view.js';
 import FilmPresenter from './film-presenter.js';
+import CommentsModel from '../model/comments-model.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
@@ -61,14 +62,8 @@ export default class FilmListPresenter {
 
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
-      case UserAction.UPDATE_FILM:
+      case UserAction.UPDATE_TASK:
         this.#filmsModel.updateFilm(updateType, update);
-        break;
-      case UserAction.ADD_COMMENT:
-        this.#filmsModel.addFilm(updateType, update);
-        break;
-      case UserAction.DELETE_COMMENT:
-        this.#filmsModel.deleteFilm(updateType, update);
         break;
     }
   };
@@ -134,7 +129,9 @@ export default class FilmListPresenter {
   };
 
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction);
+    const commentsModel = new CommentsModel();
+    commentsModel.comments = film.comments;
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, commentsModel);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };

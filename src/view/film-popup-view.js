@@ -149,6 +149,7 @@ const renderFilmPopupTemplate = (data) => {
 export default class FilmPopupView extends SmartView {
   #film = null;
   #emoji = null;
+  #changeData = null;
 
   constructor(film) {
     super();
@@ -176,8 +177,8 @@ export default class FilmPopupView extends SmartView {
   #setInnerHandlers = () => {
     const emojies = this.element.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
     emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler));
-    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#messageInputHandler);
-    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#onEnterKeyDown);
+    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
+    this.setCommentPostHandler(this._callback.postComment);
   };
 
   #emojiClickHandler = (evt) => {
@@ -186,9 +187,10 @@ export default class FilmPopupView extends SmartView {
       isEmoji: `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`,
       isEmojiChecked: evt.target.id,
     });
+    this.emoji = evt.target.id;
   };
 
-  #messageInputHandler = (evt) => {
+  #commentInputHandler = (evt) => {
     evt.preventDefault();
     this.updateData(
       {
@@ -198,9 +200,18 @@ export default class FilmPopupView extends SmartView {
     );
   };
 
-  #onEnterKeyDown = (evt) => {
+  setCommentPostHandler = (callback) => {
+    this._callback.postComment = callback;
+    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentPostHandler);
+  };
+
+  #commentPostHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.code === EvtKey.ENTER) {
       evt.preventDefault();
+      console.log(evt.target);
+      console.log(this.emoji);
+      const commentText = evt.target.textContent;
+      this._callback.postComment(this.emoji, commentText);
     }
   };
 

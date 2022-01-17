@@ -12,10 +12,12 @@ export default class FilmPresenter {
   #filmPopupComponent = null;
 
   #film = null;
+  #commentsModel = null;
 
-  constructor(filmListComponent, changeData) {
+  constructor(filmListComponent, changeData, commentsModel) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
+    this.#commentsModel = commentsModel;
   }
 
   init = (film) => {
@@ -25,7 +27,7 @@ export default class FilmPresenter {
     const prevFilmPopupComponent = this.#filmPopupComponent;
 
     this.#filmCardComponent = new FilmCardView(film);
-    this.#filmPopupComponent = new FilmPopupView(film);
+    this.#filmPopupComponent = new FilmPopupView(film, this.#changeData);
 
     this.#filmCardComponent.setEditClickHandler(this.#replaceCardToPopup);
     this.#filmPopupComponent.setCloseClickHandler(() => {
@@ -40,6 +42,7 @@ export default class FilmPresenter {
     this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmPopupComponent.setWatchedClickHandler(this.#handleAlreadyWatchedClick);
     this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+    this.#filmPopupComponent.setCommentPostHandler(this.#handleCommentPost);
 
     if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
       render(this.#filmsListComponent.container, this.#filmCardComponent, RenderPosition.BEFOREEND);
@@ -58,6 +61,10 @@ export default class FilmPresenter {
     remove(prevFilmCardComponent);
     remove(prevFilmPopupComponent);
   };
+
+  get comments() {
+    return this.#commentsModel.comments;
+  }
 
   destroy = () => {
     remove(this.#filmCardComponent);
@@ -124,6 +131,31 @@ export default class FilmPresenter {
         alreadyWatched: this.#film.userDetails.alreadyWatched,
         watchingDate: this.#film.userDetails.watchingDate,
         favorite: this.#film.userDetails.favorite,
+      },
+    });
+  };
+
+  #handleCommentChange = (actionType, updateType, update) => {
+    switch (actionType) {
+      case UserAction.ADD_COMMENT:
+        this.#commentsModel.addComment(updateType, update);
+        console.log(this.commentsModel);
+        break;
+      case UserAction.DELETE_COMMENT:
+        this.#commentsModel.deleteComment(updateType, update);
+        break;
+    }
+    console.log(this.comments);
+  };
+
+  #handleCommentPost = (emoji, comment) => {
+    this.#handleCommentChange(UserAction.ADD_COMMENT, UpdateType.PATCH, {
+      comment: {
+        id: 0,
+        author: 'Michael Jordan',
+        date: 'Now',
+        comment: comment,
+        emotion: emoji,
       },
     });
   };

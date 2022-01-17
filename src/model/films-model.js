@@ -22,22 +22,4 @@ export default class FilmsModel extends AbstractObservable {
 
     this._notify(updateType, update);
   };
-
-  addFilm = (updateType, update) => {
-    this.#films = [update, ...this.#films];
-
-    this._notify(updateType, update);
-  };
-
-  deleteFilm = (updateType, update) => {
-    const index = this.#films.findIndex((task) => task.id === update.id);
-
-    if (index === -1) {
-      throw new Error('Cannot delete unexisting film');
-    }
-
-    this.#films = [...this.#films.slice(0, index), ...this.#films.slice(index + 1)];
-
-    this._notify(updateType);
-  };
 }
