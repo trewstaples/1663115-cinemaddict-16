@@ -35,6 +35,8 @@ export default class FilmListPresenter {
     this.#mainContainer = mainContainer;
     this.#headerContainer = headerContainer;
     this.#filmsModel = filmsModel;
+
+    this.#filmsModel.addObserver(this.#handleModelEvent);
   }
 
   init = (filters) => {
@@ -55,6 +57,14 @@ export default class FilmListPresenter {
     }
     return this.#filmsModel.films;
   }
+
+  #handleViewAction = (actionType, updateType, update) => {
+    console.log(actionType, updateType, update);
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    console.log(updateType, data);
+  };
 
   #renderNoFilm = () => {
     render(this.#filmsComponent, this.#noFilmComponent, RenderPosition.BEFOREEND);
@@ -101,7 +111,7 @@ export default class FilmListPresenter {
   };
 
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleFilmChange);
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, this.#handleFilmChange);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };

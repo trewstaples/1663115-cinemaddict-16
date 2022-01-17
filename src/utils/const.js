@@ -21,3 +21,15 @@ export const Runtime = {
   MAX: 180,
   MINUTES_IN_HOUR: 60,
 };
+
+export const UserAction = {
+  ADD_COMMENT: 'ADD_COMMENT',
+  DELETE_COMMENT: 'DELETE_COMMENT',
+  UPDATE_FILM: 'UPDATE_FILM',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
