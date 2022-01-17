@@ -1,5 +1,6 @@
 import { render, remove, RenderPosition } from '../utils/render.js';
 import { sortFilmsByDate, sortFilmsByRating } from '../utils/films.js';
+import { UserAction, UpdateType } from '../utils/const.js';
 import { SortType } from '../view/sort-view.js';
 import NoFilmView from '../view/no-film.js';
 import ProfileView from '../view/profile-view.js';
@@ -59,11 +60,33 @@ export default class FilmListPresenter {
   }
 
   #handleViewAction = (actionType, updateType, update) => {
-    console.log(actionType, updateType, update);
+    switch (actionType) {
+      case UserAction.UPDATE_FILM:
+        this.#filmsModel.updateFilm(updateType, update);
+        break;
+      case UserAction.ADD_COMMENT:
+        this.#filmsModel.addFilm(updateType, update);
+        break;
+      case UserAction.DELETE_COMMENT:
+        this.#filmsModel.deleteFilm(updateType, update);
+        break;
+    }
   };
 
   #handleModelEvent = (updateType, data) => {
-    console.log(updateType, data);
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+
+        break;
+      case UpdateType.MINOR:
+        this.#filmPresenter.get(data.id).init(data);
+        // - обновить список (например, когда задача ушла в архив)
+        break;
+      case UpdateType.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+    }
   };
 
   #renderNoFilm = () => {
@@ -111,7 +134,7 @@ export default class FilmListPresenter {
   };
 
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, this.#handleFilmChange);
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };
