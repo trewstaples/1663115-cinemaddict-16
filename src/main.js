@@ -22,4 +22,4 @@ const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 
 const filmListPresenter = new FilmListPresenter(siteMainElement, siteHeaderElement, filmsModel);
-filmListPresenter.init(films, filters);
+filmListPresenter.init(filters);

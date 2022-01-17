@@ -1,4 +1,4 @@
-import { render, remove, RenderPosition, updateItem } from '../utils/render.js';
+import { render, remove, RenderPosition } from '../utils/render.js';
 import { sortFilmsByDate, sortFilmsByRating } from '../utils/films.js';
 import { SortType } from '../view/sort-view.js';
 import NoFilmView from '../view/no-film.js';
@@ -27,11 +27,9 @@ export default class FilmListPresenter {
   #footerComponent = new FooterView();
 
   #renderedFilmsCount = FILMS_COUNT_PER_STEP;
-  #listFilms = [];
   #filters = [];
   #filmPresenter = new Map();
   #currentSortType = SortType.DEFAULT;
-  #sourcedListFilms = [];
 
   constructor(mainContainer, headerContainer, filmsModel) {
     this.#mainContainer = mainContainer;
@@ -39,10 +37,8 @@ export default class FilmListPresenter {
     this.#filmsModel = filmsModel;
   }
 
-  init = (listFilms, filters) => {
-    this.#listFilms = [...listFilms];
+  init = (filters) => {
     this.#filters = [...filters];
-    this.#sourcedListFilms = [...listFilms];
 
     render(this.#mainContainer, new FilterView(filters), RenderPosition.BEFOREEND);
     render(this.#mainContainer, this.#filmsComponent, RenderPosition.BEFOREEND);
@@ -51,6 +47,12 @@ export default class FilmListPresenter {
   };
 
   get films() {
+    switch (this.#currentSortType) {
+      case SortType.BY_DATE:
+        return [...this.#filmsModel.films].sort(sortFilmsByDate);
+      case SortType.BY_RATING:
+        return [...this.#filmsModel.films].sort(sortFilmsByRating);
+    }
     return this.#filmsModel.films;
   }
 
@@ -63,24 +65,7 @@ export default class FilmListPresenter {
   };
 
   #handleFilmChange = (updatedFilm) => {
-    this.#listFilms = updateItem(this.#listFilms, updatedFilm);
-    this.#sourcedListFilms = updateItem(this.#sourcedListFilms, updatedFilm);
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
-  };
-
-  #sortFilms = (sortType) => {
-    switch (sortType) {
-      case SortType.BY_DATE:
-        this.#listFilms.sort(sortFilmsByDate);
-        break;
-      case SortType.BY_RATING:
-        this.#listFilms.sort(sortFilmsByRating);
-        break;
-      default:
-        this.#listFilms = [...this.#sourcedListFilms];
-    }
-
-    this.#currentSortType = sortType;
   };
 
   #handleSortTypeChange = (sortType) => {
@@ -88,7 +73,7 @@ export default class FilmListPresenter {
       return;
     }
 
-    this.#sortFilms(sortType);
+    this.#currentSortType = sortType;
     this.#clearFilmsList();
     this.#renderFilmsList();
   };
@@ -106,9 +91,11 @@ export default class FilmListPresenter {
   };
 
   #renderFilmsList = () => {
-    this.#renderFilms(0, Math.min(this.#listFilms.length, FILMS_COUNT_PER_STEP));
+    const filmsCount = this.films.length;
+    const films = this.films.slice(0, Math.min(filmsCount, FILMS_COUNT_PER_STEP));
+    this.#renderFilms(films);
 
-    if (this.#listFilms.length > FILMS_COUNT_PER_STEP) {
+    if (filmsCount > FILMS_COUNT_PER_STEP) {
       this.#renderShowMoreButton();
     }
   };
@@ -119,15 +106,19 @@ export default class FilmListPresenter {
     this.#filmPresenter.set(film.id, filmPresenter);
   };
 
-  #renderFilms = (from, to) => {
-    this.#listFilms.slice(from, to).forEach((boardFilm) => this.#renderFilm(boardFilm));
+  #renderFilms = (films) => {
+    films.forEach((film) => this.#renderFilm(film));
   };
 
   #handleShowMoreButtonClick = () => {
-    this.#listFilms.slice(this.#renderedFilmsCount, this.#renderedFilmsCount + FILMS_COUNT_PER_STEP).forEach((film) => this.#renderFilm(film));
-    this.#renderedFilmsCount += FILMS_COUNT_PER_STEP;
+    const filmsCount = this.films.length;
+    const newRenderedFilmsCount = Math.min(filmsCount, this.#renderedFilmsCount + FILMS_COUNT_PER_STEP);
+    const films = this.films.slice(this.#renderedFilmsCount, newRenderedFilmsCount);
 
-    if (this.#renderedFilmsCount >= this.#listFilms.length) {
+    this.#renderFilms(films);
+    this.#renderedFilmsCount = newRenderedFilmsCount;
+
+    if (this.#renderedFilmsCount >= filmsCount) {
       remove(this.#showMoreButtonComponent);
     }
   };
@@ -139,7 +130,7 @@ export default class FilmListPresenter {
   };
 
   #renderFilmsBoard = () => {
-    if (this.#listFilms.length === 0) {
+    if (this.films.length === 0) {
       this.#renderNoFilm();
     } else {
       this.#renderProfile();
@@ -154,6 +145,6 @@ export default class FilmListPresenter {
 
   #renderFooter = () => {
     const footerStatistics = document.querySelector('.footer__statistics');
-    render(footerStatistics, new FooterView(this.#listFilms), RenderPosition.BEFOREEND);
+    render(footerStatistics, new FooterView(this.films), RenderPosition.BEFOREEND);
   };
 }
