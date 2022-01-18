@@ -13,8 +13,10 @@ import FooterView from '../view/footer-stats-view.js';
 import FilmPresenter from './film-presenter.js';
 import CommentsModel from '../model/comments-model.js';
 
+//Исправить поведение попапа - попап не должен скрываться при изменении фильтров
+
 const FILMS_COUNT_PER_STEP = 5;
-//patch - добавление/удаелние комментариев
+//patch - добавление/удаление комментариев
 //minor - добавление/удаление фильма в избранное и др.
 //major - переключение фильтров
 
@@ -153,23 +155,6 @@ export default class FilmListPresenter {
     this.#showMoreButtonComponent.setClickHandler(this.#handleShowMoreButtonClick);
 
     render(this.#filmsListComponent, this.#showMoreButtonComponent, RenderPosition.BEFOREEND);
-  };
-
-  #clearFilmsList = () => {
-    this.#filmPresenter.forEach((presenter) => presenter.destroy());
-    this.#filmPresenter.clear();
-    this.#renderedFilmsCount = FILMS_COUNT_PER_STEP;
-    remove(this.#showMoreButtonComponent);
-  };
-
-  #renderFilmsList = () => {
-    const filmsCount = this.films.length;
-    const films = this.films.slice(0, Math.min(filmsCount, this.#renderedFilmsCount));
-    this.#renderFilms(films);
-
-    if (filmsCount > FILMS_COUNT_PER_STEP) {
-      this.#renderShowMoreButton();
-    }
   };
 
   #clearFilmsBoard = ({ resetRenderedFilmsCount = false, resetSortType = false } = {}) => {
