@@ -139,13 +139,12 @@ export default class FilmPresenter {
     switch (actionType) {
       case UserAction.ADD_COMMENT:
         this.#commentsModel.addComment(updateType, update);
-        console.log(this.commentsModel);
+        console.log(this.comments);
         break;
       case UserAction.DELETE_COMMENT:
         this.#commentsModel.deleteComment(updateType, update);
         break;
     }
-    console.log(this.comments);
   };
 
   #handleCommentPost = (emoji, comment) => {

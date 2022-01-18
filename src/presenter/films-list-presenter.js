@@ -62,7 +62,7 @@ export default class FilmListPresenter {
 
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
-      case UserAction.UPDATE_TASK:
+      case UserAction.UPDATE_FILM:
         this.#filmsModel.updateFilm(updateType, update);
         break;
     }
