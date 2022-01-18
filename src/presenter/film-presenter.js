@@ -18,6 +18,8 @@ export default class FilmPresenter {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
     this.#commentsModel = commentsModel;
+
+    this.#commentsModel.addObserver(this.#handleModelEvent);
   }
 
   init = (film) => {
@@ -135,7 +137,7 @@ export default class FilmPresenter {
     });
   };
 
-  #handleCommentChange = (actionType, updateType, update) => {
+  #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.ADD_COMMENT:
         this.#commentsModel.addComment(updateType, update);
@@ -147,8 +149,23 @@ export default class FilmPresenter {
     }
   };
 
+  #handleModelEvent = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+
+        break;
+      case UpdateType.MINOR:
+        // - обновить список (например, когда задача ушла в архив)
+        break;
+      case UpdateType.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+    }
+  };
+
   #handleCommentPost = (emoji, comment) => {
-    this.#handleCommentChange(UserAction.ADD_COMMENT, UpdateType.PATCH, {
+    this.#handleViewAction(UserAction.ADD_COMMENT, UpdateType.PATCH, {
       comment: {
         id: 0,
         author: 'Michael Jordan',
