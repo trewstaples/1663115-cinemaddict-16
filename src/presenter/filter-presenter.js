@@ -1,12 +1,13 @@
 import FilterView from '../view/filter-view.js';
 import { render, RenderPosition, replace, remove } from '../utils/render.js';
 import { filter } from '../utils/filter.js';
-import { FilterType, UpdateType } from '../utils/const.js';
+import { FilterType, UpdateType, MenuItem } from '../utils/const.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
   #filterModel = null;
   #filmsModel = null;
+  #handleMenuClick = null;
 
   #filterComponent = null;
 
@@ -46,12 +47,15 @@ export default class FilterPresenter {
     ];
   }
 
-  init = () => {
+  init = (handleMenuClick) => {
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
 
+    this.#handleMenuClick = handleMenuClick;
+
     this.#filterComponent = new FilterView(filters, this.#filterModel.filter);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
+    this.#filterComponent.setMenuClickHandler(this.#handleMenuClick);
 
     if (prevFilterComponent === null) {
       render(this.#filterContainer, this.#filterComponent, RenderPosition.BEFOREEND);
@@ -63,10 +67,11 @@ export default class FilterPresenter {
   };
 
   #handleModelEvent = () => {
-    this.init();
+    this.init(this.#handleMenuClick);
   };
 
   #handleFilterTypeChange = (filterType) => {
+    console.log(0);
     if (this.#filterModel.filter === filterType) {
       return;
     }

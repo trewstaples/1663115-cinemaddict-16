@@ -2,6 +2,7 @@ import { render, remove, RenderPosition } from '../utils/render.js';
 import { sortFilmsByDate, sortFilmsByRating } from '../utils/films.js';
 import { UserAction, UpdateType } from '../utils/const.js';
 import { SortType } from '../view/sort-view.js';
+import { filter } from '../utils/filter.js';
 import NoFilmView from '../view/no-film.js';
 import SortView from '../view/sort-view.js';
 import FilmsView from '../view/films-view.js';
@@ -22,6 +23,7 @@ export default class FilmsBoardPresenter {
   #mainContainer = null;
   #headerContainer = null;
   #filmsModel = null;
+  #filterModel = null;
 
   #noFilmComponent = new NoFilmView();
   #filmsComponent = new FilmsView();
@@ -34,21 +36,27 @@ export default class FilmsBoardPresenter {
   #filmPresenter = new Map();
   #currentSortType = SortType.DEFAULT;
 
-  constructor(mainContainer, filmsModel) {
+  constructor(mainContainer, filmsModel, filterModel) {
     this.#mainContainer = mainContainer;
     this.#filmsModel = filmsModel;
+    this.#filterModel = filterModel;
 
     this.#filmsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get films() {
+    const filterType = this.#filterModel.filter;
+    const films = this.#filmsModel.films;
+    const filteredFilms = filter[filterType](films);
+
     switch (this.#currentSortType) {
       case SortType.BY_DATE:
-        return [...this.#filmsModel.films].sort(sortFilmsByDate);
+        return filteredFilms.sort(sortFilmsByDate);
       case SortType.BY_RATING:
-        return [...this.#filmsModel.films].sort(sortFilmsByRating);
+        return filteredFilms.sort(sortFilmsByRating);
     }
-    return this.#filmsModel.films;
+    return filteredFilms;
   }
 
   init = () => {
@@ -79,7 +87,7 @@ export default class FilmsBoardPresenter {
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить часть списка (например, когда добавился коммент)
-        // this.#filmPresenter.get(data.id).init(data);
+        this.#filmPresenter.get(data.id).init(data);
         console.log(0);
         break;
       case UpdateType.MINOR:
