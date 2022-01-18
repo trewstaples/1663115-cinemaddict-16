@@ -141,25 +141,9 @@ export default class FilmPresenter {
     switch (actionType) {
       case UserAction.ADD_COMMENT:
         this.#commentsModel.addComment(updateType, update);
-        console.log(this.comments);
         break;
       case UserAction.DELETE_COMMENT:
         this.#commentsModel.deleteComment(updateType, update);
-        break;
-    }
-  };
-
-  #handleModelEvent = (updateType, data) => {
-    switch (updateType) {
-      case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
-
-        break;
-      case UpdateType.MINOR:
-        // - обновить список (например, когда задача ушла в архив)
-        break;
-      case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
         break;
     }
   };
@@ -174,5 +158,21 @@ export default class FilmPresenter {
         emotion: emoji,
       },
     });
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    this.#changeData(updateType, data);
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+
+        break;
+      case UpdateType.MINOR:
+        // - обновить список (например, когда задача ушла в архив)
+        break;
+      case UpdateType.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+    }
   };
 }
