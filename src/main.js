@@ -1,7 +1,9 @@
+import { render, RenderPosition } from './utils/render.js';
 import { generateFilm } from './mock/film.js';
-import { generateFilter } from './mock/filters.js';
-import FilmListPresenter from './presenter/films-list-presenter.js';
+import ProfileView from './view/profile-view.js';
+import FilmsBoardPresenter from './presenter/films-list-presenter.js';
 import FilmsModel from './model/films-model.js';
+import FilterView from './view/filter-view.js';
 import FilterModel from './model/filter-model.js';
 
 const FILMS_COUNT = 15;
@@ -14,7 +16,13 @@ const renderCards = () => {
   return array;
 };
 const films = renderCards();
-const filters = generateFilter(films);
+const filters = [
+  {
+    type: 'all',
+    name: 'All movies',
+    count: '',
+  },
+];
 
 const filmsModel = new FilmsModel();
 filmsModel.films = films;
@@ -24,5 +32,9 @@ const filterModel = new FilterModel();
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 
-const filmListPresenter = new FilmListPresenter(siteMainElement, siteHeaderElement, filmsModel);
-filmListPresenter.init(filters);
+const filmListPresenter = new FilmsBoardPresenter(siteMainElement, filmsModel);
+
+render(siteHeaderElement, new ProfileView(), RenderPosition.BEFOREEND);
+render(siteMainElement, new FilterView(filters), RenderPosition.BEFOREEND);
+
+filmListPresenter.init();

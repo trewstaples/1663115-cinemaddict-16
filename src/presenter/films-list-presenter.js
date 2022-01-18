@@ -3,8 +3,6 @@ import { sortFilmsByDate, sortFilmsByRating } from '../utils/films.js';
 import { UserAction, UpdateType } from '../utils/const.js';
 import { SortType } from '../view/sort-view.js';
 import NoFilmView from '../view/no-film.js';
-import ProfileView from '../view/profile-view.js';
-import FilterView from '../view/filter-view.js';
 import SortView from '../view/sort-view.js';
 import FilmsView from '../view/films-view.js';
 import FilmsListView from '../view/films-list-view.js';
@@ -20,13 +18,12 @@ const FILMS_COUNT_PER_STEP = 5;
 //minor - добавление/удаление фильма в избранное и др.
 //major - переключение фильтров
 
-export default class FilmListPresenter {
+export default class FilmsBoardPresenter {
   #mainContainer = null;
   #headerContainer = null;
   #filmsModel = null;
 
   #noFilmComponent = new NoFilmView();
-  #profileComponent = new ProfileView();
   #filmsComponent = new FilmsView();
   #filmsListComponent = new FilmsListView();
   #footerComponent = new FooterView();
@@ -34,13 +31,11 @@ export default class FilmListPresenter {
   #showMoreButtonComponent = null;
 
   #renderedFilmsCount = FILMS_COUNT_PER_STEP;
-  #filters = [];
   #filmPresenter = new Map();
   #currentSortType = SortType.DEFAULT;
 
-  constructor(mainContainer, headerContainer, filmsModel) {
+  constructor(mainContainer, filmsModel) {
     this.#mainContainer = mainContainer;
-    this.#headerContainer = headerContainer;
     this.#filmsModel = filmsModel;
 
     this.#filmsModel.addObserver(this.#handleModelEvent);
@@ -56,10 +51,7 @@ export default class FilmListPresenter {
     return this.#filmsModel.films;
   }
 
-  init = (filters) => {
-    this.#filters = [...filters];
-
-    render(this.#mainContainer, new FilterView(filters), RenderPosition.BEFOREEND);
+  init = () => {
     render(this.#mainContainer, this.#filmsComponent, RenderPosition.BEFOREEND);
 
     this.#renderFilmsBoard();
@@ -109,10 +101,6 @@ export default class FilmListPresenter {
     this.#currentSortType = sortType;
     this.#clearFilmsBoard({ resetRenderedFilmsCount: true });
     this.#renderFilmsBoard();
-  };
-
-  #renderProfile = () => {
-    render(this.#headerContainer, this.#profileComponent, RenderPosition.BEFOREEND);
   };
 
   #renderSort = () => {
@@ -190,7 +178,6 @@ export default class FilmListPresenter {
       return;
     }
 
-    this.#renderProfile();
     this.#renderSort();
     render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
 
