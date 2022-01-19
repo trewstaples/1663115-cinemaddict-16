@@ -3,7 +3,9 @@ import { FilterType } from '../utils/const.js';
 
 const createFilterItemTemplate = (filter, currentFilterType) => {
   const { type, name, count } = filter;
-  return `<a href="#${type}" class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}"> ${name} ${type === 'all' ? '' : `<span class="main-navigation__item-count">${count}</span>`} </a>`;
+  return `<a href="#${type}" class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}" data-filter="${type}"> ${name} ${
+    type === 'all' ? '' : `<span data-filter="${type}" class="main-navigation__item-count">${count}</span>`
+  } </a>`;
 };
 
 const renderFilterTemplate = (filters, currentFilterType) => {
@@ -32,12 +34,11 @@ export default class FilterView extends AbstractView {
 
   setFilterTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
-    this.element.querySelector('.main-navigation__items').addEventListener('change', this.#filterTypeChangeHandler);
+    this.element.querySelector('.main-navigation__items').addEventListener('click', this.#filterTypeChangeHandler);
   };
 
   #filterTypeChangeHandler = (evt) => {
     evt.preventDefault();
-    console.log(0);
-    this._callback.filterTypeChange(evt.target.value);
+    this._callback.filterTypeChange(evt.target.dataset.filter);
   };
 }
