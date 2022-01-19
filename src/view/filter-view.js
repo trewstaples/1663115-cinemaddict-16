@@ -1,9 +1,9 @@
 import AbstractView from './abstract-view.js';
-import { FilterType, MenuItem } from '../utils/const.js';
+import { FilterType } from '../utils/const.js';
 
 const createFilterItemTemplate = (filter, currentFilterType) => {
   const { type, name, count } = filter;
-  return `<a href="#${name}" class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}">${name} ${type === 'all' ? '' : `<span class="main-navigation__item-count">${count}</span>`} </a>`;
+  return `<a href="#${type}" class="main-navigation__item ${type === currentFilterType ? 'main-navigation__item--active' : ''}"> ${name} ${type === 'all' ? '' : `<span class="main-navigation__item-count">${count}</span>`} </a>`;
 };
 
 const renderFilterTemplate = (filters, currentFilterType) => {
@@ -19,33 +19,16 @@ const renderFilterTemplate = (filters, currentFilterType) => {
 export default class FilterView extends AbstractView {
   #filters = null;
   #currentFilter = null;
-  #menuItem = null;
 
-  constructor(filters, currentFilterType, menuItem) {
+  constructor(filters, currentFilterType) {
     super();
     this.#filters = filters;
     this.#currentFilter = currentFilterType;
-    this.#menuItem = menuItem;
   }
 
   get template() {
     return renderFilterTemplate(this.#filters, this.#currentFilter);
   }
-
-  setMenuClickHandler = (callback) => {
-    this._callback.menuClick = callback;
-    this.element.addEventListener('click', this.#menuClickHandler);
-  };
-
-  #menuClickHandler = (evt) => {
-    evt.preventDefault();
-
-    if (evt.target.classList.contains('main-navigation__additional')) {
-      this._callback.menuClick(MenuItem.STATS);
-    } else if (evt.target.dataset.filter) {
-      this._callback.menuClick(MenuItem.FILMS);
-    }
-  };
 
   setFilterTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
