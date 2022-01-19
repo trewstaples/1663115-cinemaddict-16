@@ -13,6 +13,7 @@ import FilmPresenter from './film-presenter.js';
 import CommentsModel from '../model/comments-model.js';
 
 //Исправить поведение попапа - попап не должен скрываться при изменении фильтров
+//В поисковике ссылка всё время идёт на watchlist после # или вообще пропадает
 
 const FILMS_COUNT_PER_STEP = 5;
 //patch - добавление/удаление комментариев
@@ -88,7 +89,6 @@ export default class FilmsBoardPresenter {
       case UpdateType.PATCH:
         // - обновить часть списка (например, когда добавился коммент)
         this.#filmPresenter.get(data.id).init(data);
-        console.log(0);
         break;
       case UpdateType.MINOR:
         this.#clearFilmsBoard();

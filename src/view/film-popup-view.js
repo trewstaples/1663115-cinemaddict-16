@@ -169,9 +169,9 @@ export default class FilmPopupView extends SmartView {
   restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setCloseClickHandler(this._callback.closeClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
-    this.setWatchedClickHandler(this._callback.watchedClick);
     this.setWatchlistClickHandler(this._callback.watchlistClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
   };
 
   #setInnerHandlers = () => {
@@ -208,8 +208,6 @@ export default class FilmPopupView extends SmartView {
   #commentPostHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.code === EvtKey.ENTER) {
       evt.preventDefault();
-      console.log(evt.target);
-      console.log(this.emoji);
       const commentText = evt.target.textContent;
       this._callback.postComment(this.emoji, commentText);
     }
@@ -226,14 +224,14 @@ export default class FilmPopupView extends SmartView {
     this._callback.closeClick();
   };
 
-  setFavoriteClickHandler = (callback) => {
-    this._callback.favoriteClick = callback;
-    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favoriteClickHandler);
+  setWatchlistClickHandler = (callback) => {
+    this._callback.watchlistClick = callback;
+    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#watchlistClickHandler);
   };
 
-  #favoriteClickHandler = (evt) => {
+  #watchlistClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.favoriteClick();
+    this._callback.watchlistClick();
   };
 
   setWatchedClickHandler = (callback) => {
@@ -246,14 +244,14 @@ export default class FilmPopupView extends SmartView {
     this._callback.watchedClick();
   };
 
-  setWatchlistClickHandler = (callback) => {
-    this._callback.watchlistClick = callback;
-    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#watchlistClickHandler);
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favoriteClickHandler);
   };
 
-  #watchlistClickHandler = (evt) => {
+  #favoriteClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.watchlistClick();
+    this._callback.favoriteClick();
   };
 
   static parseFilmToData = (film) => ({ ...film, isEmoji: '', isMessage: '', isEmojiChecked: '' });

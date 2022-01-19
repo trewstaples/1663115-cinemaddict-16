@@ -29,7 +29,7 @@ export default class FilmPresenter {
     const prevFilmPopupComponent = this.#filmPopupComponent;
 
     this.#filmCardComponent = new FilmCardView(film);
-    this.#filmPopupComponent = new FilmPopupView(film, this.#changeData);
+    this.#filmPopupComponent = new FilmPopupView(film);
 
     this.#filmCardComponent.setEditClickHandler(this.#replaceCardToPopup);
     this.#filmPopupComponent.setCloseClickHandler(() => {
@@ -38,12 +38,12 @@ export default class FilmPresenter {
       document.removeEventListener('keydown', this.#onEscKeyDown);
     });
 
-    this.#filmCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#filmCardComponent.setWatchedClickHandler(this.#handleAlreadyWatchedClick);
     this.#filmCardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
-    this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#filmPopupComponent.setWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#filmCardComponent.setWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#filmCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
+    this.#filmPopupComponent.setWatchedClickHandler(this.#handleAlreadyWatchedClick);
+    this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#filmPopupComponent.setCommentPostHandler(this.#handleCommentPost);
 
     if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
@@ -101,14 +101,14 @@ export default class FilmPresenter {
     document.body.classList.add('hide-overflow');
   };
 
-  #handleFavoriteClick = () => {
+  #handleWatchlistClick = () => {
     this.#changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, {
       ...this.#film,
       userDetails: {
-        watchlist: this.#film.userDetails.watchlist,
+        watchlist: !this.#film.userDetails.watchlist,
         alreadyWatched: this.#film.userDetails.alreadyWatched,
         watchingDate: this.#film.userDetails.watchingDate,
-        favorite: !this.#film.userDetails.favorite,
+        favorite: this.#film.userDetails.favorite,
       },
     });
   };
@@ -125,14 +125,14 @@ export default class FilmPresenter {
     });
   };
 
-  #handleWatchlistClick = () => {
+  #handleFavoriteClick = () => {
     this.#changeData(UserAction.UPDATE_FILM, UpdateType.MINOR, {
       ...this.#film,
       userDetails: {
-        watchlist: !this.#film.userDetails.watchlist,
+        watchlist: this.#film.userDetails.watchlist,
         alreadyWatched: this.#film.userDetails.alreadyWatched,
         watchingDate: this.#film.userDetails.watchingDate,
-        favorite: this.#film.userDetails.favorite,
+        favorite: !this.#film.userDetails.favorite,
       },
     });
   };
