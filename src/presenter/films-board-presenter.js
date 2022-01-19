@@ -10,7 +10,6 @@ import FilmsListView from '../view/films-list-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FooterView from '../view/footer-stats-view.js';
 import FilmPresenter from './film-presenter.js';
-import CommentsModel from '../model/comments-model.js';
 
 //Исправить поведение попапа - попап не должен скрываться при изменении фильтров
 //В поисковике ссылка всё время идёт на watchlist после # или вообще пропадает
@@ -75,11 +74,11 @@ export default class FilmsBoardPresenter {
       case UserAction.UPDATE_FILM:
         this.#filmsModel.updateFilm(updateType, update);
         break;
-      case UserAction.ADD_FILM:
-        this.#filmsModel.addFilm(updateType, update);
+      case UserAction.ADD_COMMENT:
+        this.#filmsModel.updateFilm(updateType, update);
         break;
-      case UserAction.DELETE_TASK:
-        this.#filmsModel.deleteFilm(updateType, update);
+      case UserAction.DELETE_COMMENT:
+        this.#filmsModel.updateFilm(updateType, update);
         break;
     }
   };
@@ -87,7 +86,6 @@ export default class FilmsBoardPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда добавился коммент)
         this.#filmPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
@@ -118,9 +116,8 @@ export default class FilmsBoardPresenter {
   };
 
   #renderFilm = (film) => {
-    const commentsModel = new CommentsModel();
-    commentsModel.comments = film.comments;
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, commentsModel);
+    const filmComments = film.comments;
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, filmComments);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };

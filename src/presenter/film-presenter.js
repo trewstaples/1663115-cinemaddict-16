@@ -3,6 +3,7 @@ import FilmPopupView from '../view/film-popup-view.js';
 import { EvtKey, UserAction, UpdateType } from '../utils/const.js';
 import { render, replace, remove, renderCard, RenderPosition } from '../utils/render.js';
 import AbstractView from '../view/abstract-view.js';
+import CommentsModel from '../model/comments-model.js';
 
 export default class FilmPresenter {
   #filmsListComponent = null;
@@ -14,10 +15,12 @@ export default class FilmPresenter {
   #film = null;
   #commentsModel = null;
 
-  constructor(filmListComponent, changeData, commentsModel) {
+  constructor(filmListComponent, changeData, comments) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
-    this.#commentsModel = commentsModel;
+    this.#commentsModel = new CommentsModel();
+
+    this.#commentsModel.comments = comments;
 
     this.#commentsModel.addObserver(this.#handleModelEvent);
   }
@@ -29,7 +32,7 @@ export default class FilmPresenter {
     const prevFilmPopupComponent = this.#filmPopupComponent;
 
     this.#filmCardComponent = new FilmCardView(film);
-    this.#filmPopupComponent = new FilmPopupView(film);
+    this.#filmPopupComponent = new FilmPopupView(film, this.#commentsModel.comments, this.#handleViewAction);
 
     this.#filmCardComponent.setEditClickHandler(this.#replaceCardToPopup);
     this.#filmPopupComponent.setCloseClickHandler(() => {
@@ -137,18 +140,30 @@ export default class FilmPresenter {
     });
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = (actionType, update) => {
     switch (actionType) {
       case UserAction.ADD_COMMENT:
-        this.#commentsModel.addComment(updateType, update);
+        this.#commentsModel.addComment(actionType, update);
         break;
       case UserAction.DELETE_COMMENT:
-        this.#commentsModel.deleteComment(updateType, update);
+        this.#commentsModel.deleteComment(actionType, update);
+        break;
+    }
+  };
+
+  #handleModelEvent = (actionType, data) => {
+    switch (actionType) {
+      case UserAction.ADD_COMMENT:
+        this.#changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.concat([data.id]) });
+        break;
+      case UserAction.DELETE_COMMENT:
+        this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment !== data) });
         break;
     }
   };
 
   #handleCommentPost = (emoji, comment) => {
+    console.log(emoji);
     this.#handleViewAction(UserAction.ADD_COMMENT, UpdateType.PATCH, {
       comment: {
         id: 0,
@@ -158,21 +173,5 @@ export default class FilmPresenter {
         emotion: emoji,
       },
     });
-  };
-
-  #handleModelEvent = (updateType, data) => {
-    this.#changeData(updateType, data);
-    switch (updateType) {
-      case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
-
-        break;
-      case UpdateType.MINOR:
-        // - обновить список (например, когда задача ушла в архив)
-        break;
-      case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
-        break;
-    }
   };
 }

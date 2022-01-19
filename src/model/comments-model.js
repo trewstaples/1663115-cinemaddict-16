@@ -21,7 +21,7 @@ export default class CommentsModel extends AbstractObservable {
     const index = this.#comments.findIndex((task) => task.id === update.id);
 
     if (index === -1) {
-      throw new Error('Cannot delete unexisting film');
+      throw new Error('Cannot delete unexisting comment');
     }
 
     this.#comments = [...this.#comments.slice(0, index), ...this.#comments.slice(index + 1)];

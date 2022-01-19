@@ -25,7 +25,7 @@ const renderFilmPopupTemplate = (data) => {
 
   const formatCommentDate = (commentDate) => dayjs(commentDate).format(StringFormats.COMMENT_DATE);
 
-  const createCommentTemplate = (comment) => ` <li class="film-details__comment">
+  const createCommentTemplate = (comment) => `<li class="film-details__comment">
   <span class="film-details__comment-emoji">
     <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-smile">
   </span>
@@ -149,11 +149,14 @@ const renderFilmPopupTemplate = (data) => {
 export default class FilmPopupView extends SmartView {
   #film = null;
   #emoji = null;
-  #changeData = null;
+  #filmComments = [];
+  #changeCommentData = null;
 
-  constructor(film) {
+  constructor(film, filmComments, changeCommentData) {
     super();
     this._data = FilmPopupView.parseFilmToData(film);
+    this.#filmComments = [...filmComments];
+    this.#changeCommentData = changeCommentData;
 
     this.#setInnerHandlers();
   }
@@ -187,7 +190,7 @@ export default class FilmPopupView extends SmartView {
       isEmoji: `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`,
       isEmojiChecked: evt.target.id,
     });
-    this.emoji = evt.target.id;
+    this.emoji = evt.target.value;
   };
 
   #commentInputHandler = (evt) => {
