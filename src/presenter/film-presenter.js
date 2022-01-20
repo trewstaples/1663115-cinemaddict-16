@@ -18,10 +18,9 @@ export default class FilmPresenter {
   constructor(filmListComponent, changeData, comments) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
+
     this.#commentsModel = new CommentsModel();
-
     this.#commentsModel.comments = comments;
-
     this.#commentsModel.addObserver(this.#handleModelEvent);
   }
 
@@ -31,7 +30,7 @@ export default class FilmPresenter {
     const prevFilmCardComponent = this.#filmCardComponent;
     const prevFilmPopupComponent = this.#filmPopupComponent;
 
-    this.#filmCardComponent = new FilmCardView(film);
+    this.#filmCardComponent = new FilmCardView(film, this.#commentsModel.comments);
     this.#filmPopupComponent = new FilmPopupView(film, this.#commentsModel.comments, this.#handleViewAction);
 
     this.#filmCardComponent.setEditClickHandler(this.#replaceCardToPopup);
@@ -59,7 +58,10 @@ export default class FilmPresenter {
     }
     if (document.body.contains(prevFilmPopupComponent.element)) {
       const scrollPosition = prevFilmPopupComponent.element.scrollTop;
+
       replace(this.#filmPopupComponent, prevFilmPopupComponent);
+      this.#filmPopupComponent.renderCommentInfo();
+
       this.#filmPopupComponent.element.scrollTop = scrollPosition;
     }
 
@@ -101,6 +103,7 @@ export default class FilmPresenter {
     this.#removePrevPopup();
     const popup = this.#filmPopupComponent instanceof AbstractView ? this.#filmPopupComponent.element : this.#filmPopupComponent;
     document.body.appendChild(popup);
+    this.#filmPopupComponent.renderCommentInfo();
     document.body.classList.add('hide-overflow');
   };
 
@@ -163,7 +166,6 @@ export default class FilmPresenter {
   };
 
   #handleCommentPost = (emoji, comment) => {
-    console.log(emoji);
     this.#handleViewAction(UserAction.ADD_COMMENT, UpdateType.PATCH, {
       comment: {
         id: 0,

@@ -2,15 +2,7 @@ import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { EMOTIONS, Runtime } from '../utils/const';
 
-const TITLES = [
-  'Made for Each Other',
-  'Popeye the Sailor meets Sinbad the Sailor',
-  'Sagebrush Trail',
-  'Santa Claus Conquers the Martians',
-  'The Dance of Life',
-  'The Great Flamarion',
-  'The Man with the Golden Arm',
-];
+const TITLES = ['Made for Each Other', 'Popeye the Sailor meets Sinbad the Sailor', 'Sagebrush Trail', 'Santa Claus Conquers the Martians', 'The Dance of Life', 'The Great Flamarion', 'The Man with the Golden Arm'];
 
 const Posters = {
   'made-for-each-other': 'png',
@@ -37,13 +29,7 @@ const Film = {
 
 export const Comments = {
   AUTHORS: ['Alexander Sushko', 'Igor Antonov', 'Evgeniy Lepeshkin', 'Igor Alekseenko', 'Lera Zelenaya'],
-  MESSAGES: [
-    'Interesting setting and a good cast',
-    'Booooooooooring',
-    'Very very old. Meh',
-    'Almost two hours? Seriously?',
-    'A film that changed my life, a true masterpiece, post-credit scene was just amazing omg.',
-  ],
+  MESSAGES: ['Interesting setting and a good cast', 'Booooooooooring', 'Very very old. Meh', 'Almost two hours? Seriously?', 'A film that changed my life, a true masterpiece, post-credit scene was just amazing omg.'],
   MAX: 5,
 };
 
@@ -100,7 +86,7 @@ const generateOneComment = (id) => ({
   id,
   author: getRandomElement(Comments.AUTHORS),
   date: getRandomDate(),
-  comment: getRandomElement(Comments.MESSAGES),
+  text: getRandomElement(Comments.MESSAGES),
   emotion: getRandomElement(EMOTIONS),
 });
 

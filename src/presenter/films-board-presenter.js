@@ -65,10 +65,6 @@ export default class FilmsBoardPresenter {
     this.#renderFilmsBoard();
   };
 
-  #handleFilmChange = (updatedFilm) => {
-    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
-  };
-
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
@@ -86,7 +82,9 @@ export default class FilmsBoardPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
+        console.log(data);
         this.#filmPresenter.get(data.id).init(data);
+        // this.#updateFilm(data);
         break;
       case UpdateType.MINOR:
         this.#clearFilmsBoard();

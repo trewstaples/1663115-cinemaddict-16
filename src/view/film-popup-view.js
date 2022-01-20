@@ -1,11 +1,14 @@
 import { EvtKey, EMOTIONS, Runtime, StringFormats } from '../utils/const.js';
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
+import { UserAction } from '../utils/const.js';
+import { render, RenderPosition } from '../utils/render.js';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration.js';
 import SmartView from './smart-view.js';
+import CommentView from './comments-view.js';
 
-const renderFilmPopupTemplate = (data) => {
-  const { comments, info, userDetails, isEmoji, isMessage, isEmojiChecked } = data;
+const renderFilmPopupTemplate = (data, comments) => {
+  const { info, userDetails, isEmoji, isMessage, isEmojiChecked } = data;
 
   const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
   const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
@@ -23,23 +26,7 @@ const renderFilmPopupTemplate = (data) => {
 
   const formatReleaseDate = (releaseDate) => dayjs(releaseDate).format(StringFormats.RELEASE_DATE);
 
-  const formatCommentDate = (commentDate) => dayjs(commentDate).format(StringFormats.COMMENT_DATE);
-
-  const createCommentTemplate = (comment) => `<li class="film-details__comment">
-  <span class="film-details__comment-emoji">
-    <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-smile">
-  </span>
-  <div>
-    <p class="film-details__comment-text">${comment.comment}</p>
-    <p class="film-details__comment-info">
-      <span class="film-details__comment-author">${comment.author}</span>
-      <span class="film-details__comment-day">${formatCommentDate(comment.date)}</span>
-      <button class="film-details__comment-delete">Delete</button>
-    </p>
-  </div>
-</li>`;
-
-  const createEmojiTemplate = (emoji) => `<input class="film-details__emoji-item visually-hidden"
+  const renderEmojiItemTemplate = (emoji) => `<input class="film-details__emoji-item visually-hidden"
   name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${isEmojiChecked === `emoji-${emoji}` ? 'checked' : ''}>
 <label class="film-details__emoji-label" for="emoji-${emoji}">
   <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
@@ -124,7 +111,6 @@ const renderFilmPopupTemplate = (data) => {
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
         <ul class="film-details__comments-list">
-        ${createTemplateFromArray(comments, createCommentTemplate)}
         </ul>
 
         <div class="film-details__new-comment">
@@ -136,7 +122,7 @@ const renderFilmPopupTemplate = (data) => {
           </label>
 
           <div class="film-details__emoji-list">
-          ${createTemplateFromArray(EMOTIONS, createEmojiTemplate)}
+          ${createTemplateFromArray(EMOTIONS, renderEmojiItemTemplate)}
           </div>
         </div>
       </section>
@@ -148,8 +134,9 @@ const renderFilmPopupTemplate = (data) => {
 
 export default class FilmPopupView extends SmartView {
   #film = null;
-  #filmComments = [];
   #changeCommentData = null;
+  #container = null;
+  #filmComments = [];
   emoji = null;
   commentText = null;
 
@@ -163,8 +150,42 @@ export default class FilmPopupView extends SmartView {
   }
 
   get template() {
-    return renderFilmPopupTemplate(this._data);
+    return renderFilmPopupTemplate(this._data, this.#filmComments);
   }
+
+  get container() {
+    this.#container = this.element.querySelector('.film-details__comments-list');
+
+    return this.#container;
+  }
+
+  renderCommentInfo = () => {
+    this.#renderComments();
+    // this.#renderAddComment();
+  };
+
+  #renderComments = () => {
+    for (const comment of this.#filmComments) {
+      const commentComponent = new CommentView(comment);
+      commentComponent.setDeleteClickHandler(this.#handleDeleteCommentClick);
+      render(this.container, commentComponent, RenderPosition.BEFOREEND);
+    }
+  };
+
+  #handleDeleteCommentClick = (update) => {
+    this.#changeCommentData(UserAction.DELETE_COMMENT, update);
+  };
+
+  /*
+  #renderAddComment = () => {
+    const addCommentComponent = new AddCommentView();
+    addCommentComponent.setFormKeydownHandler(this.#addCommentKeydownHandler);
+    render(this.container, addCommentComponent, RenderPosition.AFTEREND);
+  }; */
+
+  /*   #addCommentKeydownHandler = (update) => {
+    this.#changeCommentData(UserAction.ADD_COMMENT, update);
+  }; */
 
   reset = (film) => {
     this.updateData(FilmPopupView.parseFilmToData(film));

@@ -4,8 +4,8 @@ import AbstractView from './abstract-view.js';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration.js';
 
-const renderFilmTemplate = (film) => {
-  const { comments, info, userDetails } = film;
+const renderFilmTemplate = (film, comments) => {
+  const { info, userDetails } = film;
   const description = info.description.length > 140 ? info.description.slice(0, 139).concat('...') : info.description;
   const date = dayjs(info.release.date).format(StringFormats.RELEASE_YEAR);
 
@@ -49,14 +49,16 @@ const renderFilmTemplate = (film) => {
 export default class FilmCardView extends AbstractView {
   #films = null;
   #filmCardLink = null;
+  #filmComments = null;
 
-  constructor(films) {
+  constructor(films, comments) {
     super();
     this.#films = films;
+    this.#filmComments = comments;
   }
 
   get template() {
-    return renderFilmTemplate(this.#films);
+    return renderFilmTemplate(this.#films, this.#filmComments);
   }
 
   get filmCardLink() {
