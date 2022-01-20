@@ -148,9 +148,10 @@ const renderFilmPopupTemplate = (data) => {
 
 export default class FilmPopupView extends SmartView {
   #film = null;
-  #emoji = null;
   #filmComments = [];
   #changeCommentData = null;
+  emoji = null;
+  commentText = null;
 
   constructor(film, filmComments, changeCommentData) {
     super();
@@ -211,8 +212,8 @@ export default class FilmPopupView extends SmartView {
   #commentPostHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.code === EvtKey.ENTER) {
       evt.preventDefault();
-      const commentText = evt.target.textContent;
-      this._callback.postComment(this.emoji, commentText);
+      this.commentText = evt.target.value;
+      this._callback.postComment(this.emoji, this.commentText);
     }
   };
 
