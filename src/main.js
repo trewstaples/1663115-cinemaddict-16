@@ -1,6 +1,4 @@
-import { render, RenderPosition } from './utils/render.js';
 import { generateFilm } from './mock/film.js';
-import ProfileView from './view/profile-view.js';
 import FilmsBoardPresenter from './presenter/films-board-presenter.js';
 import FilmsModel from './model/films-model.js';
 import FilterModel from './model/filter-model.js';

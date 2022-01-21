@@ -14,7 +14,7 @@ export default class FilmPresenter {
   #filmsListComponent = null;
   #changeData = null;
   #removePrevPopup = null;
-  #currentFilterType = null;
+  #currentFilter = null;
   #changeWatchedFilms = null;
 
   #filmCardComponent = null;
@@ -24,11 +24,11 @@ export default class FilmPresenter {
   #commentsModel = null;
   #mode = null;
 
-  constructor(filmListComponent, changeData, comments, removePrevPopup, currentFilterType, changeWatchedFilms) {
+  constructor(filmListComponent, changeData, comments, removePrevPopup, currentFilter, changeWatchedFilms) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
     this.#removePrevPopup = removePrevPopup;
-    this.#currentFilterType = currentFilterType;
+    this.#currentFilter = currentFilter;
     this.#changeWatchedFilms = changeWatchedFilms;
 
     this.#mode = Mode.DEFAULT;
@@ -171,7 +171,7 @@ export default class FilmPresenter {
   };
 
   #handleWatchlistClick = () => {
-    this.#changeData(UserAction.UPDATE_FILM, this.#currentFilterType !== FilterType.WATCHLIST ? UpdateType.PATCH : UpdateType.MINOR, {
+    this.#changeData(UserAction.UPDATE_FILM, this.#currentFilter !== FilterType.WATCHLIST ? UpdateType.PATCH : UpdateType.MINOR, {
       ...this.#film,
       userDetails: {
         watchlist: !this.#film.userDetails.watchlist,
@@ -187,7 +187,7 @@ export default class FilmPresenter {
   };
 
   #handleWatchedClick = () => {
-    this.#changeData(UserAction.UPDATE_FILM, this.#currentFilterType !== FilterType.HISTORY ? UpdateType.PATCH : UpdateType.MINOR, {
+    this.#changeData(UserAction.UPDATE_FILM, this.#currentFilter !== FilterType.HISTORY ? UpdateType.PATCH : UpdateType.MINOR, {
       ...this.#film,
       userDetails: {
         watchlist: this.#film.userDetails.watchlist,
@@ -205,7 +205,7 @@ export default class FilmPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#changeData(UserAction.UPDATE_FILM, this.#currentFilterType !== FilterType.FAVORITES ? UpdateType.PATCH : UpdateType.MINOR, {
+    this.#changeData(UserAction.UPDATE_FILM, this.#currentFilter !== FilterType.FAVORITES ? UpdateType.PATCH : UpdateType.MINOR, {
       ...this.#film,
       userDetails: {
         watchlist: this.#film.userDetails.watchlist,

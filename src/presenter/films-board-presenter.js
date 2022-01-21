@@ -1,12 +1,12 @@
+import { UserAction, UpdateType, FilterType } from '../utils/const.js';
 import { render, replace, remove, RenderPosition } from '../utils/render.js';
 import { sortFilmsByDate, sortFilmsByRating } from '../utils/films.js';
-import { UserAction, UpdateType, FilterType } from '../utils/const.js';
 import { SortType } from '../view/sort-view.js';
 import { filter } from '../utils/filter.js';
-import NoFilmView from '../view/no-film.js';
 import SortView from '../view/sort-view.js';
 import FilmsView from '../view/films-view.js';
 import FilmsListView from '../view/films-list-view.js';
+import NoFilmView from '../view/no-film.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FooterView from '../view/footer-stats-view.js';
 import FilmPresenter from './film-presenter.js';
@@ -36,7 +36,7 @@ export default class FilmsBoardPresenter {
   #filmPresenter = new Map();
 
   #currentSortType = SortType.DEFAULT;
-  #currentfilterType = FilterType.ALL;
+  #currentFilterType = FilterType.ALL;
 
   constructor(profileContainer, mainContainer, filmsModel, filterModel) {
     this.#profileContainer = profileContainer;
@@ -49,9 +49,9 @@ export default class FilmsBoardPresenter {
   }
 
   get films() {
-    this.#currentfilterType = this.#filterModel.filter;
+    this.#currentFilterType = this.#filterModel.filter;
     const films = this.#filmsModel.films;
-    const filteredFilms = filter[this.#currentfilterType](films);
+    const filteredFilms = filter[this.#currentFilterType](films);
 
     switch (this.#currentSortType) {
       case SortType.BY_DATE:
@@ -135,7 +135,7 @@ export default class FilmsBoardPresenter {
 
   #renderFilm = (film) => {
     const filmComments = film.comments;
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, filmComments, this.#removePrevPopup, this.#currentfilterType, this.#renderProfile);
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, filmComments, this.#removePrevPopup, this.#currentFilterType, this.#renderProfile);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };
@@ -151,6 +151,7 @@ export default class FilmsBoardPresenter {
   };
 
   #renderNoFilm = () => {
+    this.#noFilmComponent = new NoFilmView(this.#currentFilterType);
     render(this.#filmsComponent, this.#noFilmComponent, RenderPosition.BEFOREEND);
   };
 
