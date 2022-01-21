@@ -47,8 +47,8 @@ export const MenuItem = {
 };
 
 export const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDIT: 'EDIT',
+  CARD: 'CARD',
+  POPUP: 'POPUP',
 };
 
 export const userRank = {

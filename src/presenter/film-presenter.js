@@ -29,7 +29,7 @@ export default class FilmPresenter {
     this.#currentFilter = currentFilter;
     this.#changeWatchedFilms = changeWatchedFilms;
 
-    this.#mode = Mode.DEFAULT;
+    this.#mode = Mode.CARD;
 
     this.#commentsModel = new CommentsModel();
     this.#commentsModel.comments = comments;
@@ -118,7 +118,7 @@ export default class FilmPresenter {
 
     this.#setPopupHandlers();
 
-    this.#mode = Mode.EDIT;
+    this.#mode = Mode.POPUP;
   };
 
   #setPopupHandlers = () => {
@@ -135,7 +135,7 @@ export default class FilmPresenter {
   #removePopup = () => {
     remove(this.#filmPopupComponent);
     document.body.classList.remove('hide-overflow');
-    this.#mode = Mode.DEFAULT;
+    this.#mode = Mode.CARD;
   };
 
   #handleViewAction = (actionType, update) => {
@@ -178,7 +178,7 @@ export default class FilmPresenter {
       },
     });
 
-    if (this.#mode === Mode.EDIT) {
+    if (this.#mode === Mode.POPUP) {
       this.#initPopup(this.#film);
     }
   };
@@ -194,7 +194,7 @@ export default class FilmPresenter {
       },
     });
 
-    if (this.#mode === Mode.EDIT) {
+    if (this.#mode === Mode.POPUP) {
       this.#initPopup(this.#film);
     }
 
@@ -212,7 +212,7 @@ export default class FilmPresenter {
       },
     });
 
-    if (this.#mode === Mode.EDIT) {
+    if (this.#mode === Mode.POPUP) {
       this.#initPopup(this.#film);
     }
   };
