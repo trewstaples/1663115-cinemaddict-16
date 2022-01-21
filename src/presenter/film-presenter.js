@@ -5,11 +5,9 @@ import FilmCardView from '../view/film-card-view.js';
 import FilmPopupView from '../view/film-popup-view.js';
 import CommentsModel from '../model/comments-model.js';
 
-//Отрегулировать changeWatchedData
-//Разобраться с AbstractView
-//Настроить удаление комментариев (не отображаются в карточке), добавление - отображается
 //Подумать, как объеденить метод initPopup в один
 //Чекнуть ошибку, которая вылетает в консоль при клике мимо фильтрации
+//Удалить лишние обработчики с document
 export default class FilmPresenter {
   #filmsListComponent = null;
   #changeData = null;
@@ -113,8 +111,8 @@ export default class FilmPresenter {
 
   #renderPopup = () => {
     document.addEventListener('keydown', this.#handleEscKeyDown);
-    //    const popup = this.#filmPopupComponent instanceof AbstractView ? this.#filmPopupComponent.element : this.#filmPopupComponent;
-    render(document.body, this.#filmPopupComponent, RenderPosition.BEFOREEND); //document.body.appendChild(popup);
+    const popup = this.#filmPopupComponent instanceof AbstractView ? this.#filmPopupComponent.element : this.#filmPopupComponent;
+    document.body.appendChild(popup);
     this.#filmPopupComponent.renderCommentInfo();
     document.body.classList.add('hide-overflow');
 
@@ -154,7 +152,7 @@ export default class FilmPresenter {
   #handleModelEvent = (actionType, data) => {
     switch (actionType) {
       case UserAction.ADD_COMMENT:
-        this.#changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.concat([data.id]) });
+        this.#changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.concat([data]) });
         break;
       case UserAction.DELETE_COMMENT:
         this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment.id !== data) });

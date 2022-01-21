@@ -12,9 +12,7 @@ import FooterView from '../view/footer-stats-view.js';
 import FilmPresenter from './film-presenter.js';
 import ProfileView from '../view/profile-view.js';
 
-//Исправить поведение попапа - попап не должен скрываться при изменении фильтров
 //В поисковике ссылка всё время идёт на watchlist после # или вообще пропадает
-//После рефакторинга убрать передачу комментариев во вью карточки
 
 const FILMS_COUNT_PER_STEP = 5;
 
@@ -152,36 +150,6 @@ export default class FilmsBoardPresenter {
         break;
     }
   };
-
-  /*   #handleViewAction = (actionType, updateType, update) => {
-    switch (actionType) {
-      case UserAction.UPDATE_FILM:
-        this.#filmsModel.updateFilm(updateType, update);
-        break;
-      case UserAction.ADD_COMMENT:
-        this.#filmsModel.updateFilm(updateType, update);
-        break;
-      case UserAction.DELETE_COMMENT:
-        this.#filmsModel.updateFilm(updateType, update);
-        break;
-    }
-  }
-
-  #handleModelEvent = (updateType, data) => {
-    switch (updateType) {
-      case UpdateType.PATCH:
-        this.#updateFilm(data);
-        break;
-      case UpdateType.MINOR:
-        this.#clearBoard();
-        this.#renderBoard();
-        break;
-      case UpdateType.MAJOR:
-        this.#clearBoard({resetRenderedFilmCount: true, resetSortType: true});
-        this.#renderBoard();
-        break;
-    }
-  } */
 
   #renderFilmsList = () => {
     render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
