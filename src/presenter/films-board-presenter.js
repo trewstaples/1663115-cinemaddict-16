@@ -12,8 +12,6 @@ import FooterView from '../view/footer-stats-view.js';
 import FilmPresenter from './film-presenter.js';
 import ProfileView from '../view/profile-view.js';
 
-//В поисковике ссылка всё время идёт на watchlist после # или вообще пропадает
-
 const FILMS_COUNT_PER_STEP = 5;
 
 export default class FilmsBoardPresenter {
@@ -107,15 +105,9 @@ export default class FilmsBoardPresenter {
 
   #renderFilm = (film) => {
     const filmComments = film.comments;
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#removePrevPopup, filmComments, this.#handleViewAction, this.#currentFilterType, this.#renderProfile);
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, filmComments, this.#handleViewAction, this.#currentFilterType, this.#renderProfile);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
-  };
-
-  #removePrevPopup = () => {
-    if (document.body.querySelector('.film-details')) {
-      document.body.querySelector('.film-details').remove();
-    }
   };
 
   #handleViewAction = (actionType, updateType, update) => {

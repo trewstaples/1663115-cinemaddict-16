@@ -5,13 +5,9 @@ import FilmCardView from '../view/film-card-view.js';
 import FilmPopupView from '../view/film-popup-view.js';
 import CommentsModel from '../model/comments-model.js';
 
-//Подумать, как объеденить метод initPopup в один
-//Чекнуть ошибку, которая вылетает в консоль при клике мимо фильтрации
-//Удалить лишние обработчики с document
 export default class FilmPresenter {
   #filmsListComponent = null;
   #changeData = null;
-  #removePrevPopup = null;
   #currentFilter = null;
   #changeWatchedFilms = null;
 
@@ -22,10 +18,9 @@ export default class FilmPresenter {
   #commentsModel = null;
   #mode = null;
 
-  constructor(filmListComponent, removePrevPopup, comments, changeData, currentFilter, changeWatchedFilms) {
+  constructor(filmListComponent, comments, changeData, currentFilter, changeWatchedFilms) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
-    this.#removePrevPopup = removePrevPopup;
     this.#currentFilter = currentFilter;
     this.#changeWatchedFilms = changeWatchedFilms;
 
@@ -136,6 +131,13 @@ export default class FilmPresenter {
     remove(this.#filmPopupComponent);
     document.body.classList.remove('hide-overflow');
     this.#mode = Mode.CARD;
+  };
+
+  #removePrevPopup = () => {
+    if (document.body.querySelector('.film-details')) {
+      document.body.querySelector('.film-details').remove();
+      document.removeEventListener('keydown', this.#handleEscKeyDown);
+    }
   };
 
   #handleViewAction = (actionType, update) => {
