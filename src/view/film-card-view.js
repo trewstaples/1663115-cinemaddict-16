@@ -1,28 +1,17 @@
-import { Runtime, StringFormats } from '../utils/const.js';
+import { StringFormats } from '../utils/const.js';
+import { formatRuntime } from '../utils/date.js';
 import { getClassName } from '../utils/films.js';
 import AbstractView from './abstract-view.js';
 import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration.js';
 
-const renderFilmTemplate = (film, comments) => {
-  const { info, userDetails } = film;
+const renderFilmTemplate = (film) => {
+  const { info, userDetails, comments } = film;
   const description = info.description.length > 140 ? info.description.slice(0, 139).concat('...') : info.description;
   const date = dayjs(info.release.date).format(StringFormats.RELEASE_YEAR);
 
   const watchlistClassName = getClassName(userDetails.watchlist, 'film-card__controls-item--active');
   const wactchedButtonClassName = getClassName(userDetails.alreadyWatched, 'film-card__controls-item--active');
   const favoriteClassName = getClassName(userDetails.favorite, 'film-card__controls-item--active');
-
-  const formatRuntime = (minutesDuration) => {
-    dayjs.extend(duration);
-    let formatString = StringFormats.RUNTIME_MINUTES;
-    if (minutesDuration >= Runtime.MINUTES_IN_HOUR) {
-      formatString = StringFormats.RUNTIME_HOURS;
-    }
-
-    const runtime = dayjs.duration(minutesDuration, 'm').format(formatString);
-    return runtime;
-  };
 
   return `<article class="film-card">
   <a class="film-card__link">
@@ -47,54 +36,46 @@ const renderFilmTemplate = (film, comments) => {
 };
 
 export default class FilmCardView extends AbstractView {
-  #films = null;
-  #filmCardLink = null;
-  #filmComments = null;
+  #film = null;
 
-  constructor(films, comments) {
+  constructor(film) {
     super();
-    this.#films = films;
-    this.#filmComments = comments;
+
+    this.#film = film;
   }
 
   get template() {
-    return renderFilmTemplate(this.#films, this.#filmComments);
-  }
-
-  get filmCardLink() {
-    this.#filmCardLink = this.element.querySelector('.film-card__link');
-
-    return this.#filmCardLink;
+    return renderFilmTemplate(this.#film);
   }
 
   setEditClickHandler = (callback) => {
     this._callback.editClick = callback;
-    this.filmCardLink.addEventListener('click', this.#editClickHandler);
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#editClickHandler);
   };
 
   #editClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.editClick();
+    this._callback.editClick(this.#film);
   };
 
   setWatchlistClickHandler = (callback) => {
-    this._callback.watchlist = callback;
+    this._callback.watchlistClick = callback;
     this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#watchlistClickHandler);
   };
 
   #watchlistClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.watchlist();
+    this._callback.watchlistClick();
   };
 
   setWatchedClickHandler = (callback) => {
-    this._callback.alreadyWatched = callback;
+    this._callback.watchedClick = callback;
     this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#watchedClickHandler);
   };
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.alreadyWatched();
+    this._callback.watchedClick();
   };
 
   setFavoriteClickHandler = (callback) => {

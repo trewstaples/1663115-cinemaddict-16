@@ -45,3 +45,8 @@ export const MenuItem = {
   FILMS: 'FILMS',
   STATS: 'STATS',
 };
+
+export const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDIT: 'EDIT',
+};

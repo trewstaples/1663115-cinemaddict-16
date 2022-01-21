@@ -1,6 +1,6 @@
 import { UserAction } from '../utils/const.js';
-import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import { render, RenderPosition } from '../utils/render.js';
+import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import { formatRuntime, formatReleaseDate } from '../utils/date.js';
 import SmartView from './smart-view.js';
 import CommentView from './comments-view.js';

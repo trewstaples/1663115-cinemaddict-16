@@ -1,23 +1,32 @@
-import FilmCardView from '../view/film-card-view.js';
-import FilmPopupView from '../view/film-popup-view.js';
-import { KeyboardKeys, UserAction, UpdateType } from '../utils/const.js';
+import { KeyboardKeys, UserAction, UpdateType, Mode } from '../utils/const.js';
 import { render, replace, remove, renderCard, RenderPosition } from '../utils/render.js';
 import AbstractView from '../view/abstract-view.js';
+import FilmCardView from '../view/film-card-view.js';
+import FilmPopupView from '../view/film-popup-view.js';
 import CommentsModel from '../model/comments-model.js';
 
 export default class FilmPresenter {
   #filmsListComponent = null;
   #changeData = null;
+  #removePopup = null;
+  #filterType = null;
+  #changeWatchedData = null;
 
   #filmCardComponent = null;
   #filmPopupComponent = null;
 
   #film = null;
   #commentsModel = null;
+  #mode = null;
 
-  constructor(filmListComponent, changeData, comments) {
+  constructor(filmListComponent, changeData, comments, removePopup, filterType, changeWatchedData) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
+    this.#removePopup = removePopup;
+    this.#filterType = filterType;
+    this.#changeWatchedData = changeWatchedData;
+
+    this.#mode = Mode.DEFAULT;
 
     this.#commentsModel = new CommentsModel();
     this.#commentsModel.comments = comments;
@@ -30,7 +39,7 @@ export default class FilmPresenter {
     const prevFilmCardComponent = this.#filmCardComponent;
     const prevFilmPopupComponent = this.#filmPopupComponent;
 
-    this.#filmCardComponent = new FilmCardView(film, this.#commentsModel.comments);
+    this.#filmCardComponent = new FilmCardView(film);
     this.#filmPopupComponent = new FilmPopupView(film, this.#commentsModel.comments, this.#handleViewAction);
 
     this.#filmCardComponent.setEditClickHandler(this.#replaceCardToPopup);
