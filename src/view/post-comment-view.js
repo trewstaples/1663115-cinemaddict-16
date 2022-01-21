@@ -1,7 +1,7 @@
-import dayjs from 'dayjs';
-import { nanoid } from 'nanoid';
 import { EMOTIONS, KeyboardKeys, StringFormats } from '../utils/const';
 import { createTemplateFromArray } from '../utils/films';
+import { nanoid } from 'nanoid';
+import dayjs from 'dayjs';
 import SmartView from './smart-view';
 
 const postCommentTemplate = (data) => {
@@ -68,6 +68,11 @@ export default class PostCommentView extends SmartView {
     }
   };
 
+  #disableForm = () => {
+    this.element.querySelector('.film-details__comment-input').disabled = true;
+    this.element.querySelector('.film-details__emoji-list').disabled = true;
+  };
+
   #setInnerHandlers = () => {
     this.element.querySelector('.film-details__emoji-list').addEventListener('change', this.#emojiChangeHandler);
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
@@ -85,9 +90,6 @@ export default class PostCommentView extends SmartView {
       emojiChecked: evt.target.id,
     });
   };
-  // reset = (film) => {
-  //   this.updateData(AddCommentView.parseFilmToData());
-  // }
 
   #commentInputHandler = (evt) => {
     this.updateData(
@@ -97,13 +99,6 @@ export default class PostCommentView extends SmartView {
       true,
     );
   };
-
-  #disableForm = () => {
-    this.element.querySelector('.film-details__comment-input').disabled = true;
-    this.element.querySelector('.film-details__emoji-list').disabled = true;
-  };
-
-  // static parseFilmToData = (film) => ({ ...film, isEmoji: '', isMessage: '', isEmojiChecked: '' });
 
   static parseCommentToData = () => {
     const data = {};

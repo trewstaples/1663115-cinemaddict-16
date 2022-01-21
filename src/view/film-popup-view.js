@@ -1,37 +1,16 @@
-import { KeyboardKeys, EMOTIONS, Runtime, StringFormats } from '../utils/const.js';
-import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import { UserAction } from '../utils/const.js';
+import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import { render, RenderPosition } from '../utils/render.js';
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration.js';
+import { formatRuntime, formatReleaseDate } from '../utils/date.js';
 import SmartView from './smart-view.js';
 import CommentView from './comments-view.js';
 import PostCommentView from './post-comment-view.js';
 
-const renderFilmPopupTemplate = (data, comments) => {
-  const { info, userDetails, isEmoji, isMessage, isEmojiChecked } = data;
+const renderFilmPopupTemplate = (film, comments) => {
+  const { info, userDetails } = film;
 
   const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
   const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
-
-  const formatRuntime = (minutesDuration) => {
-    dayjs.extend(duration);
-    let formatString = StringFormats.RUNTIME_MINUTES;
-    if (minutesDuration >= Runtime.MINUTES_IN_HOUR) {
-      formatString = StringFormats.RUNTIME_HOURS;
-    }
-
-    const runtime = dayjs.duration(minutesDuration, 'm').format(formatString);
-    return runtime;
-  };
-
-  const formatReleaseDate = (releaseDate) => dayjs(releaseDate).format(StringFormats.RELEASE_DATE);
-
-  const renderEmojiItemTemplate = (emoji) => `<input class="film-details__emoji-item visually-hidden"
-  name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${isEmojiChecked === `emoji-${emoji}` ? 'checked' : ''}>
-<label class="film-details__emoji-label" for="emoji-${emoji}">
-  <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
-</label>`;
 
   const watchlistClassName = getClassName(userDetails.watchlist, 'film-details__control-button--active');
   const wactchedButtonClassName = getClassName(userDetails.alreadyWatched, 'film-details__control-button--active');
@@ -113,19 +92,6 @@ const renderFilmPopupTemplate = (data, comments) => {
 
         <ul class="film-details__comments-list">
         </ul>
-
-        <!--<div class="film-details__new-comment">
-          <div class="film-details__add-emoji-label">${isEmoji}
-          </div>
-
-          <label class="film-details__comment-label">
-            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${isMessage}</textarea>
-          </label>
-
-          <div class="film-details__emoji-list">
-          ${createTemplateFromArray(EMOTIONS, renderEmojiItemTemplate)}
-          </div>
-        </div>-->
       </section>
     </div>
   </form>
@@ -135,23 +101,20 @@ const renderFilmPopupTemplate = (data, comments) => {
 
 export default class FilmPopupView extends SmartView {
   #film = null;
-  #changeCommentData = null;
   #container = null;
   #filmComments = [];
-  emoji = null;
-  commentText = null;
+  #changeCommentData = null;
 
   constructor(film, filmComments, changeCommentData) {
     super();
-    this._data = FilmPopupView.parseFilmToData(film);
+
+    this.#film = film;
     this.#filmComments = [...filmComments];
     this.#changeCommentData = changeCommentData;
-
-    this.#setInnerHandlers();
   }
 
   get template() {
-    return renderFilmPopupTemplate(this._data, this.#filmComments);
+    return renderFilmPopupTemplate(this.#film, this.#filmComments);
   }
 
   get container() {
@@ -187,56 +150,16 @@ export default class FilmPopupView extends SmartView {
     this.#changeCommentData(UserAction.ADD_COMMENT, update);
   };
 
-  reset = (film) => {
+  /*  reset = (film) => {
     this.updateData(FilmPopupView.parseFilmToData(film));
-  };
+  }; */
 
   restoreHandlers = () => {
-    this.#setInnerHandlers();
     this.setCloseClickHandler(this._callback.closeClick);
     this.setWatchlistClickHandler(this._callback.watchlistClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
   };
-
-  #setInnerHandlers = () => {
-    // const emojies = this.element.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
-    // emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler));
-    // this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
-    // this.setCommentPostHandler(this._callback.postComment);
-  };
-
-  /*   #emojiClickHandler = (evt) => {
-    evt.preventDefault();
-    this.updateData({
-      isEmoji: `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`,
-      isEmojiChecked: evt.target.id,
-    });
-    this.emoji = evt.target.value;
-  }; */
-
-  #commentInputHandler = (evt) => {
-    evt.preventDefault();
-    this.updateData(
-      {
-        isMessage: evt.target.value,
-      },
-      true,
-    );
-  };
-
-  /*   setCommentPostHandler = (callback) => {
-    this._callback.postComment = callback;
-    this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentPostHandler);
-  };
-
-  #commentPostHandler = (evt) => {
-    if ((evt.ctrlKey || evt.metaKey) && evt.code === EvtKey.ENTER) {
-      evt.preventDefault();
-      this.commentText = evt.target.value;
-      this._callback.postComment(this.emoji, this.commentText);
-    }
-  }; */
 
   setCloseClickHandler = (callback) => {
     this._callback.closeClick = callback;
@@ -245,7 +168,6 @@ export default class FilmPopupView extends SmartView {
 
   #closeClickHandler = (evt) => {
     evt.preventDefault();
-    FilmPopupView.parseDataToFilm(this._data);
     this._callback.closeClick();
   };
 
@@ -277,17 +199,5 @@ export default class FilmPopupView extends SmartView {
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.favoriteClick();
-  };
-
-  static parseFilmToData = (film) => ({ ...film, isEmoji: '', isMessage: '', isEmojiChecked: '' });
-
-  static parseDataToFilm = (data) => {
-    const film = { ...data };
-
-    delete film.isEmoji;
-    delete film.isMessage;
-    delete film.isEmojiChecked;
-
-    return film;
   };
 }
