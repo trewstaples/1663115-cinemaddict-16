@@ -105,7 +105,6 @@ export default class FilmPresenter {
   };
 
   #renderPopup = () => {
-    document.addEventListener('keydown', this.#handleEscKeyDown);
     const popup = this.#filmPopupComponent instanceof AbstractView ? this.#filmPopupComponent.element : this.#filmPopupComponent;
     document.body.appendChild(popup);
     this.#filmPopupComponent.renderCommentInfo();
@@ -164,6 +163,7 @@ export default class FilmPresenter {
 
   #handleCardClick = () => {
     if (!document.body.contains(this.#filmPopupComponent.element)) {
+      document.addEventListener('keydown', this.#handleEscKeyDown);
       this.#removePrevPopup();
       this.#renderPopup();
     }
