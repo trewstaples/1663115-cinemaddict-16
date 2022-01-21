@@ -1,4 +1,4 @@
-import { render, remove, RenderPosition } from '../utils/render.js';
+import { render, replace, remove, RenderPosition } from '../utils/render.js';
 import { sortFilmsByDate, sortFilmsByRating } from '../utils/films.js';
 import { UserAction, UpdateType, FilterType } from '../utils/const.js';
 import { SortType } from '../view/sort-view.js';
@@ -10,6 +10,7 @@ import FilmsListView from '../view/films-list-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FooterView from '../view/footer-stats-view.js';
 import FilmPresenter from './film-presenter.js';
+import ProfileView from '../view/profile-view.js';
 
 //Исправить поведение попапа - попап не должен скрываться при изменении фильтров
 //В поисковике ссылка всё время идёт на watchlist после # или вообще пропадает
@@ -18,14 +19,16 @@ import FilmPresenter from './film-presenter.js';
 const FILMS_COUNT_PER_STEP = 5;
 
 export default class FilmsBoardPresenter {
+  #profileContainer = null;
   #mainContainer = null;
   #filmsModel = null;
   #filterModel = null;
 
-  #noFilmComponent = new NoFilmView();
   #filmsComponent = new FilmsView();
   #filmsListComponent = new FilmsListView();
+  #noFilmComponent = new NoFilmView();
   #footerComponent = new FooterView();
+  #profileComponent = null;
   #sortComponent = null;
   #showMoreButtonComponent = null;
 
@@ -35,7 +38,8 @@ export default class FilmsBoardPresenter {
   #currentSortType = SortType.DEFAULT;
   #currentfilterType = FilterType.ALL;
 
-  constructor(mainContainer, filmsModel, filterModel) {
+  constructor(profileContainer, mainContainer, filmsModel, filterModel) {
+    this.#profileContainer = profileContainer;
     this.#mainContainer = mainContainer;
     this.#filmsModel = filmsModel;
     this.#filterModel = filterModel;
@@ -56,6 +60,10 @@ export default class FilmsBoardPresenter {
         return filteredFilms.sort(sortFilmsByRating);
     }
     return filteredFilms;
+  }
+
+  get watchedFilms() {
+    return this.#filmsModel.films.filter((film) => film.userDetails.alreadyWatched);
   }
 
   init = () => {
@@ -94,6 +102,21 @@ export default class FilmsBoardPresenter {
     }
   };
 
+  #renderProfile = () => {
+    const prevProfileComponent = this.#profileComponent;
+
+    this.#profileComponent = new ProfileView(this.watchedFilms.length);
+
+    if (prevProfileComponent === null) {
+      render(this.#profileContainer, this.#profileComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this.#profileContainer.contains(prevProfileComponent.element)) {
+      replace(this.#profileComponent, prevProfileComponent);
+    }
+  };
+
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
@@ -112,7 +135,7 @@ export default class FilmsBoardPresenter {
 
   #renderFilm = (film) => {
     const filmComments = film.comments;
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, filmComments, this.#removePrevPopup, this.#currentfilterType);
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, filmComments, this.#removePrevPopup, this.#currentfilterType, this.#renderProfile);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };
@@ -179,6 +202,10 @@ export default class FilmsBoardPresenter {
     if (filmsCount === 0) {
       this.#renderNoFilm();
       return;
+    }
+
+    if (this.#profileComponent === null) {
+      this.#renderProfile();
     }
 
     this.#renderSort();

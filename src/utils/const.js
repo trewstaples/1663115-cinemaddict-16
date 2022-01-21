@@ -50,3 +50,22 @@ export const Mode = {
   DEFAULT: 'DEFAULT',
   EDIT: 'EDIT',
 };
+
+export const userRank = {
+  None: {
+    MIN: 0,
+    MAX: 0,
+  },
+  Novice: {
+    MIN: 1,
+    MAX: 10,
+  },
+  Fan: {
+    MIN: 11,
+    MAX: 20,
+  },
+  'Movie Buff': {
+    MIN: 21,
+    MAX: Infinity,
+  },
+};

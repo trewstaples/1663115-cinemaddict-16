@@ -7,12 +7,15 @@ import CommentsModel from '../model/comments-model.js';
 
 //Отрегулировать changeWatchedData
 //Разобраться с AbstractView
+//Настроить удаление комментариев (не отображаются в карточке), добавление - отображается
+//Подумать, как объеденить метод initPopup в один
+//Чекнуть ошибку, которая вылетает в консоль при клике мимо фильтрации
 export default class FilmPresenter {
   #filmsListComponent = null;
   #changeData = null;
   #removePrevPopup = null;
   #currentFilterType = null;
-  #changeWatchedData = null;
+  #changeWatchedFilms = null;
 
   #filmCardComponent = null;
   #filmPopupComponent = null;
@@ -21,12 +24,12 @@ export default class FilmPresenter {
   #commentsModel = null;
   #mode = null;
 
-  constructor(filmListComponent, changeData, comments, removePrevPopup, currentFilterType, changeWatchedData) {
+  constructor(filmListComponent, changeData, comments, removePrevPopup, currentFilterType, changeWatchedFilms) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
     this.#removePrevPopup = removePrevPopup;
     this.#currentFilterType = currentFilterType;
-    this.#changeWatchedData = changeWatchedData;
+    this.#changeWatchedFilms = changeWatchedFilms;
 
     this.#mode = Mode.DEFAULT;
 
@@ -39,10 +42,10 @@ export default class FilmPresenter {
     this.#film = film;
 
     const prevFilmCardComponent = this.#filmCardComponent;
-    // const prevFilmPopupComponent = this.#filmPopupComponent;//
+    const prevFilmPopupComponent = this.#filmPopupComponent;
 
     this.#filmCardComponent = new FilmCardView(film);
-    // this.#filmPopupComponent = new FilmPopupView(film, this.#commentsModel.comments, this.#handleViewAction); //
+    this.#filmPopupComponent = new FilmPopupView(film, this.#commentsModel.comments, this.#handleViewAction);
 
     this.#filmCardComponent.setCardClickHandler(this.#handleCardClick);
     this.#filmCardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
@@ -59,19 +62,18 @@ export default class FilmPresenter {
     }
 
     this.#initPopup(this.#film);
-    // if (document.body.contains(prevFilmPopupComponent.element)) {
-    //   //
-    //   const scrollPosition = prevFilmPopupComponent.element.scrollTop;
+    if (document.body.contains(prevFilmPopupComponent.element)) {
+      const scrollPosition = prevFilmPopupComponent.element.scrollTop;
 
-    //   replace(this.#filmPopupComponent, prevFilmPopupComponent);
-    //   this.#filmPopupComponent.renderCommentInfo();
+      replace(this.#filmPopupComponent, prevFilmPopupComponent);
+      this.#filmPopupComponent.renderCommentInfo();
 
-    //   this.#filmPopupComponent.element.scrollTop = scrollPosition;
+      this.#filmPopupComponent.element.scrollTop = scrollPosition;
 
-    //   this.#setPopupHandlers();
+      this.#setPopupHandlers();
 
-    //   remove(prevFilmPopupComponent);
-    // }
+      remove(prevFilmPopupComponent);
+    }
 
     remove(prevFilmCardComponent);
   };
@@ -84,9 +86,9 @@ export default class FilmPresenter {
   #initPopup = (film) => {
     this.#film = film;
 
-    // const prevFilmPopupComponent = this.#filmPopupComponent;
+    const prevFilmPopupComponent = this.#filmPopupComponent;
 
-    // this.#filmPopupComponent = new FilmPopupView(film, this.#commentsModel.comments, this.#handleViewAction);
+    this.#filmPopupComponent = new FilmPopupView(film, this.#commentsModel.comments, this.#handleViewAction);
 
     if (document.body.contains(prevFilmPopupComponent.element)) {
       const scrollPosition = prevFilmPopupComponent.element.scrollTop;
@@ -99,12 +101,6 @@ export default class FilmPresenter {
       this.#setPopupHandlers();
       remove(prevFilmPopupComponent);
     }
-  };
-
-  #changePopup = (film) => {
-    const prevFilmPopupComponent = this.#filmPopupComponent;
-
-    this.#filmPopupComponent = new FilmPopupView(film, this.#commentsModel.comments, this.#handleViewAction);
   };
 
   #handleEscKeyDown = (evt) => {
@@ -204,6 +200,8 @@ export default class FilmPresenter {
     if (this.#mode === Mode.EDIT) {
       this.#initPopup(this.#film);
     }
+
+    this.#changeWatchedFilms();
   };
 
   #handleFavoriteClick = () => {

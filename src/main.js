@@ -25,10 +25,8 @@ const filterModel = new FilterModel();
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 
-const filmsBoardPresenter = new FilmsBoardPresenter(siteMainElement, filmsModel, filterModel);
+const filmsBoardPresenter = new FilmsBoardPresenter(siteHeaderElement, siteMainElement, filmsModel, filterModel);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
-
-render(siteHeaderElement, new ProfileView(), RenderPosition.BEFOREEND);
 
 filterPresenter.init();
 filmsBoardPresenter.init();
