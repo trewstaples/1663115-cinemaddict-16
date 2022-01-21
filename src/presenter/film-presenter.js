@@ -39,6 +39,7 @@ export default class FilmPresenter {
   }
 
   init = (film) => {
+    console.log(0);
     this.#film = film;
 
     const prevFilmCardComponent = this.#filmCardComponent;
