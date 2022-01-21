@@ -39,7 +39,6 @@ export default class FilmPresenter {
   }
 
   init = (film) => {
-    console.log(0);
     this.#film = film;
 
     const prevFilmCardComponent = this.#filmCardComponent;
@@ -158,7 +157,7 @@ export default class FilmPresenter {
         this.#changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.concat([data.id]) });
         break;
       case UserAction.DELETE_COMMENT:
-        this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment !== data) });
+        this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment.id !== data) });
         break;
     }
   };

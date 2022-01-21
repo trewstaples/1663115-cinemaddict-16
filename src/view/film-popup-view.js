@@ -150,10 +150,6 @@ export default class FilmPopupView extends SmartView {
     this.#changeCommentData(UserAction.ADD_COMMENT, update);
   };
 
-  /*  reset = (film) => {
-    this.updateData(FilmPopupView.parseFilmToData(film));
-  }; */
-
   restoreHandlers = () => {
     this.setCloseClickHandler(this._callback.closeClick);
     this.setWatchlistClickHandler(this._callback.watchlistClick);

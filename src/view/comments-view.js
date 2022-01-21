@@ -39,6 +39,7 @@ export default class CommentView extends AbstractView {
 
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
+
     this._callback.deleteClick(this.#comment.id);
   };
 }
