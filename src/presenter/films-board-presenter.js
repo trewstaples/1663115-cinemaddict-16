@@ -15,13 +15,9 @@ import FilmPresenter from './film-presenter.js';
 //В поисковике ссылка всё время идёт на watchlist после # или вообще пропадает
 
 const FILMS_COUNT_PER_STEP = 5;
-//patch - добавление/удаление комментариев
-//minor - добавление/удаление фильма в избранное и др.
-//major - переключение фильтров
 
 export default class FilmsBoardPresenter {
   #mainContainer = null;
-  #headerContainer = null;
   #filmsModel = null;
   #filterModel = null;
 
@@ -82,9 +78,7 @@ export default class FilmsBoardPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        console.log(data);
         this.#filmPresenter.get(data.id).init(data);
-        // this.#updateFilm(data);
         break;
       case UpdateType.MINOR:
         this.#clearFilmsBoard();
@@ -162,9 +156,6 @@ export default class FilmsBoardPresenter {
     if (resetRenderedFilmsCount) {
       this.#renderedFilmsCount = FILMS_COUNT_PER_STEP;
     } else {
-      // На случай, если перерисовка доски вызвана
-      // уменьшением количества задач (например, удаление или перенос в архив)
-      // нужно скорректировать число показанных задач
       this.#renderedFilmsCount = Math.min(filmsCount, this.#renderedFilmsCount);
     }
 

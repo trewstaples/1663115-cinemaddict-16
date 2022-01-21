@@ -1,6 +1,6 @@
 import FilmCardView from '../view/film-card-view.js';
 import FilmPopupView from '../view/film-popup-view.js';
-import { EvtKey, UserAction, UpdateType } from '../utils/const.js';
+import { KeyboardKeys, UserAction, UpdateType } from '../utils/const.js';
 import { render, replace, remove, renderCard, RenderPosition } from '../utils/render.js';
 import AbstractView from '../view/abstract-view.js';
 import CommentsModel from '../model/comments-model.js';
@@ -46,7 +46,7 @@ export default class FilmPresenter {
     this.#filmPopupComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
     this.#filmPopupComponent.setWatchedClickHandler(this.#handleAlreadyWatchedClick);
     this.#filmPopupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#filmPopupComponent.setCommentPostHandler(this.#handleCommentPost);
+    // this.#filmPopupComponent.setCommentPostHandler(this.#handleCommentPost);
 
     if (prevFilmCardComponent === null || prevFilmPopupComponent === null) {
       render(this.#filmsListComponent.container, this.#filmCardComponent, RenderPosition.BEFOREEND);
@@ -83,7 +83,7 @@ export default class FilmPresenter {
   };
 
   #onEscKeyDown = (evt) => {
-    if (evt.key === EvtKey.ESCAPE || evt.key === EvtKey.ESC) {
+    if (evt.key === KeyboardKeys.ESCAPE || evt.key === KeyboardKeys.ESC) {
       evt.preventDefault();
       this.#filmPopupComponent.reset(this.#film);
       this.#replacePopupToCard();

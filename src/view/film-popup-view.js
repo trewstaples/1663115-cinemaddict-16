@@ -1,4 +1,4 @@
-import { EvtKey, EMOTIONS, Runtime, StringFormats } from '../utils/const.js';
+import { KeyboardKeys, EMOTIONS, Runtime, StringFormats } from '../utils/const.js';
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import { UserAction } from '../utils/const.js';
 import { render, RenderPosition } from '../utils/render.js';
@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration.js';
 import SmartView from './smart-view.js';
 import CommentView from './comments-view.js';
+import PostCommentView from './post-comment-view.js';
 
 const renderFilmPopupTemplate = (data, comments) => {
   const { info, userDetails, isEmoji, isMessage, isEmojiChecked } = data;
@@ -113,7 +114,7 @@ const renderFilmPopupTemplate = (data, comments) => {
         <ul class="film-details__comments-list">
         </ul>
 
-        <div class="film-details__new-comment">
+        <!--<div class="film-details__new-comment">
           <div class="film-details__add-emoji-label">${isEmoji}
           </div>
 
@@ -124,7 +125,7 @@ const renderFilmPopupTemplate = (data, comments) => {
           <div class="film-details__emoji-list">
           ${createTemplateFromArray(EMOTIONS, renderEmojiItemTemplate)}
           </div>
-        </div>
+        </div>-->
       </section>
     </div>
   </form>
@@ -161,7 +162,7 @@ export default class FilmPopupView extends SmartView {
 
   renderCommentInfo = () => {
     this.#renderComments();
-    // this.#renderAddComment();
+    this.#renderPostComment();
   };
 
   #renderComments = () => {
@@ -176,16 +177,15 @@ export default class FilmPopupView extends SmartView {
     this.#changeCommentData(UserAction.DELETE_COMMENT, update);
   };
 
-  /*
-  #renderAddComment = () => {
-    const addCommentComponent = new AddCommentView();
-    addCommentComponent.setFormKeydownHandler(this.#addCommentKeydownHandler);
-    render(this.container, addCommentComponent, RenderPosition.AFTEREND);
-  }; */
+  #renderPostComment = () => {
+    const postCommentComponent = new PostCommentView();
+    postCommentComponent.setCommentKeydownHandler(this.#handleCommentKeydown);
+    render(this.container, postCommentComponent, RenderPosition.AFTEREND);
+  };
 
-  /*   #addCommentKeydownHandler = (update) => {
+  #handleCommentKeydown = (update) => {
     this.#changeCommentData(UserAction.ADD_COMMENT, update);
-  }; */
+  };
 
   reset = (film) => {
     this.updateData(FilmPopupView.parseFilmToData(film));
@@ -200,20 +200,20 @@ export default class FilmPopupView extends SmartView {
   };
 
   #setInnerHandlers = () => {
-    const emojies = this.element.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
-    emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler));
-    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
-    this.setCommentPostHandler(this._callback.postComment);
+    // const emojies = this.element.querySelectorAll('.film-details__emoji-list input[name="comment-emoji"]');
+    // emojies.forEach((emoji) => emoji.addEventListener('click', this.#emojiClickHandler));
+    // this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
+    // this.setCommentPostHandler(this._callback.postComment);
   };
 
-  #emojiClickHandler = (evt) => {
+  /*   #emojiClickHandler = (evt) => {
     evt.preventDefault();
     this.updateData({
       isEmoji: `<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}">`,
       isEmojiChecked: evt.target.id,
     });
     this.emoji = evt.target.value;
-  };
+  }; */
 
   #commentInputHandler = (evt) => {
     evt.preventDefault();
@@ -225,7 +225,7 @@ export default class FilmPopupView extends SmartView {
     );
   };
 
-  setCommentPostHandler = (callback) => {
+  /*   setCommentPostHandler = (callback) => {
     this._callback.postComment = callback;
     this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentPostHandler);
   };
@@ -236,7 +236,7 @@ export default class FilmPopupView extends SmartView {
       this.commentText = evt.target.value;
       this._callback.postComment(this.emoji, this.commentText);
     }
-  };
+  }; */
 
   setCloseClickHandler = (callback) => {
     this._callback.closeClick = callback;

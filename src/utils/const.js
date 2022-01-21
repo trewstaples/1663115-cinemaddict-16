@@ -1,4 +1,4 @@
-export const EvtKey = {
+export const KeyboardKeys = {
   ESCAPE: 'Escape',
   ESC: 'Esc',
   ENTER: 'Enter',
