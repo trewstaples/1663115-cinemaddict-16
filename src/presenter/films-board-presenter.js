@@ -1,6 +1,6 @@
 import { render, remove, RenderPosition } from '../utils/render.js';
 import { sortFilmsByDate, sortFilmsByRating } from '../utils/films.js';
-import { UserAction, UpdateType } from '../utils/const.js';
+import { UserAction, UpdateType, FilterType } from '../utils/const.js';
 import { SortType } from '../view/sort-view.js';
 import { filter } from '../utils/filter.js';
 import NoFilmView from '../view/no-film.js';
@@ -31,7 +31,9 @@ export default class FilmsBoardPresenter {
 
   #renderedFilmsCount = FILMS_COUNT_PER_STEP;
   #filmPresenter = new Map();
+
   #currentSortType = SortType.DEFAULT;
+  #currentfilterType = FilterType.ALL;
 
   constructor(mainContainer, filmsModel, filterModel) {
     this.#mainContainer = mainContainer;
@@ -43,9 +45,9 @@ export default class FilmsBoardPresenter {
   }
 
   get films() {
-    const filterType = this.#filterModel.filter;
+    this.#currentfilterType = this.#filterModel.filter;
     const films = this.#filmsModel.films;
-    const filteredFilms = filter[filterType](films);
+    const filteredFilms = filter[this.#currentfilterType](films);
 
     switch (this.#currentSortType) {
       case SortType.BY_DATE:
@@ -110,9 +112,15 @@ export default class FilmsBoardPresenter {
 
   #renderFilm = (film) => {
     const filmComments = film.comments;
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, filmComments);
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, filmComments, this.#removePrevPopup, this.#currentfilterType);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
+  };
+
+  #removePrevPopup = () => {
+    if (document.body.querySelector('.film-details')) {
+      document.body.querySelector('.film-details').remove();
+    }
   };
 
   #renderFilms = (films) => {
