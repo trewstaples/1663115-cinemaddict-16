@@ -26,8 +26,8 @@ export default class FilmsBoardPresenter {
 
   #filmsComponent = new FilmsView();
   #filmsListComponent = new FilmsListView();
-  #noFilmComponent = new NoFilmView();
   #footerComponent = new FooterView();
+  #noFilmComponent = null;
   #profileComponent = null;
   #sortComponent = null;
   #showMoreButtonComponent = null;
@@ -72,6 +72,54 @@ export default class FilmsBoardPresenter {
     this.#renderFilmsBoard();
   };
 
+  #renderProfile = () => {
+    const prevProfileComponent = this.#profileComponent;
+
+    this.#profileComponent = new ProfileView(this.watchedFilms.length);
+
+    if (prevProfileComponent === null) {
+      render(this.#profileContainer, this.#profileComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this.#profileContainer.contains(prevProfileComponent.element)) {
+      replace(this.#profileComponent, prevProfileComponent);
+    }
+  };
+
+  #renderSort = () => {
+    this.#sortComponent = new SortView(this.#currentSortType);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+    render(this.#filmsComponent, this.#sortComponent, RenderPosition.BEFOREBEGIN);
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#currentSortType = sortType;
+    this.#clearFilmsBoard({ resetRenderedFilmsCount: true });
+    this.#renderFilmsBoard();
+  };
+
+  #renderFilms = (films) => {
+    films.forEach((film) => this.#renderFilm(film));
+  };
+
+  #renderFilm = (film) => {
+    const filmComments = film.comments;
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#removePrevPopup, filmComments, this.#handleViewAction, this.#currentFilterType, this.#renderProfile);
+    filmPresenter.init(film);
+    this.#filmPresenter.set(film.id, filmPresenter);
+  };
+
+  #removePrevPopup = () => {
+    if (document.body.querySelector('.film-details')) {
+      document.body.querySelector('.film-details').remove();
+    }
+  };
+
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
@@ -102,52 +150,8 @@ export default class FilmsBoardPresenter {
     }
   };
 
-  #renderProfile = () => {
-    const prevProfileComponent = this.#profileComponent;
-
-    this.#profileComponent = new ProfileView(this.watchedFilms.length);
-
-    if (prevProfileComponent === null) {
-      render(this.#profileContainer, this.#profileComponent, RenderPosition.BEFOREEND);
-      return;
-    }
-
-    if (this.#profileContainer.contains(prevProfileComponent.element)) {
-      replace(this.#profileComponent, prevProfileComponent);
-    }
-  };
-
-  #handleSortTypeChange = (sortType) => {
-    if (this.#currentSortType === sortType) {
-      return;
-    }
-
-    this.#currentSortType = sortType;
-    this.#clearFilmsBoard({ resetRenderedFilmsCount: true });
-    this.#renderFilmsBoard();
-  };
-
-  #renderSort = () => {
-    this.#sortComponent = new SortView(this.#currentSortType);
-    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
-    render(this.#filmsComponent, this.#sortComponent, RenderPosition.BEFOREBEGIN);
-  };
-
-  #renderFilm = (film) => {
-    const filmComments = film.comments;
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, filmComments, this.#removePrevPopup, this.#currentFilterType, this.#renderProfile);
-    filmPresenter.init(film);
-    this.#filmPresenter.set(film.id, filmPresenter);
-  };
-
-  #removePrevPopup = () => {
-    if (document.body.querySelector('.film-details')) {
-      document.body.querySelector('.film-details').remove();
-    }
-  };
-
-  #renderFilms = (films) => {
-    films.forEach((film) => this.#renderFilm(film));
+  #renderFilmsList = () => {
+    render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
   };
 
   #renderNoFilm = () => {
@@ -210,7 +214,7 @@ export default class FilmsBoardPresenter {
     }
 
     this.#renderSort();
-    render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
+    this.#renderFilmsList();
 
     this.#renderFilms(films.slice(0, Math.min(filmsCount, this.#renderedFilmsCount)));
 

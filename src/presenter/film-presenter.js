@@ -24,7 +24,7 @@ export default class FilmPresenter {
   #commentsModel = null;
   #mode = null;
 
-  constructor(filmListComponent, changeData, comments, removePrevPopup, currentFilter, changeWatchedFilms) {
+  constructor(filmListComponent, removePrevPopup, comments, changeData, currentFilter, changeWatchedFilms) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
     this.#removePrevPopup = removePrevPopup;
@@ -106,7 +106,6 @@ export default class FilmPresenter {
   #handleEscKeyDown = (evt) => {
     if (evt.key === KeyboardKeys.ESCAPE || evt.key === KeyboardKeys.ESC) {
       evt.preventDefault();
-      this.#filmPopupComponent.reset(this.#film);
       this.#removePopup();
       document.removeEventListener('keydown', this.#handleEscKeyDown);
     }
