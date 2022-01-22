@@ -11,6 +11,7 @@ import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FooterView from '../view/footer-stats-view.js';
 import FilmPresenter from './film-presenter.js';
 import ProfileView from '../view/profile-view.js';
+import StatsView from '../view/stats-view.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
@@ -19,6 +20,7 @@ export default class FilmsBoardPresenter {
   #mainContainer = null;
   #filmsModel = null;
   #filterModel = null;
+  #mode = 0;
 
   #filmsComponent = new FilmsView();
   #filmsListComponent = new FilmsListView();
@@ -26,6 +28,7 @@ export default class FilmsBoardPresenter {
   #noFilmComponent = null;
   #profileComponent = null;
   #sortComponent = null;
+  #statsComponent = null;
   #showMoreButtonComponent = null;
 
   #renderedFilmsCount = FILMS_COUNT_PER_STEP;
@@ -81,6 +84,11 @@ export default class FilmsBoardPresenter {
     if (this.#profileContainer.contains(prevProfileComponent.element)) {
       replace(this.#profileComponent, prevProfileComponent);
     }
+  };
+
+  #renderStats = () => {
+    this.#statsComponent = new StatsView();
+    render(this.#mainContainer, this.#statsComponent, RenderPosition.BEFOREEND);
   };
 
   #renderSort = () => {
@@ -204,6 +212,12 @@ export default class FilmsBoardPresenter {
 
     if (this.#profileComponent === null) {
       this.#renderProfile();
+    }
+
+    if (this.#mode === 0) {
+      this.#renderStats();
+      this.#renderFooter();
+      return;
     }
 
     this.#renderSort();
