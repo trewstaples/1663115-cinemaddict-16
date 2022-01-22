@@ -1,4 +1,4 @@
-export const EvtKey = {
+export const KeyboardKeys = {
   ESCAPE: 'Escape',
   ESC: 'Esc',
   ENTER: 'Enter',
@@ -20,4 +20,52 @@ export const Runtime = {
   MIN: 50,
   MAX: 180,
   MINUTES_IN_HOUR: 60,
+};
+
+export const UserAction = {
+  UPDATE_FILM: 'UPDATE_FILM',
+  ADD_COMMENT: 'ADD_COMMENT',
+  DELETE_COMMENT: 'DELETE_COMMENT',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export const FilterType = {
+  ALL: 'all',
+  WATCHLIST: 'watchlist',
+  HISTORY: 'history',
+  FAVORITES: 'favorites',
+};
+
+export const MenuItem = {
+  FILMS: 'FILMS',
+  STATS: 'STATS',
+};
+
+export const Mode = {
+  CARD: 'CARD',
+  POPUP: 'POPUP',
+};
+
+export const userRank = {
+  None: {
+    MIN: 0,
+    MAX: 0,
+  },
+  Novice: {
+    MIN: 1,
+    MAX: 10,
+  },
+  Fan: {
+    MIN: 11,
+    MAX: 20,
+  },
+  'Movie Buff': {
+    MIN: 21,
+    MAX: Infinity,
+  },
 };

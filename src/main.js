@@ -1,6 +1,8 @@
 import { generateFilm } from './mock/film.js';
-import { generateFilter } from './mock/filters.js';
-import FilmListPresenter from './presenter/films-list-presenter.js';
+import FilmsBoardPresenter from './presenter/films-board-presenter.js';
+import FilmsModel from './model/films-model.js';
+import FilterModel from './model/filter-model.js';
+import FilterPresenter from './presenter/filter-presenter.js';
 
 const FILMS_COUNT = 15;
 
@@ -12,10 +14,17 @@ const renderCards = () => {
   return array;
 };
 const films = renderCards();
-const filters = generateFilter(films);
+
+const filmsModel = new FilmsModel();
+filmsModel.films = films;
+
+const filterModel = new FilterModel();
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 
-const filmListPresenter = new FilmListPresenter(siteMainElement, siteHeaderElement);
-filmListPresenter.init(films, filters);
+const filmsBoardPresenter = new FilmsBoardPresenter(siteHeaderElement, siteMainElement, filmsModel, filterModel);
+const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
+
+filterPresenter.init();
+filmsBoardPresenter.init();
