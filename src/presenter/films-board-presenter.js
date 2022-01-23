@@ -215,6 +215,7 @@ export default class FilmsBoardPresenter {
     }
 
     if (this.#mode === 0) {
+      remove(this.#filmsComponent);
       this.#renderStats();
       this.#renderFooter();
       return;
