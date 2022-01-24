@@ -16,3 +16,9 @@ export const formatRuntime = (minutesDuration) => {
 };
 
 export const formatReleaseDate = (releaseDate) => dayjs(releaseDate).format(StringFormats.RELEASE_DATE);
+
+export const getTotalDuration = (films) => {
+  const totalDuration = films.map((film) => film.info.runtime).reduce((sum, current) => sum + current, 0);
+
+  return totalDuration;
+};

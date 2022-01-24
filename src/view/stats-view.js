@@ -1,8 +1,8 @@
 import { StatsType, userRanks } from '../utils/const.js';
 import { statisticFilter } from '../utils/stats.js';
-import { createTemplateFromArray } from '../utils/films.js';
 import SmartView from './smart-view.js';
-import { getUserRank } from '../utils/stats.js';
+import { getUserRank, getTopGenre } from '../utils/stats.js';
+import { getTotalDuration, formatRuntime } from '../utils/date.js';
 
 const createStatsFilterTemplate = (filter, currentFilter) => {
   const { name, type } = filter;
@@ -16,8 +16,13 @@ const createStatsFilterTemplate = (filter, currentFilter) => {
 };
 
 const renderStatsTemplate = (watchedFilms, currentFilter, filteredFilms, filters) => {
-  const statsFiltersTemplate = filters.map((filter) => createStatsFilterTemplate(filter, currentFilter)).join('');
   const statsUserRank = getUserRank(watchedFilms.length, userRanks);
+  const totalDuration = formatRuntime(getTotalDuration(filteredFilms)).split(' ');
+  const hours = parseInt(totalDuration[0], 10);
+  const minutes = parseInt(totalDuration[1], 10);
+  const topGenre = getTopGenre(filteredFilms);
+
+  const statsFiltersTemplate = filters.map((filter) => createStatsFilterTemplate(filter, currentFilter)).join('');
 
   return `<section class="statistic"> ${
     statsUserRank !== 'None'
@@ -36,15 +41,15 @@ const renderStatsTemplate = (watchedFilms, currentFilter, filteredFilms, filters
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">28 <span class="statistic__item-description">movies</span></p>
+        <p class="statistic__item-text">${watchedFilms.length} <span class="statistic__item-description">movies</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
-        <p class="statistic__item-text">69 <span class="statistic__item-description">h</span> 41 <span class="statistic__item-description">m</span></p>
+        <p class="statistic__item-text">${hours} <span class="statistic__item-description">h</span> ${minutes} <span class="statistic__item-description">m</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">Drama</p>
+        <p class="statistic__item-text">${topGenre}</p>
       </li>
     </ul>
 

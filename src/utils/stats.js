@@ -24,3 +24,30 @@ export const statisticFilter = {
   [StatsType.MONTH]: (films) => films.filter((film) => dayjs(film.userDetails.watchingDate).isBetween(ComparingDate.MONTH, ComparingDate.TODAY, 'month', '[]')),
   [StatsType.YEAR]: (films) => films.filter((film) => dayjs(film.userDetails.watchingDate).isBetween(ComparingDate.YEAR, ComparingDate.TODAY, 'year', '[]')),
 };
+
+export const getGenres = (films) => {
+  const genresStats = {};
+
+  films.map((film) => {
+    film.info.genre.forEach((genre) => {
+      if (genre in genresStats) {
+        genresStats[genre]++;
+      } else {
+        genresStats[genre] = 1;
+      }
+    });
+  });
+
+  return genresStats;
+};
+
+export const getTopGenre = (films) => {
+  if (films.length === 0) {
+    return '';
+  }
+
+  const genresStats = getGenres(films);
+  const topGenre = Object.entries(genresStats).sort((a, b) => b[1] - a[1])[0][0];
+
+  return topGenre;
+};
