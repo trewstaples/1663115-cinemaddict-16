@@ -1,3 +1,4 @@
+import { MenuItem } from '../utils/const.js';
 import AbstractView from './abstract-view.js';
 
 const createFilterItemTemplate = (filter, currentFilterType) => {
@@ -7,24 +8,27 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
   } </a>`;
 };
 
-const renderFilterTemplate = (filters, currentFilterType) => {
+const renderFilterTemplate = (filters, currentFilterType, menuItem) => {
   const filterItemsTemplate = filters.map((filter) => createFilterItemTemplate(filter, currentFilterType)).join('');
+  const statsActiveClass = menuItem === MenuItem.STATS ? 'main-navigation__additional--active' : '';
   return `<nav class="main-navigation">
     <div class="main-navigation__items">
       ${filterItemsTemplate}
     </div>
-    <a href="#stats" class="main-navigation__additional">Stats</a>
+    <a href="#stats" class="main-navigation__additional ${statsActiveClass}">Stats</a>
   </nav>`;
 };
 
 export default class FilterView extends AbstractView {
   #filters = null;
   #currentFilter = null;
+  #menuItem = null;
 
-  constructor(filters, currentFilterType) {
+  constructor(filters, currentFilterType, menuItem) {
     super();
     this.#filters = filters;
     this.#currentFilter = currentFilterType;
+    this.#menuItem = menuItem;
   }
 
   get template() {
@@ -33,11 +37,26 @@ export default class FilterView extends AbstractView {
 
   setFilterTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
-    this.element.querySelector('.main-navigation__items').addEventListener('click', this.#filterTypeChangeHandler);
+    this.element.querySelector('.main-navigation__items').addEventListener('click', this.#filterTypeChangeHandler, this.#menuItem);
   };
 
   #filterTypeChangeHandler = (evt) => {
     evt.preventDefault();
     this._callback.filterTypeChange(evt.target.dataset.filter);
+  };
+
+  setMenuClickHandler = (callback) => {
+    this._callback.menuClick = callback;
+    this.element.addEventListener('click', this.#menuClickHandler);
+  };
+
+  #menuClickHandler = (evt) => {
+    evt.preventDefault();
+
+    if (evt.target.classList.contains('main-navigation__additional')) {
+      this._callback.menuClick(MenuItem.STATS);
+    } else if (evt.target.dataset.filter) {
+      this._callback.menuClick(MenuItem.FILMS);
+    }
   };
 }

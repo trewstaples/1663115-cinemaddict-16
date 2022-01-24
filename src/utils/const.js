@@ -41,6 +41,14 @@ export const FilterType = {
   FAVORITES: 'favorites',
 };
 
+export const StatsType = {
+  ALL: 'all-time',
+  TODAY: 'today',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year',
+};
+
 export const MenuItem = {
   FILMS: 'FILMS',
   STATS: 'STATS',
@@ -51,7 +59,7 @@ export const Mode = {
   POPUP: 'POPUP',
 };
 
-export const userRank = {
+export const userRanks = {
   None: {
     MIN: 0,
     MAX: 0,

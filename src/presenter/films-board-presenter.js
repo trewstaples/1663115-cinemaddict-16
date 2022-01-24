@@ -8,7 +8,6 @@ import FilmsView from '../view/films-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import NoFilmView from '../view/no-film.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
-import FooterView from '../view/footer-stats-view.js';
 import FilmPresenter from './film-presenter.js';
 import ProfileView from '../view/profile-view.js';
 import StatsView from '../view/stats-view.js';
@@ -20,11 +19,10 @@ export default class FilmsBoardPresenter {
   #mainContainer = null;
   #filmsModel = null;
   #filterModel = null;
-  #mode = 0;
+  #mode = 1;
 
   #filmsComponent = new FilmsView();
   #filmsListComponent = new FilmsListView();
-  #footerComponent = new FooterView();
   #noFilmComponent = null;
   #profileComponent = null;
   #sortComponent = null;
@@ -69,6 +67,15 @@ export default class FilmsBoardPresenter {
     render(this.#mainContainer, this.#filmsComponent, RenderPosition.BEFOREEND);
 
     this.#renderFilmsBoard();
+  };
+
+  destroy = () => {
+    this.#clearFilmsBoard({ resetRenderedFilmCount: true, resetSortType: true });
+
+    remove(this.#filmsComponent);
+
+    this.#filmsModel.removeObserver(this.#handleModelEvent);
+    this.#filterModel.removeObserver(this.#handleModelEvent);
   };
 
   #renderProfile = () => {
@@ -189,7 +196,6 @@ export default class FilmsBoardPresenter {
     remove(this.#sortComponent);
     remove(this.#noFilmComponent);
     remove(this.#showMoreButtonComponent);
-    remove(this.#footerComponent);
 
     if (resetRenderedFilmsCount) {
       this.#renderedFilmsCount = FILMS_COUNT_PER_STEP;
@@ -217,7 +223,6 @@ export default class FilmsBoardPresenter {
     if (this.#mode === 0) {
       remove(this.#filmsComponent);
       this.#renderStats();
-      this.#renderFooter();
       return;
     }
 
@@ -229,13 +234,5 @@ export default class FilmsBoardPresenter {
     if (filmsCount > FILMS_COUNT_PER_STEP) {
       this.#renderShowMoreButton();
     }
-
-    this.#renderFooter();
-  };
-
-  #renderFooter = () => {
-    const footerStatistics = document.querySelector('.footer__statistics');
-    this.#footerComponent = new FooterView(this.films);
-    render(footerStatistics, this.#footerComponent, RenderPosition.BEFOREEND);
   };
 }

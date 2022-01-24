@@ -1,5 +1,5 @@
 import { UserAction } from '../utils/const.js';
-import { render, RenderPosition } from '../utils/render.js';
+import { render, RenderPosition, remove } from '../utils/render.js';
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import { formatRuntime, formatReleaseDate } from '../utils/date.js';
 import SmartView from './smart-view.js';
@@ -104,6 +104,7 @@ export default class FilmPopupView extends SmartView {
   #container = null;
   #filmComments = [];
   #changeCommentData = null;
+  #commentComponent = null;
 
   constructor(film, filmComments, changeCommentData) {
     super();
@@ -128,11 +129,18 @@ export default class FilmPopupView extends SmartView {
     this.#renderPostComment();
   };
 
-  #renderComments = () => {
+  #removeCommentInfo = () => {
     for (const comment of this.#filmComments) {
-      const commentComponent = new CommentView(comment);
-      commentComponent.setDeleteClickHandler(this.#handleDeleteCommentClick);
-      render(this.container, commentComponent, RenderPosition.BEFOREEND);
+      remove(this.#commentComponent);
+    }
+  };
+
+  #renderComments = () => {
+    this.#removeCommentInfo();
+    for (const comment of this.#filmComments) {
+      this.#commentComponent = new CommentView(comment);
+      this.#commentComponent.setDeleteClickHandler(this.#handleDeleteCommentClick);
+      render(this.container, this.#commentComponent, RenderPosition.BEFOREEND);
     }
   };
 
