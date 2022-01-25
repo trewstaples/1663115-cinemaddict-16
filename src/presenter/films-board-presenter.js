@@ -152,7 +152,6 @@ export default class FilmsBoardPresenter {
         this.#renderFilmsBoard();
         break;
       case UpdateType.MAJOR:
-        console.log(0);
         this.#clearFilmsBoard({ resetRenderedFilmsCount: true, resetSortType: true });
         this.#renderFilmsBoard();
         break;

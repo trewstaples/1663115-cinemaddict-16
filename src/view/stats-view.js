@@ -1,8 +1,106 @@
 import { StatsType, userRanks } from '../utils/const.js';
-import { statisticFilter } from '../utils/stats.js';
-import SmartView from './smart-view.js';
-import { getUserRank, getTopGenre } from '../utils/stats.js';
+import { getUserRank, getGenres, getTopGenre, statisticFilter } from '../utils/stats.js';
 import { getTotalDuration, formatRuntime } from '../utils/date.js';
+import SmartView from './smart-view.js';
+import Chart from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+const ChartConfiguration = {
+  TYPE: 'horizontalBar',
+  BACKGROUND: '#ffe800',
+  ANCHOR: 'start',
+  BAR_THICKNESS: 24,
+  SIZE: 20,
+  COLOR: '#ffffff',
+  ALIGN: 'start',
+  OFFSET: 40,
+  PADDING: 100,
+};
+
+const BAR_HEIGHT = 50;
+
+const renderChart = (statisticCtx, films) => {
+  const genresStats = getGenres(films);
+
+  const sortedGenresStats = Object.keys(genresStats)
+    .sort((a, b) => genresStats[b] - genresStats[a])
+    .reduce(
+      (sortedObj, key) => ({
+        ...sortedObj,
+        [key]: genresStats[key],
+      }),
+      {},
+    );
+
+  const genres = Object.keys(sortedGenresStats);
+  const genresCount = Object.values(sortedGenresStats);
+
+  statisticCtx.height = BAR_HEIGHT * genres.length;
+
+  return new Chart(statisticCtx, {
+    plugins: [ChartDataLabels],
+    type: ChartConfiguration.TYPE,
+    data: {
+      labels: genres,
+      datasets: [
+        {
+          data: genresCount,
+          backgroundColor: ChartConfiguration.BACKGROUND,
+          hoverBackgroundColor: ChartConfiguration.BACKGROUND,
+          anchor: ChartConfiguration.ANCHOR,
+          barThickness: ChartConfiguration.BAR_THICKNESS,
+        },
+      ],
+    },
+    options: {
+      responsive: false,
+      plugins: {
+        datalabels: {
+          font: {
+            size: ChartConfiguration.SIZE,
+          },
+          color: ChartConfiguration.COLOR,
+          anchor: ChartConfiguration.ANCHOR,
+          align: ChartConfiguration.ALIGN,
+          offset: ChartConfiguration.OFFSET,
+        },
+      },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              fontColor: ChartConfiguration.COLOR,
+              padding: ChartConfiguration.PADDING,
+              fontSize: ChartConfiguration.SIZE,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false,
+            },
+          },
+        ],
+        xAxes: [
+          {
+            ticks: {
+              display: false,
+              beginAtZero: true,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false,
+            },
+          },
+        ],
+      },
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        enabled: false,
+      },
+    },
+  });
+};
 
 const createStatsFilterTemplate = (filter, currentFilter) => {
   const { name, type } = filter;
@@ -76,7 +174,7 @@ export default class StatsView extends SmartView {
     this._filteredFilms = statisticFilter[this.#currentFilter](this.#watchedFilms);
 
     this.setStatsFilterChangeHandler();
-    // this.#setCharts();
+    this.#setCharts();
   }
 
   get template() {
@@ -110,7 +208,7 @@ export default class StatsView extends SmartView {
 
   restoreHandlers = () => {
     this.setStatsFilterChangeHandler();
-    // this.#setCharts();
+    this.#setCharts();
   };
 
   setStatsFilterChangeHandler = () => {
@@ -129,12 +227,12 @@ export default class StatsView extends SmartView {
     this.updateElement();
   };
 
-  /* #setCharts = () => {
+  #setCharts = () => {
     if (this.#chart !== null) {
       this.#chart = null;
     }
 
     const chartContainer = this.element.querySelector('.statistic__chart');
-    this.#chart = renderChart(chartContainer, this._data);
-  }; */
+    this.#chart = renderChart(chartContainer, this._filteredFilms);
+  };
 }
