@@ -1,6 +1,7 @@
 import { StatsType } from './const.js';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
+dayjs.extend(isBetween);
 
 export const STATS_COUNT = 1;
 
@@ -11,7 +12,7 @@ export const getUserRank = (count, rank = {}) => {
 };
 
 const ComparingDate = {
-  TODAY: dayjs(Date.now()).toDate(),
+  TODAY: dayjs().toDate(),
   WEEK: dayjs().subtract(STATS_COUNT, 'week').toDate(),
   MONTH: dayjs().subtract(STATS_COUNT, 'month').toDate(),
   YEAR: dayjs().subtract(STATS_COUNT, 'year').toDate(),

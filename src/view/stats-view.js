@@ -3,6 +3,7 @@ import { statisticFilter } from '../utils/stats.js';
 import SmartView from './smart-view.js';
 import { getUserRank, getTopGenre } from '../utils/stats.js';
 import { getTotalDuration, formatRuntime } from '../utils/date.js';
+import dayjs from 'dayjs';
 
 const createStatsFilterTemplate = (filter, currentFilter) => {
   const { name, type } = filter;
@@ -17,10 +18,10 @@ const createStatsFilterTemplate = (filter, currentFilter) => {
 
 const renderStatsTemplate = (watchedFilms, currentFilter, filteredFilms, filters) => {
   const statsUserRank = getUserRank(watchedFilms.length, userRanks);
-  const totalDuration = formatRuntime(getTotalDuration(filteredFilms)).split(' ');
-  const hours = parseInt(totalDuration[0], 10);
-  const minutes = parseInt(totalDuration[1], 10);
   const topGenre = getTopGenre(filteredFilms);
+  const totalDuration = formatRuntime(getTotalDuration(filteredFilms));
+  const hours = totalDuration.split(' ')[0];
+  const minutes = totalDuration.split(' ')[1];
 
   const statsFiltersTemplate = filters.map((filter) => createStatsFilterTemplate(filter, currentFilter)).join('');
 
@@ -41,15 +42,18 @@ const renderStatsTemplate = (watchedFilms, currentFilter, filteredFilms, filters
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">${watchedFilms.length} <span class="statistic__item-description">movies</span></p>
+        <p class="statistic__item-text">${filteredFilms.length} <span class="statistic__item-description">${filteredFilms.length === 1 ? 'movie' : 'movies'}</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
-        <p class="statistic__item-text">${hours} <span class="statistic__item-description">h</span> ${minutes} <span class="statistic__item-description">m</span></p>
+        <p class="statistic__item-text">${parseInt(hours, 10)} <span class="statistic__item-description">h</span> ${parseInt(minutes, 10)} <span class="statistic__item-description">m</span></p>
       </li>
-      <li class="statistic__text-item">
-        <h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">${topGenre}</p>
+      <li class="statistic__text-item"> ${
+        filteredFilms.length === 0
+          ? ''
+          : `<h4 class="statistic__item-title">Top genre</h4>
+        <p class="statistic__item-text">${topGenre}</p>`
+      }
       </li>
     </ul>
 
@@ -70,13 +74,14 @@ export default class StatsView extends SmartView {
 
     this.#watchedFilms = films.filter((film) => film.userDetails.alreadyWatched);
     this.#currentFilter = StatsType.ALL;
-    this._data = statisticFilter[this.#currentFilter](this.#watchedFilms);
+    this._filteredFilms = statisticFilter[this.#currentFilter](this.#watchedFilms);
 
     this.setStatsFilterChangeHandler();
+    // this.#setCharts();
   }
 
   get template() {
-    return renderStatsTemplate(this.#watchedFilms, this.#currentFilter, this._data, this.filters);
+    return renderStatsTemplate(this.#watchedFilms, this.#currentFilter, this._filteredFilms, this.filters);
   }
 
   get filters() {
@@ -104,6 +109,11 @@ export default class StatsView extends SmartView {
     ];
   }
 
+  restoreHandlers = () => {
+    this.setStatsFilterChangeHandler();
+    // this.#setCharts();
+  };
+
   setStatsFilterChangeHandler = () => {
     this.element.querySelector('.statistic__filters').addEventListener('change', this.#statsFilterChangeHandler);
   };
@@ -116,7 +126,16 @@ export default class StatsView extends SmartView {
     }
 
     this.#currentFilter = evt.target.value;
-    this._data = statisticFilter[this.#currentFilter](this.#watchedFilms);
+    this._filteredFilms = statisticFilter[this.#currentFilter](this.#watchedFilms);
     this.updateElement();
   };
+
+  /* #setCharts = () => {
+    if (this.#chart !== null) {
+      this.#chart = null;
+    }
+
+    const chartContainer = this.element.querySelector('.statistic__chart');
+    this.#chart = renderChart(chartContainer, this._data);
+  }; */
 }

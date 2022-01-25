@@ -1,14 +1,14 @@
 import AbstractView from './abstract-view.js';
 
 export default class SmartView extends AbstractView {
-  _data = {};
+  _filteredFilms = {};
 
   updateData = (update, justDataUpdating) => {
     if (!update) {
       return;
     }
 
-    this._data = { ...this._data, ...update };
+    this._filteredFilms = { ...this._filteredFilms, ...update };
 
     if (justDataUpdating) {
       return;
