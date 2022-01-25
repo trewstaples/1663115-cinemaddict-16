@@ -145,13 +145,10 @@ const renderStatsTemplate = (watchedFilms, currentFilter, filteredFilms, filters
         <h4 class="statistic__item-title">Total duration</h4>
         <p class="statistic__item-text">${parseInt(hours, 10)} <span class="statistic__item-description">h</span> ${parseInt(minutes, 10)} <span class="statistic__item-description">m</span></p>
       </li>
-      <li class="statistic__text-item"> ${
-        filteredFilms.length === 0
-          ? ''
-          : `<h4 class="statistic__item-title">Top genre</h4>
-        <p class="statistic__item-text">${topGenre}</p>`
-      }
-      </li>
+      <li class="statistic__text-item">
+  ${filteredFilms.length !== 0 ? `<h4 class="statistic__item-title">Top genre</h4>
+    <p class="statistic__item-text">${topGenre}</p>` : '' }
+        </li>
     </ul>
 
     <div class="statistic__chart-wrap">

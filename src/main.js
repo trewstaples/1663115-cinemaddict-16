@@ -7,10 +7,6 @@ import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import StatsView from './view/stats-view.js';
 import FooterView from './view/footer-stats-view.js';
-//Настроить удаление ESCAPE
-//Подумать, как объеденить метод openPopup в один
-//Чекнуть ошибку, которая вылетает в консоль при клике мимо фильтрации
-//По возможности объеденить функции отрисовки макетов в одну общую, но посложнее
 
 const FILMS_COUNT = 15;
 

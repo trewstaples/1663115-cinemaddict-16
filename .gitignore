@@ -7,6 +7,7 @@ Thumbs.db
 *.sublime*
 .vscode
 .prettierrc
+.prettierignore
 
 # Вспомогательные файлы
 *.log*
