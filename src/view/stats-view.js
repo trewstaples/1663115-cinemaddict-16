@@ -3,7 +3,6 @@ import { statisticFilter } from '../utils/stats.js';
 import SmartView from './smart-view.js';
 import { getUserRank, getTopGenre } from '../utils/stats.js';
 import { getTotalDuration, formatRuntime } from '../utils/date.js';
-import dayjs from 'dayjs';
 
 const createStatsFilterTemplate = (filter, currentFilter) => {
   const { name, type } = filter;

@@ -40,9 +40,6 @@ export default class FilmsBoardPresenter {
     this.#mainContainer = mainContainer;
     this.#filmsModel = filmsModel;
     this.#filterModel = filterModel;
-
-    this.#filmsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get films() {
@@ -65,6 +62,9 @@ export default class FilmsBoardPresenter {
 
   init = () => {
     render(this.#mainContainer, this.#filmsComponent, RenderPosition.BEFOREEND);
+
+    this.#filmsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
 
     this.#renderFilmsBoard();
   };
@@ -152,6 +152,7 @@ export default class FilmsBoardPresenter {
         this.#renderFilmsBoard();
         break;
       case UpdateType.MAJOR:
+        console.log(0);
         this.#clearFilmsBoard({ resetRenderedFilmsCount: true, resetSortType: true });
         this.#renderFilmsBoard();
         break;
