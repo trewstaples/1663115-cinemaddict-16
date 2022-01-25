@@ -67,7 +67,7 @@ export default class FilterPresenter {
   };
 
   #handleModelEvent = () => {
-    this.init();
+    this.init(this.#handleMenuClick);
   };
 
   #handleFilterTypeChange = (filterType) => {

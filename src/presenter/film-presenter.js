@@ -73,7 +73,7 @@ export default class FilmPresenter {
 
   destroy = () => {
     remove(this.#filmCardComponent);
-    remove(this.#filmPopupComponent); //-удалять или нет?
+    remove(this.#filmPopupComponent);
   };
 
   #initPopup = (film) => {

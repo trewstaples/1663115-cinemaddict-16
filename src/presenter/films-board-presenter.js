@@ -143,9 +143,6 @@ export default class FilmsBoardPresenter {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#filmPresenter.get(data.id).init(data);
-        if (this.#filmPresenter.has(data.id)) {
-          this.#filmPresenter.get(data.id).init(data);
-        }
         break;
       case UpdateType.MINOR:
         this.#clearFilmsBoard();
