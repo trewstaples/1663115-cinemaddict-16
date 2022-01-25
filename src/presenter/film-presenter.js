@@ -127,7 +127,7 @@ export default class FilmPresenter {
   };
 
   #removePopup = () => {
-    remove(this.#filmPopupComponent);
+    document.body.querySelector('.film-details').remove();
     document.body.classList.remove('hide-overflow');
     this.#mode = Mode.CARD;
   };
@@ -136,6 +136,14 @@ export default class FilmPresenter {
     if (document.body.querySelector('.film-details')) {
       document.body.querySelector('.film-details').remove();
       document.removeEventListener('keydown', this.#handleEscKeyDown);
+    }
+  };
+
+  #handleCardClick = () => {
+    if (!document.body.contains(this.#filmPopupComponent.element)) {
+      document.addEventListener('keydown', this.#handleEscKeyDown);
+      this.#removePrevPopup();
+      this.#renderPopup();
     }
   };
 
@@ -158,14 +166,6 @@ export default class FilmPresenter {
       case UserAction.DELETE_COMMENT:
         this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment.id !== data) });
         break;
-    }
-  };
-
-  #handleCardClick = () => {
-    if (!document.body.contains(this.#filmPopupComponent.element)) {
-      document.addEventListener('keydown', this.#handleEscKeyDown);
-      this.#removePrevPopup();
-      this.#renderPopup();
     }
   };
 
