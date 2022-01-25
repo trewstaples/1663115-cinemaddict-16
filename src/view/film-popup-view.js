@@ -105,6 +105,8 @@ export default class FilmPopupView extends SmartView {
   #filmComments = [];
   #changeCommentData = null;
   #commentComponent = null;
+  #postCommentComponent = null;
+  #commentMap = new Map();
 
   constructor(film, filmComments, changeCommentData) {
     super();
@@ -130,9 +132,8 @@ export default class FilmPopupView extends SmartView {
   };
 
   #removeCommentInfo = () => {
-    for (const comment of this.#filmComments) {
-      remove(this.#commentComponent);
-    }
+    this.#commentMap.forEach((comment) => remove(comment));
+    this.#commentMap.clear();
   };
 
   #renderComments = () => {
@@ -141,6 +142,7 @@ export default class FilmPopupView extends SmartView {
       this.#commentComponent = new CommentView(comment);
       this.#commentComponent.setDeleteClickHandler(this.#handleDeleteCommentClick);
       render(this.container, this.#commentComponent, RenderPosition.BEFOREEND);
+      this.#commentMap.set(comment.id, this.#commentComponent);
     }
   };
 
@@ -149,9 +151,11 @@ export default class FilmPopupView extends SmartView {
   };
 
   #renderPostComment = () => {
-    const postCommentComponent = new PostCommentView();
-    postCommentComponent.setCommentKeydownHandler(this.#handleCommentKeydown);
-    render(this.container, postCommentComponent, RenderPosition.AFTEREND);
+    const prevPostCommentComponent = this.#postCommentComponent;
+    this.#postCommentComponent = new PostCommentView();
+    this.#postCommentComponent.setCommentKeydownHandler(this.#handleCommentKeydown);
+    render(this.container, this.#postCommentComponent, RenderPosition.AFTEREND);
+    remove(prevPostCommentComponent);
   };
 
   #handleCommentKeydown = (update) => {

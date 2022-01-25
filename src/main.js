@@ -7,8 +7,6 @@ import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import StatsView from './view/stats-view.js';
 import FooterView from './view/footer-stats-view.js';
-//Настроить добавление обработчиков на статистику при изменении данных
-//Настроить удаление комментариев
 //Настроить удаление ESCAPE
 //Подумать, как объеденить метод openPopup в один
 //Чекнуть ошибку, которая вылетает в консоль при клике мимо фильтрации
