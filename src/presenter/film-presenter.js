@@ -1,9 +1,10 @@
-import { KeyboardKeys, UserAction, UpdateType, Mode, FilterType } from '../utils/const.js';
+import { KeyboardKeys, UserAction, UpdateType, Mode, FilterType, AUTHORIZATION, END_POINT } from '../utils/const.js';
 import { render, replace, remove, RenderPosition } from '../utils/render.js';
 import AbstractView from '../view/abstract-view.js';
 import FilmCardView from '../view/film-card-view.js';
 import FilmPopupView from '../view/film-popup-view.js';
 import CommentsModel from '../model/comments-model.js';
+import ApiService from '../api-service.js';
 
 export default class FilmPresenter {
   #filmsListComponent = null;
@@ -18,7 +19,7 @@ export default class FilmPresenter {
   #commentsModel = null;
   #mode = null;
 
-  constructor(filmListComponent, comments, changeData, currentFilter, changeWatchedFilms) {
+  constructor(filmListComponent, comments, changeData, currentFilter, changeWatchedFilms, filmId) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
     this.#currentFilter = currentFilter;
@@ -26,8 +27,9 @@ export default class FilmPresenter {
 
     this.#mode = Mode.CARD;
 
-    this.#commentsModel = new CommentsModel();
-    this.#commentsModel.comments = comments;
+    this.#commentsModel = new CommentsModel(new ApiService(END_POINT, AUTHORIZATION));
+    this.#commentsModel.init();
+    // this.#commentsModel.comments = comments;
     this.#commentsModel.addObserver(this.#handleModelEvent);
   }
 

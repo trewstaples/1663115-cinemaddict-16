@@ -30,6 +30,7 @@ export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 export const FilterType = {
@@ -75,3 +76,6 @@ export const userRanks = {
     MAX: Infinity,
   },
 };
+
+export const AUTHORIZATION = 'Basic jfoiye98yfdc6';
+export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';

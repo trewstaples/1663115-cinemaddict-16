@@ -1,4 +1,4 @@
-import { MenuItem } from './utils/const.js';
+import { MenuItem, AUTHORIZATION, END_POINT } from './utils/const.js';
 import { render, remove, RenderPosition } from './utils/render.js';
 import { generateFilm } from './mock/film.js';
 import FilmsBoardPresenter from './presenter/films-board-presenter.js';
@@ -7,6 +7,11 @@ import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import StatsView from './view/stats-view.js';
 import FooterView from './view/footer-stats-view.js';
+import ApiService from './api-service.js';
+
+//Фильтры блокировать в finally?
+//разобраться с футером
+//разобраться с комментариями
 
 const FILMS_COUNT = 15;
 
@@ -19,17 +24,15 @@ const renderCards = () => {
 };
 const films = renderCards();
 
-const filmsModel = new FilmsModel();
-filmsModel.films = films;
-
-const filterModel = new FilterModel();
-
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const footerStats = document.querySelector('.footer__statistics');
 
-const filmsBoardPresenter = new FilmsBoardPresenter(siteHeaderElement, siteMainElement, filmsModel, filterModel);
+const filmsModel = new FilmsModel(new ApiService(END_POINT, AUTHORIZATION));
+const filterModel = new FilterModel();
+
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
+const filmsBoardPresenter = new FilmsBoardPresenter(siteHeaderElement, siteMainElement, filmsModel, filterModel);
 
 let statsComponent = null;
 
@@ -55,6 +58,10 @@ const handleSiteMenuClick = (menuItem) => {
 
 filterPresenter.init(handleSiteMenuClick);
 filmsBoardPresenter.init();
+
+filmsModel.init();
+
+console.log(filmsModel.films);
 
 const footerStatsComponent = new FooterView(filmsModel.films);
 render(footerStats, footerStatsComponent, RenderPosition.BEFOREEND);

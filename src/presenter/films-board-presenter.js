@@ -11,6 +11,7 @@ import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FilmPresenter from './film-presenter.js';
 import ProfileView from '../view/profile-view.js';
 import StatsView from '../view/stats-view.js';
+import LoadingView from '../view/loading-view.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
@@ -23,6 +24,7 @@ export default class FilmsBoardPresenter {
 
   #filmsComponent = new FilmsView();
   #filmsListComponent = new FilmsListView();
+  #loadingComponent = new LoadingView();
   #noFilmComponent = null;
   #profileComponent = null;
   #sortComponent = null;
@@ -34,6 +36,7 @@ export default class FilmsBoardPresenter {
 
   #currentSortType = SortType.DEFAULT;
   #currentFilterType = FilterType.ALL;
+  #isLoading = true;
 
   constructor(profileContainer, mainContainer, filmsModel, filterModel) {
     this.#profileContainer = profileContainer;
@@ -120,7 +123,8 @@ export default class FilmsBoardPresenter {
 
   #renderFilm = (film) => {
     const filmComments = film.comments;
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, filmComments, this.#handleViewAction, this.#currentFilterType, this.#renderProfile);
+    const filmId = film.id;
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, filmComments, this.#handleViewAction, this.#currentFilterType, this.#renderProfile, filmId);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };
@@ -152,11 +156,20 @@ export default class FilmsBoardPresenter {
         this.#clearFilmsBoard({ resetRenderedFilmsCount: true, resetSortType: true });
         this.#renderFilmsBoard();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderFilmsBoard();
+        break;
     }
   };
 
   #renderFilmsList = () => {
     render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
+  };
+
+  #renderLoading = () => {
+    render(this.#filmsComponent, this.#loadingComponent, RenderPosition.BEFOREEND);
   };
 
   #renderNoFilm = () => {
@@ -191,6 +204,7 @@ export default class FilmsBoardPresenter {
     this.#filmPresenter.clear();
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
     remove(this.#noFilmComponent);
     remove(this.#showMoreButtonComponent);
 
@@ -206,13 +220,17 @@ export default class FilmsBoardPresenter {
   };
 
   #renderFilmsBoard = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     const films = this.films;
     const filmsCount = this.films.length;
     if (filmsCount === 0) {
       this.#renderNoFilm();
       return;
     }
-
     if (this.#profileComponent === null) {
       this.#renderProfile();
     }
