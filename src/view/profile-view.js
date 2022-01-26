@@ -1,13 +1,9 @@
 import AbstractView from './abstract-view.js';
-import { userRank } from '../utils/const.js';
+import { userRanks } from '../utils/const.js';
+import { getUserRank } from '../utils/stats.js';
 
 const renderProfileTemplate = (watchedFilmsCount) => {
-  const getUserRank = (count, rank = {}) => {
-    const profileRank = Object.keys(rank).find((key) => count >= rank[key].MIN && count <= rank[key].MAX);
-
-    return profileRank;
-  };
-  const profileUserRank = getUserRank(watchedFilmsCount, userRank);
+  const profileUserRank = getUserRank(watchedFilmsCount, userRanks);
 
   return `<section class="header__profile profile"> ${
     profileUserRank !== 'None'

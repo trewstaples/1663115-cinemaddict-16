@@ -8,9 +8,9 @@ import FilmsView from '../view/films-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import NoFilmView from '../view/no-film.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
-import FooterView from '../view/footer-stats-view.js';
 import FilmPresenter from './film-presenter.js';
 import ProfileView from '../view/profile-view.js';
+import StatsView from '../view/stats-view.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
@@ -19,13 +19,14 @@ export default class FilmsBoardPresenter {
   #mainContainer = null;
   #filmsModel = null;
   #filterModel = null;
+  #mode = 1;
 
   #filmsComponent = new FilmsView();
   #filmsListComponent = new FilmsListView();
-  #footerComponent = new FooterView();
   #noFilmComponent = null;
   #profileComponent = null;
   #sortComponent = null;
+  #statsComponent = null;
   #showMoreButtonComponent = null;
 
   #renderedFilmsCount = FILMS_COUNT_PER_STEP;
@@ -39,9 +40,6 @@ export default class FilmsBoardPresenter {
     this.#mainContainer = mainContainer;
     this.#filmsModel = filmsModel;
     this.#filterModel = filterModel;
-
-    this.#filmsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get films() {
@@ -65,7 +63,19 @@ export default class FilmsBoardPresenter {
   init = () => {
     render(this.#mainContainer, this.#filmsComponent, RenderPosition.BEFOREEND);
 
+    this.#filmsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+
     this.#renderFilmsBoard();
+  };
+
+  destroy = () => {
+    this.#clearFilmsBoard({ resetRenderedFilmCount: true, resetSortType: true });
+
+    remove(this.#filmsComponent);
+
+    this.#filmsModel.removeObserver(this.#handleModelEvent);
+    this.#filterModel.removeObserver(this.#handleModelEvent);
   };
 
   #renderProfile = () => {
@@ -81,6 +91,11 @@ export default class FilmsBoardPresenter {
     if (this.#profileContainer.contains(prevProfileComponent.element)) {
       replace(this.#profileComponent, prevProfileComponent);
     }
+  };
+
+  #renderStats = () => {
+    this.#statsComponent = new StatsView();
+    render(this.#mainContainer, this.#statsComponent, RenderPosition.BEFOREEND);
   };
 
   #renderSort = () => {
@@ -128,9 +143,6 @@ export default class FilmsBoardPresenter {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#filmPresenter.get(data.id).init(data);
-        if (this.#filmPresenter.has(data.id)) {
-          this.#filmPresenter.get(data.id).init(data);
-        }
         break;
       case UpdateType.MINOR:
         this.#clearFilmsBoard();
@@ -181,7 +193,6 @@ export default class FilmsBoardPresenter {
     remove(this.#sortComponent);
     remove(this.#noFilmComponent);
     remove(this.#showMoreButtonComponent);
-    remove(this.#footerComponent);
 
     if (resetRenderedFilmsCount) {
       this.#renderedFilmsCount = FILMS_COUNT_PER_STEP;
@@ -206,6 +217,12 @@ export default class FilmsBoardPresenter {
       this.#renderProfile();
     }
 
+    if (this.#mode === 0) {
+      remove(this.#filmsComponent);
+      this.#renderStats();
+      return;
+    }
+
     this.#renderSort();
     this.#renderFilmsList();
 
@@ -214,13 +231,5 @@ export default class FilmsBoardPresenter {
     if (filmsCount > FILMS_COUNT_PER_STEP) {
       this.#renderShowMoreButton();
     }
-
-    this.#renderFooter();
-  };
-
-  #renderFooter = () => {
-    const footerStatistics = document.querySelector('.footer__statistics');
-    this.#footerComponent = new FooterView(this.films);
-    render(footerStatistics, this.#footerComponent, RenderPosition.BEFOREEND);
   };
 }

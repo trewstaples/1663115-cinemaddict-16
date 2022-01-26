@@ -12,14 +12,12 @@ export const StringFormats = {
   RELEASE_DATE: 'DD MMMM YYYY',
   RELEASE_YEAR: 'YYYY',
   COMMENT_DATE: 'YYYY/MM/D HH:mm',
-  RUNTIME_MINUTES: 'mm[M]',
   RUNTIME_HOURS: 'H[h] mm[m]',
 };
 
 export const Runtime = {
   MIN: 50,
   MAX: 180,
-  MINUTES_IN_HOUR: 60,
 };
 
 export const UserAction = {
@@ -41,6 +39,14 @@ export const FilterType = {
   FAVORITES: 'favorites',
 };
 
+export const StatsType = {
+  ALL: 'all-time',
+  TODAY: 'today',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year',
+};
+
 export const MenuItem = {
   FILMS: 'FILMS',
   STATS: 'STATS',
@@ -51,7 +57,7 @@ export const Mode = {
   POPUP: 'POPUP',
 };
 
-export const userRank = {
+export const userRanks = {
   None: {
     MIN: 0,
     MAX: 0,

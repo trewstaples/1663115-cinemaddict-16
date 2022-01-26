@@ -1,5 +1,5 @@
 import { UserAction } from '../utils/const.js';
-import { render, RenderPosition } from '../utils/render.js';
+import { render, RenderPosition, remove } from '../utils/render.js';
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import { formatRuntime, formatReleaseDate } from '../utils/date.js';
 import SmartView from './smart-view.js';
@@ -104,6 +104,9 @@ export default class FilmPopupView extends SmartView {
   #container = null;
   #filmComments = [];
   #changeCommentData = null;
+  #commentComponent = null;
+  #postCommentComponent = null;
+  #commentMap = new Map();
 
   constructor(film, filmComments, changeCommentData) {
     super();
@@ -128,11 +131,18 @@ export default class FilmPopupView extends SmartView {
     this.#renderPostComment();
   };
 
+  #removeCommentInfo = () => {
+    this.#commentMap.forEach((comment) => remove(comment));
+    this.#commentMap.clear();
+  };
+
   #renderComments = () => {
+    this.#removeCommentInfo();
     for (const comment of this.#filmComments) {
-      const commentComponent = new CommentView(comment);
-      commentComponent.setDeleteClickHandler(this.#handleDeleteCommentClick);
-      render(this.container, commentComponent, RenderPosition.BEFOREEND);
+      this.#commentComponent = new CommentView(comment);
+      this.#commentComponent.setDeleteClickHandler(this.#handleDeleteCommentClick);
+      render(this.container, this.#commentComponent, RenderPosition.BEFOREEND);
+      this.#commentMap.set(comment.id, this.#commentComponent);
     }
   };
 
@@ -141,9 +151,11 @@ export default class FilmPopupView extends SmartView {
   };
 
   #renderPostComment = () => {
-    const postCommentComponent = new PostCommentView();
-    postCommentComponent.setCommentKeydownHandler(this.#handleCommentKeydown);
-    render(this.container, postCommentComponent, RenderPosition.AFTEREND);
+    const prevPostCommentComponent = this.#postCommentComponent;
+    this.#postCommentComponent = new PostCommentView();
+    this.#postCommentComponent.setCommentKeydownHandler(this.#handleCommentKeydown);
+    render(this.container, this.#postCommentComponent, RenderPosition.AFTEREND);
+    remove(prevPostCommentComponent);
   };
 
   #handleCommentKeydown = (update) => {

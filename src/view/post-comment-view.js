@@ -28,12 +28,12 @@ export default class PostCommentView extends SmartView {
   constructor() {
     super();
 
-    this._data = PostCommentView.parseCommentToData();
+    this._filteredFilms = PostCommentView.parseCommentToData();
     this.#setInnerHandlers();
   }
 
   get template() {
-    return postCommentTemplate(this._data);
+    return postCommentTemplate(this._filteredFilms);
   }
 
   restoreHandlers = () => {
@@ -48,7 +48,7 @@ export default class PostCommentView extends SmartView {
 
   #commentKeydownHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.code === KeyboardKeys.ENTER) {
-      if (!this._data.emoji || !this._data.text) {
+      if (!this._filteredFilms.emoji || !this._filteredFilms.text) {
         return;
       }
 
@@ -58,12 +58,12 @@ export default class PostCommentView extends SmartView {
       const newComment = {
         id: nanoid(),
         author: 'Author',
-        text: this._data.text,
+        text: this._filteredFilms.text,
         date: dayjs(Date.now()).format(StringFormats.COMMENT_DATE),
-        emotion: this._data.emoji,
+        emotion: this._filteredFilms.emoji,
       };
 
-      PostCommentView.parseDataToComment(this._data);
+      PostCommentView.parseDataToComment(this._filteredFilms);
       this._callback.formSubmit(newComment);
     }
   };
@@ -81,7 +81,7 @@ export default class PostCommentView extends SmartView {
   #emojiChangeHandler = (evt) => {
     evt.preventDefault();
 
-    if (this._data.emoji === evt.target.value) {
+    if (this._filteredFilms.emoji === evt.target.value) {
       return;
     }
 
