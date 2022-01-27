@@ -30,7 +30,7 @@ export default class FilmPresenter {
     this.#filmId = filmId;
 
     this.#commentsModel = new CommentsModel(new ApiService(END_POINT, AUTHORIZATION, this.#filmId));
-    this.#commentsModel.init();
+    // this.#commentsModel.init();
     // this.#commentsModel.comments = comments;
     this.#commentsModel.addObserver(this.#handleModelEvent);
   }

@@ -1,6 +1,5 @@
 import { MenuItem, AUTHORIZATION, END_POINT } from './utils/const.js';
 import { render, remove, RenderPosition } from './utils/render.js';
-import { generateFilm } from './mock/film.js';
 import FilmsBoardPresenter from './presenter/films-board-presenter.js';
 import FilmsModel from './model/films-model.js';
 import FilterModel from './model/filter-model.js';
@@ -12,17 +11,6 @@ import ApiService from './api-service.js';
 //разобраться с комментариями
 //разобраться с футером
 //Фильтры блокировать в finally?
-
-const FILMS_COUNT = 15;
-
-const renderCards = () => {
-  const array = [];
-  for (let i = 0; i < FILMS_COUNT; i++) {
-    array.push(generateFilm());
-  }
-  return array;
-};
-const films = renderCards();
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
@@ -63,5 +51,3 @@ filmsModel.init();
 
 const footerStatsComponent = new FooterView(filmsModel.films);
 render(footerStats, footerStatsComponent, RenderPosition.BEFOREEND);
-
-console.log(filmsModel.films);
