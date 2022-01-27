@@ -8,10 +8,6 @@ import StatsView from './view/stats-view.js';
 import FooterView from './view/footer-stats-view.js';
 import ApiService from './api-service.js';
 
-//разобраться с комментариями
-//разобраться с футером
-//Фильтры блокировать в finally?
-
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const footerStats = document.querySelector('.footer__statistics');

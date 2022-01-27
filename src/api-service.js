@@ -37,7 +37,7 @@ export default class ApiService {
 
   updateFilm = async (film) => {
     const response = await this.#load({
-      url: `films/${film.id}`,
+      url: `movies/${film.id}`,
       method: Method.PUT,
       body: JSON.stringify(this.#adaptFilmToServer(film)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -76,7 +76,7 @@ export default class ApiService {
       },
     };
 
-    delete adaptedFilm.filmInfo;
+    delete adaptedFilm.info;
     delete adaptedFilm.userDetails;
 
     return adaptedFilm;
