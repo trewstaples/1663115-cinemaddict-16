@@ -20,7 +20,7 @@ export default class FilmPresenter {
   #commentsModel = null;
   #mode = null;
 
-  constructor(filmListComponent, comments, changeData, currentFilter, changeWatchedFilms, filmId) {
+  constructor(filmListComponent, changeData, currentFilter, changeWatchedFilms, filmId) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
     this.#currentFilter = currentFilter;
@@ -30,8 +30,6 @@ export default class FilmPresenter {
     this.#filmId = filmId;
 
     this.#commentsModel = new CommentsModel(new ApiService(END_POINT, AUTHORIZATION, this.#filmId));
-    // this.#commentsModel.init();
-    // this.#commentsModel.comments = comments;
     this.#commentsModel.addObserver(this.#handleModelEvent);
   }
 
@@ -75,6 +73,12 @@ export default class FilmPresenter {
     remove(prevFilmCardComponent);
   };
 
+  get comments() {
+    const comments = this.#commentsModel.comments;
+
+    return comments;
+  }
+
   destroy = () => {
     remove(this.#filmCardComponent);
     remove(this.#filmPopupComponent);
@@ -111,7 +115,8 @@ export default class FilmPresenter {
   #renderPopup = () => {
     const popup = this.#filmPopupComponent instanceof AbstractView ? this.#filmPopupComponent.element : this.#filmPopupComponent;
     document.body.appendChild(popup);
-    this.#filmPopupComponent.renderCommentInfo();
+    this.#commentsModel.init();
+    console.log(this.#commentsModel.comments);
     document.body.classList.add('hide-overflow');
 
     this.#setPopupHandlers();
@@ -163,6 +168,7 @@ export default class FilmPresenter {
   };
 
   #handleModelEvent = (actionType, data) => {
+    console.log(actionType);
     switch (actionType) {
       case UserAction.ADD_COMMENT:
         this.#changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.concat([data]) });
@@ -170,6 +176,9 @@ export default class FilmPresenter {
       case UserAction.DELETE_COMMENT:
         this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment.id !== data) });
         break;
+      case UserAction.INIT:
+        console.log(this.comments);
+        this.#filmPopupComponent.renderCommentInfo(this.comments);
     }
   };
 

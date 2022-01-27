@@ -22,19 +22,6 @@ export default class ApiService {
     return this.#load({ url: `/comments/${this.#filmId}` }).then(ApiService.parseResponse);
   }
 
-  updateFilm = async (film) => {
-    const response = await this.#load({
-      url: `films/${film.id}`,
-      method: Method.PUT,
-      body: JSON.stringify(this.#adaptToServer(film)),
-      headers: new Headers({ 'Content-Type': 'application/json' }),
-    });
-
-    const parsedResponse = await ApiService.parseResponse(response);
-
-    return parsedResponse;
-  };
-
   #load = async ({ url, method = Method.GET, body = null, headers = new Headers() }) => {
     headers.append('Authorization', this.#authorization);
 
@@ -48,7 +35,20 @@ export default class ApiService {
     }
   };
 
-  #adaptToServer = (film) => {
+  updateFilm = async (film) => {
+    const response = await this.#load({
+      url: `films/${film.id}`,
+      method: Method.PUT,
+      body: JSON.stringify(this.#adaptFilmToServer(film)),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    });
+
+    const parsedResponse = await ApiService.parseResponse(response);
+
+    return parsedResponse;
+  };
+
+  #adaptFilmToServer = (film) => {
     const adaptedFilm = {
       ...film,
       'film_info': {
@@ -76,11 +76,36 @@ export default class ApiService {
       },
     };
 
-    // Ненужные ключи мы удаляем
     delete adaptedFilm.filmInfo;
     delete adaptedFilm.userDetails;
 
     return adaptedFilm;
+  };
+
+  updateComment = async (comment) => {
+    const response = await this.#load({
+      url: `comments/${comment.id}`,
+      method: Method.PUT,
+      body: JSON.stringify(this.#adaptCommentToServer(comment)),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    });
+
+    const parsedResponse = await ApiService.parseResponse(response);
+
+    return parsedResponse;
+  };
+
+  #adaptCommentToServer = (comment) => {
+    const adaptedComment = {
+      ...comment,
+      comment: comment.text,
+      date: comment.date instanceof Date ? comment.date.toISOString() : null,
+    };
+
+    delete comment.text;
+    delete comment.date;
+
+    return adaptedComment;
   };
 
   static parseResponse = (response) => response.json();

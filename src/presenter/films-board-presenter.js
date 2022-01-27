@@ -122,9 +122,8 @@ export default class FilmsBoardPresenter {
   };
 
   #renderFilm = (film) => {
-    const filmComments = film.comments;
     const filmId = film.id;
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, filmComments, this.#handleViewAction, this.#currentFilterType, this.#renderProfile, filmId);
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, this.#currentFilterType, this.#renderProfile, filmId);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };

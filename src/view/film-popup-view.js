@@ -112,7 +112,7 @@ export default class FilmPopupView extends SmartView {
     super();
 
     this.#film = film;
-    this.#filmComments = [...filmComments];
+    // this.#filmComments = [...filmComments];
     this.#changeCommentData = changeCommentData;
   }
 
@@ -126,8 +126,8 @@ export default class FilmPopupView extends SmartView {
     return this.#container;
   }
 
-  renderCommentInfo = () => {
-    this.#renderComments();
+  renderCommentInfo = (comments) => {
+    this.#renderComments(comments);
     this.#renderPostComment();
   };
 
@@ -136,9 +136,10 @@ export default class FilmPopupView extends SmartView {
     this.#commentMap.clear();
   };
 
-  #renderComments = () => {
+  #renderComments = (comments) => {
+    console.log(comments);
     this.#removeCommentInfo();
-    for (const comment of this.#filmComments) {
+    for (const comment of comments) {
       this.#commentComponent = new CommentView(comment);
       this.#commentComponent.setDeleteClickHandler(this.#handleDeleteCommentClick);
       render(this.container, this.#commentComponent, RenderPosition.BEFOREEND);

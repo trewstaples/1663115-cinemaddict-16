@@ -17,8 +17,7 @@ export default class FilmsModel extends AbstractObservable {
   init = async () => {
     try {
       const films = await this.#apiService.films;
-      this.#films = films.map(this.#adaptToClient);
-      console.log(this.#films);
+      this.#films = films.map(this.#adaptFilmToClient);
     } catch (err) {
       this.#films = [];
     }
@@ -38,7 +37,7 @@ export default class FilmsModel extends AbstractObservable {
     this._notify(updateType, update);
   };
 
-  #adaptToClient = (film) => {
+  #adaptFilmToClient = (film) => {
     const adaptedFilm = {
       ...film,
       info: {
@@ -66,7 +65,6 @@ export default class FilmsModel extends AbstractObservable {
       },
     };
 
-    // Ненужные ключи мы удаляем
     delete adaptedFilm['film_info'];
     delete adaptedFilm['user_details'];
 

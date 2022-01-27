@@ -1,4 +1,5 @@
 import AbstractObservable from '../utils/abstract-observable.js';
+import { UserAction } from '../utils/const.js';
 
 export default class CommentsModel extends AbstractObservable {
   #comments = [];
@@ -16,13 +17,11 @@ export default class CommentsModel extends AbstractObservable {
   init = async () => {
     try {
       const comments = await this.#apiService.comments;
-      this.#comments = comments;
-      console.log(this.#comments);
+      this.#comments = comments.map(this.#adaptCommentToClient);
     } catch (err) {
       this.#comments = [];
     }
-
-    // this._notify(UpdateType.INIT);
+    this._notify(UserAction.INIT);
   };
 
   addComment = (actionType, update) => {
@@ -41,5 +40,18 @@ export default class CommentsModel extends AbstractObservable {
     this.#comments = [...this.#comments.slice(0, index), ...this.#comments.slice(index + 1)];
 
     this._notify(actionType, update);
+  };
+
+  #adaptCommentToClient = (comment) => {
+    const adaptedComment = {
+      ...comment,
+      text: comment.comment,
+      date: comment.date !== null ? new Date(comment.date) : comment.date,
+    };
+
+    delete comment.comment;
+    delete comment.date;
+
+    return adaptedComment;
   };
 }
