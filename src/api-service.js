@@ -19,7 +19,7 @@ export default class ApiService {
   }
 
   get comments() {
-    return this.#load({ url: '/comments/:this.#filmId' }).then(ApiService.parseResponse);
+    return this.#load({ url: `/comments/${this.#filmId}` }).then(ApiService.parseResponse);
   }
 
   updateFilm = async (film) => {
@@ -51,28 +51,28 @@ export default class ApiService {
   #adaptToServer = (film) => {
     const adaptedFilm = {
       ...film,
-      film_info: {
-        actors: film.info.actors,
-        age_rating: film.info.ageRating,
-        alternative_title: film.info.alternativeTitle,
-        description: film.info.description,
-        director: film.info.director,
-        genre: film.info.genre,
-        poster: film.info.poster,
-        release: {
-          date: film.info.release.date instanceof Date ? film.info.release.date.toISOString() : null,
-          release_country: film.info.release.country,
+      'film_info': {
+        'actors': film.info.actors,
+        'age_rating': film.info.ageRating,
+        'alternative_title': film.info.alternativeTitle,
+        'description': film.info.description,
+        'director': film.info.director,
+        'genre': film.info.genre,
+        'poster': film.info.poster,
+        'release': {
+          'date': film.info.release.date instanceof Date ? film.info.release.date.toISOString() : null,
+          'release_country': film.info.release.country,
         },
-        runtime: film.info.runtime,
-        title: film.info.title,
-        total_rating: film.info.totalRating,
-        writers: film.info.writers,
+        'runtime': film.info.runtime,
+        'title': film.info.title,
+        'total_rating': film.info.totalRating,
+        'writers': film.info.writers,
       },
-      user_details: {
-        already_watched: film.userDetails.alreadyWatched,
-        favorite: film.userDetails.favorite,
-        watching_date: film.userDetails.watchingDate instanceof Date ? film.userDetails.watchingDate.toISOString() : null,
-        watchlist: film.userDetails.watchlist,
+      'user_details': {
+        'already_watched': film.userDetails.alreadyWatched,
+        'favorite': film.userDetails.favorite,
+        'watching_date': film.userDetails.watchingDate instanceof Date ? film.userDetails.watchingDate.toISOString() : null,
+        'watchlist': film.userDetails.watchlist,
       },
     };
 

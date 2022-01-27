@@ -9,9 +9,9 @@ import StatsView from './view/stats-view.js';
 import FooterView from './view/footer-stats-view.js';
 import ApiService from './api-service.js';
 
-//Фильтры блокировать в finally?
-//разобраться с футером
 //разобраться с комментариями
+//разобраться с футером
+//Фильтры блокировать в finally?
 
 const FILMS_COUNT = 15;
 
@@ -61,7 +61,7 @@ filmsBoardPresenter.init();
 
 filmsModel.init();
 
-console.log(filmsModel.films);
-
 const footerStatsComponent = new FooterView(filmsModel.films);
 render(footerStats, footerStatsComponent, RenderPosition.BEFOREEND);
+
+console.log(filmsModel.films);

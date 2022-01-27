@@ -18,6 +18,7 @@ export default class FilmsModel extends AbstractObservable {
     try {
       const films = await this.#apiService.films;
       this.#films = films.map(this.#adaptToClient);
+      console.log(this.#films);
     } catch (err) {
       this.#films = [];
     }

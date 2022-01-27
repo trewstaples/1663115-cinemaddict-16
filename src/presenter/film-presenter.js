@@ -16,6 +16,7 @@ export default class FilmPresenter {
   #filmPopupComponent = null;
 
   #film = null;
+  #filmId = null;
   #commentsModel = null;
   #mode = null;
 
@@ -26,8 +27,9 @@ export default class FilmPresenter {
     this.#changeWatchedFilms = changeWatchedFilms;
 
     this.#mode = Mode.CARD;
+    this.#filmId = filmId;
 
-    this.#commentsModel = new CommentsModel(new ApiService(END_POINT, AUTHORIZATION));
+    this.#commentsModel = new CommentsModel(new ApiService(END_POINT, AUTHORIZATION, this.#filmId));
     this.#commentsModel.init();
     // this.#commentsModel.comments = comments;
     this.#commentsModel.addObserver(this.#handleModelEvent);
