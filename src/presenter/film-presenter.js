@@ -61,7 +61,7 @@ export default class FilmPresenter {
       const scrollPosition = prevFilmPopupComponent.element.scrollTop;
 
       replace(this.#filmPopupComponent, prevFilmPopupComponent);
-      this.#filmPopupComponent.renderCommentInfo();
+      this.#commentsModel.init();
 
       this.#filmPopupComponent.element.scrollTop = scrollPosition;
 
@@ -89,13 +89,13 @@ export default class FilmPresenter {
 
     const prevFilmPopupComponent = this.#filmPopupComponent;
 
-    this.#filmPopupComponent = new FilmPopupView(film, this.#commentsModel.comments, this.#handleViewAction);
+    this.#filmPopupComponent = new FilmPopupView(film, this.#handleViewAction);
 
     if (document.body.contains(prevFilmPopupComponent.element)) {
       const scrollPosition = prevFilmPopupComponent.element.scrollTop;
 
       replace(this.#filmPopupComponent, prevFilmPopupComponent);
-      this.#filmPopupComponent.renderCommentInfo();
+      this.#commentsModel.init();
 
       this.#filmPopupComponent.element.scrollTop = scrollPosition;
 
@@ -116,7 +116,6 @@ export default class FilmPresenter {
     const popup = this.#filmPopupComponent instanceof AbstractView ? this.#filmPopupComponent.element : this.#filmPopupComponent;
     document.body.appendChild(popup);
     this.#commentsModel.init();
-    console.log(this.#commentsModel.comments);
     document.body.classList.add('hide-overflow');
 
     this.#setPopupHandlers();
@@ -168,7 +167,6 @@ export default class FilmPresenter {
   };
 
   #handleModelEvent = (actionType, data) => {
-    console.log(actionType);
     switch (actionType) {
       case UserAction.ADD_COMMENT:
         this.#changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.concat([data]) });
@@ -177,8 +175,7 @@ export default class FilmPresenter {
         this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment.id !== data) });
         break;
       case UserAction.INIT:
-        console.log(this.comments);
-        this.#filmPopupComponent.renderCommentInfo(this.comments);
+        this.#filmPopupComponent.renderCommentList(this.comments);
     }
   };
 

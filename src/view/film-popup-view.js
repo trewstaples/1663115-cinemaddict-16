@@ -3,10 +3,11 @@ import { render, RenderPosition, remove } from '../utils/render.js';
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import { formatRuntime, formatReleaseDate } from '../utils/date.js';
 import SmartView from './smart-view.js';
+import CommentInfoView from './comment-info-view.js';
 import CommentView from './comments-view.js';
 import PostCommentView from './post-comment-view.js';
 
-const renderFilmPopupTemplate = (film, comments) => {
+const renderFilmPopupTemplate = (film) => {
   const { info, userDetails } = film;
 
   const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
@@ -86,14 +87,6 @@ const renderFilmPopupTemplate = (film, comments) => {
       </section>
     </div>
 
-    <div class="film-details__bottom-container">
-      <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-
-        <ul class="film-details__comments-list">
-        </ul>
-      </section>
-    </div>
   </form>
 </section>
 `;
@@ -102,47 +95,57 @@ const renderFilmPopupTemplate = (film, comments) => {
 export default class FilmPopupView extends SmartView {
   #film = null;
   #container = null;
-  #filmComments = [];
+  #commentList = null;
   #changeCommentData = null;
+  #commentInfoComponent = null;
   #commentComponent = null;
   #postCommentComponent = null;
   #commentMap = new Map();
 
-  constructor(film, filmComments, changeCommentData) {
+  constructor(film, changeCommentData) {
     super();
 
     this.#film = film;
-    // this.#filmComments = [...filmComments];
     this.#changeCommentData = changeCommentData;
   }
 
   get template() {
-    return renderFilmPopupTemplate(this.#film, this.#filmComments);
+    return renderFilmPopupTemplate(this.#film);
   }
 
   get container() {
-    this.#container = this.element.querySelector('.film-details__comments-list');
+    this.#container = this.element.querySelector('.film-details__inner');
 
     return this.#container;
   }
 
-  renderCommentInfo = (comments) => {
-    this.#renderComments(comments);
-    this.#renderPostComment();
-  };
+  get commentList() {
+    this.#commentList = this.element.querySelector('.film-details__comments-list');
+    return this.#commentList;
+  }
 
-  #removeCommentInfo = () => {
+  #removeCommentList = () => {
     this.#commentMap.forEach((comment) => remove(comment));
     this.#commentMap.clear();
   };
 
+  renderCommentList = (comments) => {
+    this.#renderCommentInfo(comments);
+    this.#renderComments(comments);
+    this.#renderPostComment();
+  };
+
+  #renderCommentInfo = (comments) => {
+    this.#commentInfoComponent = new CommentInfoView(comments);
+    render(this.container, this.#commentInfoComponent, RenderPosition.BEFOREEND);
+  };
+
   #renderComments = (comments) => {
-    console.log(comments);
-    this.#removeCommentInfo();
+    this.#removeCommentList();
     for (const comment of comments) {
       this.#commentComponent = new CommentView(comment);
       this.#commentComponent.setDeleteClickHandler(this.#handleDeleteCommentClick);
-      render(this.container, this.#commentComponent, RenderPosition.BEFOREEND);
+      render(this.commentList, this.#commentComponent, RenderPosition.BEFOREEND);
       this.#commentMap.set(comment.id, this.#commentComponent);
     }
   };
@@ -155,7 +158,7 @@ export default class FilmPopupView extends SmartView {
     const prevPostCommentComponent = this.#postCommentComponent;
     this.#postCommentComponent = new PostCommentView();
     this.#postCommentComponent.setCommentKeydownHandler(this.#handleCommentKeydown);
-    render(this.container, this.#postCommentComponent, RenderPosition.AFTEREND);
+    render(this.commentList, this.#postCommentComponent, RenderPosition.AFTEREND);
     remove(prevPostCommentComponent);
   };
 
