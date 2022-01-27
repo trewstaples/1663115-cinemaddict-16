@@ -21,6 +21,7 @@ export default class CommentsModel extends AbstractObservable {
     } catch (err) {
       this.#comments = [];
     }
+
     this._notify(UserAction.INIT);
   };
 

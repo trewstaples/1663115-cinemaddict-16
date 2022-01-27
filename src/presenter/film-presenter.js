@@ -40,7 +40,7 @@ export default class FilmPresenter {
     const prevFilmPopupComponent = this.#filmPopupComponent;
 
     this.#filmCardComponent = new FilmCardView(film);
-    this.#filmPopupComponent = new FilmPopupView(film, this.#commentsModel.comments, this.#handleViewAction);
+    this.#filmPopupComponent = new FilmPopupView(film, this.#handleViewAction);
 
     this.#filmCardComponent.setCardClickHandler(this.#handleCardClick);
     this.#filmCardComponent.setWatchlistClickHandler(this.#handleWatchlistClick);
@@ -56,12 +56,11 @@ export default class FilmPresenter {
       replace(this.#filmCardComponent, prevFilmCardComponent);
     }
 
-    this.#initPopup(this.#film);
     if (document.body.contains(prevFilmPopupComponent.element)) {
       const scrollPosition = prevFilmPopupComponent.element.scrollTop;
 
       replace(this.#filmPopupComponent, prevFilmPopupComponent);
-      this.#commentsModel.init();
+      this.#filmPopupComponent.renderCommentList(this.comments);
 
       this.#filmPopupComponent.element.scrollTop = scrollPosition;
 
@@ -93,8 +92,10 @@ export default class FilmPresenter {
 
     if (document.body.contains(prevFilmPopupComponent.element)) {
       const scrollPosition = prevFilmPopupComponent.element.scrollTop;
-
+      console.log(this.comments);
       replace(this.#filmPopupComponent, prevFilmPopupComponent);
+
+      this.#filmPopupComponent.renderCommentList();
       this.#commentsModel.init();
 
       this.#filmPopupComponent.element.scrollTop = scrollPosition;
@@ -172,7 +173,7 @@ export default class FilmPresenter {
         this.#changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.concat([data]) });
         break;
       case UserAction.DELETE_COMMENT:
-        this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment.id !== data) });
+        this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment !== data) });
         break;
       case UserAction.INIT:
         this.#filmPopupComponent.renderCommentList(this.comments);

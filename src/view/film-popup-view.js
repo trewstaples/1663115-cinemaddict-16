@@ -136,8 +136,10 @@ export default class FilmPopupView extends SmartView {
   };
 
   #renderCommentInfo = (comments) => {
+    const prevCommentInfoComponent = this.#commentInfoComponent;
     this.#commentInfoComponent = new CommentInfoView(comments);
     render(this.container, this.#commentInfoComponent, RenderPosition.BEFOREEND);
+    remove(prevCommentInfoComponent);
   };
 
   #renderComments = (comments) => {
