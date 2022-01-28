@@ -92,15 +92,13 @@ export default class FilmPresenter {
 
     if (document.body.contains(prevFilmPopupComponent.element)) {
       const scrollPosition = prevFilmPopupComponent.element.scrollTop;
-      console.log(this.comments);
       replace(this.#filmPopupComponent, prevFilmPopupComponent);
-
-      this.#filmPopupComponent.renderCommentList();
-      this.#commentsModel.init();
-
       this.#filmPopupComponent.element.scrollTop = scrollPosition;
 
       this.#setPopupHandlers();
+
+      this.#handleModelEvent(UserAction.INIT);
+
       remove(prevFilmPopupComponent);
     }
   };
@@ -115,13 +113,16 @@ export default class FilmPresenter {
 
   #renderPopup = () => {
     const popup = this.#filmPopupComponent instanceof AbstractView ? this.#filmPopupComponent.element : this.#filmPopupComponent;
-    document.body.appendChild(popup);
-    this.#commentsModel.init();
     document.body.classList.add('hide-overflow');
-
+    document.body.appendChild(popup);
     this.#setPopupHandlers();
-
     this.#mode = Mode.POPUP;
+
+    if (this.comments.length === 0) {
+      this.#commentsModel.init();
+      return;
+    }
+    this.#handleModelEvent(UserAction.INIT);
   };
 
   #setPopupHandlers = () => {
