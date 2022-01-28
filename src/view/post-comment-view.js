@@ -3,18 +3,20 @@ import { createTemplateFromArray } from '../utils/films';
 import SmartView from './smart-view';
 
 const postCommentTemplate = (data) => {
-  const renderEmojiItemTemplate = (emoji) => `<input class="film-details__emoji-item visually-hidden"
-  name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}" ${data.emojiChecked === `emoji-${emoji}` ? 'checked' : ''}>
-<label class="film-details__emoji-label" for="emoji-${emoji}">
-  <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
+  const { emoji, text, emojiChecked, isDisabled } = data;
+
+  const renderEmojiItemTemplate = (emotion) => `<input class="film-details__emoji-item visually-hidden"  ${isDisabled ? 'disabled' : ''}
+  name="comment-emoji" type="radio" id="emoji-${emotion}" value="${emotion}" ${emojiChecked === `emoji-${emotion}` ? 'checked' : ''}>
+<label class="film-details__emoji-label" for="emoji-${emotion}">
+  <img src="./images/emoji/${emotion}.png" width="30" height="30" alt="emoji">
 </label>`;
 
-  return `<div class="film-details__new-comment">
+  return `<div class="film-details__new-comment" disabled>
     <div class="film-details__add-emoji-label">
-      ${data.emoji !== null ? `<img src="images/emoji/${data.emoji}.png" width="55" height="55" alt="emoji-${data.emoji}"></img>` : ''}
+      ${emoji !== null ? `<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}"></img>` : ''}
     </div>
     <label class="film-details__comment-label">
-      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${data.text}</textarea>
+      <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isDisabled ? 'disabled' : ''} >${text}</textarea>
     </label>
     <div class="film-details__emoji-list">
     ${createTemplateFromArray(EMOTIONS, renderEmojiItemTemplate)}
@@ -26,12 +28,12 @@ export default class PostCommentView extends SmartView {
   constructor() {
     super();
 
-    this._filteredFilms = PostCommentView.parseCommentToData();
+    this._data = PostCommentView.parseCommentToData();
     this.#setInnerHandlers();
   }
 
   get template() {
-    return postCommentTemplate(this._filteredFilms);
+    return postCommentTemplate(this._data);
   }
 
   restoreHandlers = () => {
@@ -46,7 +48,7 @@ export default class PostCommentView extends SmartView {
 
   #commentKeydownHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.code === KeyboardKeys.ENTER) {
-      if (!this._filteredFilms.emoji || !this._filteredFilms.text) {
+      if (!this._data.emoji || !this._data.text) {
         return;
       }
 
@@ -54,11 +56,11 @@ export default class PostCommentView extends SmartView {
       this.#disableForm();
 
       const newComment = {
-        text: this._filteredFilms.text,
-        emotion: this._filteredFilms.emoji,
+        text: this._data.text,
+        emotion: this._data.emoji,
       };
 
-      PostCommentView.parseDataToComment(this._filteredFilms);
+      PostCommentView.parseDataToComment(this._data);
       this._callback.formSubmit(newComment);
     }
   };
@@ -76,7 +78,7 @@ export default class PostCommentView extends SmartView {
   #emojiChangeHandler = (evt) => {
     evt.preventDefault();
 
-    if (this._filteredFilms.emoji === evt.target.value) {
+    if (this._data.emoji === evt.target.value) {
       return;
     }
 
@@ -98,15 +100,14 @@ export default class PostCommentView extends SmartView {
   static parseCommentToData = () => {
     const data = {};
 
-    return { ...data, emoji: null, text: '', emojiChecked: '' };
+    return { ...data, emoji: null, text: '', emojiChecked: '', isDisabled: false };
   };
 
   static parseDataToComment = (data) => {
     const comment = { ...data };
 
-    delete comment.emoji;
-    delete comment.text;
     delete comment.emojiChecked;
+    delete comment.isDisabled;
 
     return comment;
   };

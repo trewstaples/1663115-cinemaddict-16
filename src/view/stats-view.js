@@ -168,14 +168,14 @@ export default class StatsView extends SmartView {
 
     this.#watchedFilms = films.filter((film) => film.userDetails.alreadyWatched);
     this.#currentFilter = StatsType.ALL;
-    this._filteredFilms = statisticFilter[this.#currentFilter](this.#watchedFilms);
+    this._data = statisticFilter[this.#currentFilter](this.#watchedFilms);
 
     this.setStatsFilterChangeHandler();
     this.#setCharts();
   }
 
   get template() {
-    return renderStatsTemplate(this.#watchedFilms, this.#currentFilter, this._filteredFilms, this.filters);
+    return renderStatsTemplate(this.#watchedFilms, this.#currentFilter, this._data, this.filters);
   }
 
   get filters() {
@@ -220,7 +220,7 @@ export default class StatsView extends SmartView {
     }
 
     this.#currentFilter = evt.target.value;
-    this._filteredFilms = statisticFilter[this.#currentFilter](this.#watchedFilms);
+    this._data = statisticFilter[this.#currentFilter](this.#watchedFilms);
     this.updateElement();
   };
 
@@ -230,6 +230,6 @@ export default class StatsView extends SmartView {
     }
 
     const chartContainer = this.element.querySelector('.statistic__chart');
-    this.#chart = renderChart(chartContainer, this._filteredFilms);
+    this.#chart = renderChart(chartContainer, this._data);
   };
 }
