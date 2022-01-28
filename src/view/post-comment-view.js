@@ -1,7 +1,5 @@
-import { EMOTIONS, KeyboardKeys, StringFormats } from '../utils/const';
+import { EMOTIONS, KeyboardKeys } from '../utils/const';
 import { createTemplateFromArray } from '../utils/films';
-import { nanoid } from 'nanoid';
-import dayjs from 'dayjs';
 import SmartView from './smart-view';
 
 const postCommentTemplate = (data) => {
@@ -56,10 +54,7 @@ export default class PostCommentView extends SmartView {
       this.#disableForm();
 
       const newComment = {
-        id: nanoid(),
-        author: 'Author',
         text: this._filteredFilms.text,
-        date: dayjs(Date.now()).format(StringFormats.COMMENT_DATE),
         emotion: this._filteredFilms.emoji,
       };
 

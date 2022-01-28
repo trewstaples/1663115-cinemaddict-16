@@ -25,10 +25,14 @@ export default class CommentsModel extends AbstractObservable {
     this._notify(UserAction.INIT);
   };
 
-  addComment = (actionType, update) => {
-    this.#comments = [...this.#comments, update];
-
-    this._notify(actionType, update);
+  addComment = async (updateType, update) => {
+    try {
+      const response = await this.#apiService.addComment(update);
+      this.#comments = response.comments.map(this.#adaptCommentToClient);
+      this._notify(updateType, response);
+    } catch (err) {
+      throw new Error('Cannot add comment');
+    }
   };
 
   deleteComment = async (actionType, update) => {

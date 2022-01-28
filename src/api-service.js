@@ -88,18 +88,16 @@ export default class ApiService {
     const adaptedComment = {
       ...comment,
       comment: comment.text,
-      date: comment.date instanceof Date ? comment.date.toISOString() : null,
     };
 
-    delete comment.text;
-    delete comment.date;
+    delete adaptedComment.text;
 
     return adaptedComment;
   };
-/*
+
   addComment = async (comment) => {
     const response = await this.#load({
-      url: 'comments',
+      url:`/comments/${this.#filmId}`,
       method: Method.POST,
       body: JSON.stringify(this.#adaptCommentToServer(comment)),
       headers: new Headers({'Content-Type': 'application/json'}),
@@ -108,7 +106,7 @@ export default class ApiService {
     const parsedResponse = await ApiService.parseResponse(response);
 
     return parsedResponse;
-  } */
+  }
 
   deleteComment = async (comment) => {
     const response = await this.#load({

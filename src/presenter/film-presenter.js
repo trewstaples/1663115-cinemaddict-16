@@ -151,7 +151,7 @@ export default class FilmPresenter {
   #handleModelEvent = (actionType, data) => {
     switch (actionType) {
       case UserAction.ADD_COMMENT:
-        this.#changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.concat([data]) });
+        this.#changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, { ...this.#film, comments: data.comments.map((comment) => comment.id) });
         break;
       case UserAction.DELETE_COMMENT:
         this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment !== data) });
