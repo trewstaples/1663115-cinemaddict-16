@@ -141,12 +141,32 @@ export default class FilmPopupView extends SmartView {
         break;
       case State.ABORTING:
         if (id !== null) {
-          // this.#setCommentAborting(id);
+          this.#setCommentAborting(id);
         } else {
-          // this.#setAddCommentAborting();
+          this.#setPostCommentAborting();
         }
         break;
     }
+  };
+
+  #setCommentAborting = (id) => {
+    const resetFormState = () => {
+      this.#comments.get(id).updateData({
+        isDisabled: false,
+        isDeleting: false,
+      });
+    };
+    this.#comments.get(id).shake(resetFormState);
+  };
+
+  #setPostCommentAborting = () => {
+    const resetFormState = () => {
+      this.#postCommentComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+      });
+    };
+    this.#postCommentComponent.shake(resetFormState);
   };
 
   #removeCommentList = () => {

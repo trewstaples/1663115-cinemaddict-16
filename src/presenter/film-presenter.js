@@ -151,15 +151,23 @@ export default class FilmPresenter {
     }
   };
 
-  #handleViewAction = (actionType, update) => {
+  #handleViewAction = async (actionType, update) => {
     switch (actionType) {
       case UserAction.ADD_COMMENT:
         this.setViewState(State.SAVING);
-        this.#commentsModel.addComment(actionType, update);
+        try {
+          await this.#commentsModel.addComment(actionType, update, this.#film.id);
+        } catch (err) {
+          this.setViewState(State.ABORTING);
+        }
         break;
       case UserAction.DELETE_COMMENT:
         this.setViewState(State.DELETING, update);
-        this.#commentsModel.deleteComment(actionType, update);
+        try {
+          await this.#commentsModel.deleteComment(actionType, update);
+        } catch (err) {
+          this.setViewState(State.ABORTING, update);
+        }
         break;
     }
   };
