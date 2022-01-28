@@ -1,35 +1,31 @@
-import { MenuItem } from './utils/const.js';
+import { MenuItem, AUTHORIZATION, END_POINT } from './utils/const.js';
 import { render, remove, RenderPosition } from './utils/render.js';
-import { generateFilm } from './mock/film.js';
 import FilmsBoardPresenter from './presenter/films-board-presenter.js';
 import FilmsModel from './model/films-model.js';
 import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import StatsView from './view/stats-view.js';
 import FooterView from './view/footer-stats-view.js';
+import ApiService from './api-service.js';
 
-const FILMS_COUNT = 15;
+//ОБНОВЛЕНИЕ ФИЛЬМА
 
-const renderCards = () => {
-  const array = [];
-  for (let i = 0; i < FILMS_COUNT; i++) {
-    array.push(generateFilm());
-  }
-  return array;
-};
-const films = renderCards();
+//УДАЛЕНИЕ ЗАДАЧИ
 
-const filmsModel = new FilmsModel();
-filmsModel.films = films;
+//ДОБАВЛЕНИЕ ЗАДАЧИ
 
-const filterModel = new FilterModel();
+//Разобраться с передачей данных в футер
+//Разобраться с блокировкой фильтров в finally
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const footerStats = document.querySelector('.footer__statistics');
 
-const filmsBoardPresenter = new FilmsBoardPresenter(siteHeaderElement, siteMainElement, filmsModel, filterModel);
+const filmsModel = new FilmsModel(new ApiService(END_POINT, AUTHORIZATION));
+const filterModel = new FilterModel();
+
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
+const filmsBoardPresenter = new FilmsBoardPresenter(siteHeaderElement, siteMainElement, filmsModel, filterModel);
 
 let statsComponent = null;
 
@@ -55,6 +51,8 @@ const handleSiteMenuClick = (menuItem) => {
 
 filterPresenter.init(handleSiteMenuClick);
 filmsBoardPresenter.init();
+
+filmsModel.init();
 
 const footerStatsComponent = new FooterView(filmsModel.films);
 render(footerStats, footerStatsComponent, RenderPosition.BEFOREEND);
