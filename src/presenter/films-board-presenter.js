@@ -73,7 +73,7 @@ export default class FilmsBoardPresenter {
   };
 
   destroy = () => {
-    this.#clearFilmsBoard({ resetRenderedFilmCount: true, resetSortType: true });
+    this.#clearFilmsBoard({ resetRenderedFilmsCount: true, resetSortType: true });
 
     remove(this.#filmsComponent);
 
@@ -94,6 +94,7 @@ export default class FilmsBoardPresenter {
     if (this.#profileContainer.contains(prevProfileComponent.element)) {
       replace(this.#profileComponent, prevProfileComponent);
     }
+    remove(prevProfileComponent);
   };
 
   #renderStats = () => {
@@ -226,12 +227,12 @@ export default class FilmsBoardPresenter {
 
     const films = this.films;
     const filmsCount = this.films.length;
+
+    this.#renderProfile();
+
     if (filmsCount === 0) {
       this.#renderNoFilm();
       return;
-    }
-    if (this.#profileComponent === null) {
-      this.#renderProfile();
     }
 
     if (this.#mode === 0) {

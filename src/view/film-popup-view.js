@@ -28,7 +28,7 @@ const renderFilmPopupTemplate = (film) => {
         <div class="film-details__poster">
           <img class="film-details__poster-img" src=${info.poster} alt="">
 
-          <p class="film-details__age">${info.ageRating}</p>
+          <p class="film-details__age">${info.ageRating}+</p>
         </div>
 
         <div class="film-details__info">
@@ -152,7 +152,7 @@ export default class FilmPopupView extends SmartView {
   #setCommentAborting = (id) => {
     const resetFormState = () => {
       this.#comments.get(id).updateData({
-        isDisabled: false,
+        isDisabled: true,
         isDeleting: false,
       });
     };

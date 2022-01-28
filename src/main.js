@@ -8,6 +8,12 @@ import StatsView from './view/stats-view.js';
 import FooterView from './view/footer-stats-view.js';
 import ApiService from './api-service.js';
 
+//ПРОФАЙЛ
+//1.Обновлять статус сразу после изменения данных в модели
+
+//СТАТИСТИКА
+//1.Сбрасывать кол-во показанных фильмов после возвращения из статистики (на изменении фильтров уже работает)
+
 //ОБНОВЛЕНИЕ ФИЛЬМА
 
 //УДАЛЕНИЕ ЗАДАЧИ

@@ -60,6 +60,7 @@ export default class FilmPresenter {
 
     if (this.#filmsListComponent.element.contains(prevFilmCardComponent.element)) {
       replace(this.#filmCardComponent, prevFilmCardComponent);
+      this.#changeWatchedFilms();
     }
 
     if (document.body.contains(prevFilmPopupComponent.element)) {
@@ -207,8 +208,6 @@ export default class FilmPresenter {
         favorite: this.#film.userDetails.favorite,
       },
     });
-
-    this.#changeWatchedFilms();
   };
 
   #handleFavoriteClick = () => {
