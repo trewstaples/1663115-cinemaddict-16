@@ -1,5 +1,5 @@
 import { formatCommentDate } from '../utils/date';
-import AbstractView from './abstract-view';
+import SmartView from './smart-view';
 import he from 'he';
 
 const createCommentItemTemplate = (data = {}) => {
@@ -20,9 +20,7 @@ const createCommentItemTemplate = (data = {}) => {
   </li>`;
 };
 
-export default class CommentView extends AbstractView {
-  #comment = null;
-
+export default class CommentView extends SmartView {
   constructor(comment) {
     super();
     this._data = CommentView.parseCommentToData(comment);
@@ -32,6 +30,10 @@ export default class CommentView extends AbstractView {
     return createCommentItemTemplate(this._data);
   }
 
+  restoreHandlers = () => {
+    this.setDeleteClickHandler(this._callback.deleteClick);
+  };
+
   setDeleteClickHandler = (callback) => {
     this._callback.deleteClick = callback;
     this.element.querySelector('.film-details__comment-delete').addEventListener('click', this.#deleteClickHandler);
@@ -40,7 +42,7 @@ export default class CommentView extends AbstractView {
   #deleteClickHandler = (evt) => {
     evt.preventDefault();
 
-    this._callback.deleteClick(this.#comment.id);
+    this._callback.deleteClick(this._data.id);
   };
 
   static parseCommentToData = (comment) => ({ ...comment, isDisabled: false, isDeleting: false });

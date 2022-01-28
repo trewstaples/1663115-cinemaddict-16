@@ -6,6 +6,12 @@ import FilmPopupView from '../view/film-popup-view.js';
 import CommentsModel from '../model/comments-model.js';
 import ApiService from '../api-service.js';
 
+export const State = {
+  SAVING: 'SAVING',
+  DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
+};
+
 export default class FilmPresenter {
   #filmsListComponent = null;
   #changeData = null;
@@ -83,6 +89,14 @@ export default class FilmPresenter {
     remove(this.#filmPopupComponent);
   };
 
+  setViewState = (state, id = null) => {
+    if (this.#mode === Mode.CARD) {
+      return;
+    }
+
+    this.#filmPopupComponent.updateData(state, id);
+  };
+
   #handleEscKeyDown = (evt) => {
     if (evt.key === KeyboardKeys.ESCAPE || evt.key === KeyboardKeys.ESC) {
       evt.preventDefault();
@@ -140,9 +154,11 @@ export default class FilmPresenter {
   #handleViewAction = (actionType, update) => {
     switch (actionType) {
       case UserAction.ADD_COMMENT:
+        this.setViewState(State.SAVING);
         this.#commentsModel.addComment(actionType, update);
         break;
       case UserAction.DELETE_COMMENT:
+        this.setViewState(State.DELETING, update);
         this.#commentsModel.deleteComment(actionType, update);
         break;
     }
