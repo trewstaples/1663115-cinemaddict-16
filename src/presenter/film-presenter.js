@@ -34,7 +34,6 @@ export default class FilmPresenter {
   }
 
   init = (film) => {
-    console.log('Я первый раз рисуюсь');
     this.#film = film;
 
     const prevFilmCardComponent = this.#filmCardComponent;
@@ -58,7 +57,6 @@ export default class FilmPresenter {
     }
 
     if (document.body.contains(prevFilmPopupComponent.element)) {
-      console.log('я здесь');
       const scrollPosition = prevFilmPopupComponent.element.scrollTop;
 
       replace(this.#filmPopupComponent, prevFilmPopupComponent);

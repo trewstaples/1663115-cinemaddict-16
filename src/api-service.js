@@ -24,28 +24,6 @@ export default class ApiService {
     return this.#load({ url: `/comments/${this.#filmId}` }).then(ApiService.parseResponse);
   }
 
-  /*   addComment = async (comment) => {
-    const response = await this.#load({
-      url: 'comments',
-      method: Method.POST,
-      body: JSON.stringify(this.#adaptCommentToServer(comment)),
-      headers: new Headers({'Content-Type': 'application/json'}),
-    });
-
-    const parsedResponse = await ApiService.parseResponse(response);
-
-    return parsedResponse;
-  }
-
-  deleteComment = async (comment) => {
-    const response = await this.#load({
-      url: `comments/${comment.id}`,
-      method: Method.DELETE,
-    });
-
-    return response;
-  } */
-
   #load = async ({ url, method = Method.GET, body = null, headers = new Headers() }) => {
     headers.append('Authorization', this.#authorization);
 
@@ -57,19 +35,6 @@ export default class ApiService {
     } catch (err) {
       ApiService.catchError(err);
     }
-  };
-
-  updateFilm = async (film) => {
-    const response = await this.#load({
-      url: `movies/${film.id}`,
-      method: Method.PUT,
-      body: JSON.stringify(this.#adaptFilmToServer(film)),
-      headers: new Headers({ 'Content-Type': 'application/json' }),
-    });
-
-    const parsedResponse = await ApiService.parseResponse(response);
-
-    return parsedResponse;
   };
 
   #adaptFilmToServer = (film) => {
@@ -106,11 +71,11 @@ export default class ApiService {
     return adaptedFilm;
   };
 
-  updateComment = async (comment) => {
+  updateFilm = async (film) => {
     const response = await this.#load({
-      url: `comments/${comment.id}`,
+      url: `movies/${film.id}`,
       method: Method.PUT,
-      body: JSON.stringify(this.#adaptCommentToServer(comment)),
+      body: JSON.stringify(this.#adaptFilmToServer(film)),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
 
@@ -131,7 +96,7 @@ export default class ApiService {
 
     return adaptedComment;
   };
-
+/*
   addComment = async (comment) => {
     const response = await this.#load({
       url: 'comments',
@@ -143,11 +108,11 @@ export default class ApiService {
     const parsedResponse = await ApiService.parseResponse(response);
 
     return parsedResponse;
-  }
+  } */
 
   deleteComment = async (comment) => {
     const response = await this.#load({
-      url: `comments/${comment.id}`,
+      url: `comments/${comment}`,
       method: Method.DELETE,
     });
 
