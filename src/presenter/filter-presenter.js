@@ -51,11 +51,11 @@ export default class FilterPresenter {
     const filters = this.filters;
     const prevFilterComponent = this.#filterComponent;
 
-    this.#handleMenuClick = handleMenuClick;
+    if (this.#handleMenuClick === null) {
+      this.#handleMenuClick = handleMenuClick;
+    }
 
     this.#filterComponent = new FilterView(filters, this.#filterModel.filter, menuItem);
-    this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
-    this.#filterComponent.setMenuClickHandler(this.#handleMenuClick);
 
     if (prevFilterComponent === null) {
       render(this.#filterContainer, this.#filterComponent, RenderPosition.BEFOREEND);
@@ -66,8 +66,14 @@ export default class FilterPresenter {
     remove(prevFilterComponent);
   };
 
+  setMenuHandlers = () => {
+    this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
+    this.#filterComponent.setMenuClickHandler(this.#handleMenuClick);
+  };
+
   #handleModelEvent = () => {
     this.init(this.#handleMenuClick);
+    this.setMenuHandlers();
   };
 
   #handleFilterTypeChange = (filterType) => {

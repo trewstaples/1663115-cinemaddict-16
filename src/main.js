@@ -8,21 +8,6 @@ import StatsView from './view/stats-view.js';
 import FooterView from './view/footer-stats-view.js';
 import ApiService from './api-service.js';
 
-//ПРОФАЙЛ
-//1.Обновлять статус сразу после изменения данных в модели
-
-//СТАТИСТИКА
-//1.Сбрасывать кол-во показанных фильмов после возвращения из статистики (на изменении фильтров уже работает)
-
-//ОБНОВЛЕНИЕ ФИЛЬМА
-
-//УДАЛЕНИЕ ЗАДАЧИ
-
-//ДОБАВЛЕНИЕ ЗАДАЧИ
-
-//Разобраться с передачей данных в футер
-//Разобраться с блокировкой фильтров в finally
-
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const footerStats = document.querySelector('.footer__statistics');
@@ -35,10 +20,15 @@ const filmsBoardPresenter = new FilmsBoardPresenter(siteHeaderElement, siteMainE
 
 let statsComponent = null;
 
+const footerStatsComponent = new FooterView(filmsModel.films);
+render(footerStats, footerStatsComponent, RenderPosition.BEFOREEND);
+
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.FILMS:
       filterPresenter.init(handleSiteMenuClick);
+      filterPresenter.setMenuHandlers();
+
       if (!siteMainElement.querySelector('.films')) {
         filmsBoardPresenter.init();
       }
@@ -48,6 +38,7 @@ const handleSiteMenuClick = (menuItem) => {
 
     case MenuItem.STATS:
       filterPresenter.init(handleSiteMenuClick, MenuItem.STATS);
+      filterPresenter.setMenuHandlers();
       filmsBoardPresenter.destroy();
       statsComponent = new StatsView(filmsModel.films);
       render(siteMainElement, statsComponent, RenderPosition.BEFOREEND);
@@ -57,8 +48,8 @@ const handleSiteMenuClick = (menuItem) => {
 
 filterPresenter.init(handleSiteMenuClick);
 filmsBoardPresenter.init();
-
-filmsModel.init();
-
-const footerStatsComponent = new FooterView(filmsModel.films);
-render(footerStats, footerStatsComponent, RenderPosition.BEFOREEND);
+filmsModel.init().finally(() => {
+  filterPresenter.setMenuHandlers();
+  remove(footerStatsComponent);
+  render(footerStats, new FooterView(filmsModel.films), RenderPosition.BEFOREEND);
+});
