@@ -34,6 +34,7 @@ export default class FilmPresenter {
   }
 
   init = (film) => {
+    console.log('Я первый раз рисуюсь');
     this.#film = film;
 
     const prevFilmCardComponent = this.#filmCardComponent;
@@ -57,6 +58,7 @@ export default class FilmPresenter {
     }
 
     if (document.body.contains(prevFilmPopupComponent.element)) {
+      console.log('я здесь');
       const scrollPosition = prevFilmPopupComponent.element.scrollTop;
 
       replace(this.#filmPopupComponent, prevFilmPopupComponent);
@@ -81,26 +83,6 @@ export default class FilmPresenter {
   destroy = () => {
     remove(this.#filmCardComponent);
     remove(this.#filmPopupComponent);
-  };
-
-  #initPopup = (film) => {
-    this.#film = film;
-
-    const prevFilmPopupComponent = this.#filmPopupComponent;
-
-    this.#filmPopupComponent = new FilmPopupView(film, this.#handleViewAction);
-
-    if (document.body.contains(prevFilmPopupComponent.element)) {
-      const scrollPosition = prevFilmPopupComponent.element.scrollTop;
-      replace(this.#filmPopupComponent, prevFilmPopupComponent);
-      this.#filmPopupComponent.element.scrollTop = scrollPosition;
-
-      this.#setPopupHandlers();
-
-      this.#handleModelEvent(UserAction.INIT);
-
-      remove(prevFilmPopupComponent);
-    }
   };
 
   #handleEscKeyDown = (evt) => {
@@ -191,10 +173,6 @@ export default class FilmPresenter {
         favorite: this.#film.userDetails.favorite,
       },
     });
-
-    if (this.#mode === Mode.POPUP) {
-      this.#initPopup(this.#film);
-    }
   };
 
   #handleWatchedClick = () => {
@@ -207,10 +185,6 @@ export default class FilmPresenter {
         favorite: this.#film.userDetails.favorite,
       },
     });
-
-    if (this.#mode === Mode.POPUP) {
-      this.#initPopup(this.#film);
-    }
 
     this.#changeWatchedFilms();
   };
@@ -225,9 +199,5 @@ export default class FilmPresenter {
         favorite: !this.#film.userDetails.favorite,
       },
     });
-
-    if (this.#mode === Mode.POPUP) {
-      this.#initPopup(this.#film);
-    }
   };
 }

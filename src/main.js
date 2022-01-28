@@ -8,6 +8,17 @@ import StatsView from './view/stats-view.js';
 import FooterView from './view/footer-stats-view.js';
 import ApiService from './api-service.js';
 
+//ОБНОВЛЕНИЕ ФИЛЬМА
+//1. Исправить сброс положения попап при перезагрузке. ScrollPostition - Исправил, удалив initPopup();
+
+//УДАЛЕНИЕ ЗАДАЧИ
+
+//ДОБАВЛЕНИЕ ЗАДАЧИ
+
+//Отрефакторить, если надо, обновление данных комментариев при инициализации попап. Ходить на сервер или нет?
+//Разобраться с передачей данных в футер
+//Разобраться с блокировкой фильтров в finally
+
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const footerStats = document.querySelector('.footer__statistics');

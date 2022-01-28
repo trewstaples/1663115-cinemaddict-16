@@ -24,6 +24,28 @@ export default class ApiService {
     return this.#load({ url: `/comments/${this.#filmId}` }).then(ApiService.parseResponse);
   }
 
+  /*   addComment = async (comment) => {
+    const response = await this.#load({
+      url: 'comments',
+      method: Method.POST,
+      body: JSON.stringify(this.#adaptCommentToServer(comment)),
+      headers: new Headers({'Content-Type': 'application/json'}),
+    });
+
+    const parsedResponse = await ApiService.parseResponse(response);
+
+    return parsedResponse;
+  }
+
+  deleteComment = async (comment) => {
+    const response = await this.#load({
+      url: `comments/${comment.id}`,
+      method: Method.DELETE,
+    });
+
+    return response;
+  } */
+
   #load = async ({ url, method = Method.GET, body = null, headers = new Headers() }) => {
     headers.append('Authorization', this.#authorization);
 
