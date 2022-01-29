@@ -182,26 +182,6 @@ export default class FilmPopupView extends SmartView {
     this.#renderPostComment();
   };
 
-  #closeClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.closeClick();
-  };
-
-  #watchlistClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.watchlistClick();
-  };
-
-  #watchedClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.watchedClick();
-  };
-
-  #favoriteClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.favoriteClick();
-  };
-
   #renderCommentInfo = (comments) => {
     const prevCommentInfoComponent = this.#commentInfoComponent;
     this.#commentInfoComponent = new CommentInfoView(comments);
@@ -219,10 +199,6 @@ export default class FilmPopupView extends SmartView {
     }
   };
 
-  #handleDeleteCommentClick = (update) => {
-    this.#changeCommentData(UserAction.DELETE_COMMENT, update);
-  };
-
   #removeCommentList = () => {
     this.#comments.forEach((comment) => remove(comment));
     this.#comments.clear();
@@ -234,10 +210,6 @@ export default class FilmPopupView extends SmartView {
     this.#postCommentComponent.setCommentKeydownHandler(this.#handleCommentKeydown);
     render(this.commentListContainer, this.#postCommentComponent, RenderPosition.AFTEREND);
     remove(prevPostCommentComponent);
-  };
-
-  #handleCommentKeydown = (update) => {
-    this.#changeCommentData(UserAction.ADD_COMMENT, update);
   };
 
   #setCommentAborting = (id) => {
@@ -258,5 +230,33 @@ export default class FilmPopupView extends SmartView {
       });
     };
     this.#postCommentComponent.shake(resetFormState);
+  };
+
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closeClick();
+  };
+
+  #watchlistClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.watchlistClick();
+  };
+
+  #watchedClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  };
+
+  #handleDeleteCommentClick = (update) => {
+    this.#changeCommentData(UserAction.DELETE_COMMENT, update);
+  };
+
+  #handleCommentKeydown = (update) => {
+    this.#changeCommentData(UserAction.ADD_COMMENT, update);
   };
 }

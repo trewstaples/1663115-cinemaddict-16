@@ -71,16 +71,16 @@ export default class FilterPresenter {
     this.#filterComponent.setMenuClickHandler(this.#handleMenuClick);
   };
 
+  #handleModelEvent = () => {
+    this.init(this.#handleMenuClick);
+    this.setMenuHandlers();
+  };
+
   #handleFilterTypeChange = (filterType) => {
     if (this.#filterModel.filter === filterType) {
       return;
     }
 
     this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
-  };
-
-  #handleModelEvent = () => {
-    this.init(this.#handleMenuClick);
-    this.setMenuHandlers();
   };
 }

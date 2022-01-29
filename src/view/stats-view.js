@@ -211,6 +211,15 @@ export default class StatsView extends SmartView {
     this.element.querySelector('.statistic__filters').addEventListener('change', this.#statsFilterChangeHandler);
   };
 
+  #setCharts = () => {
+    if (this.#chart !== null) {
+      this.#chart = null;
+    }
+
+    const chartContainer = this.element.querySelector('.statistic__chart');
+    this.#chart = renderChart(chartContainer, this._data);
+  };
+
   #statsFilterChangeHandler = (evt) => {
     evt.preventDefault();
 
@@ -221,14 +230,5 @@ export default class StatsView extends SmartView {
     this.#currentFilter = evt.target.value;
     this._data = statisticFilter[this.#currentFilter](this.#watchedFilms);
     this.updateElement();
-  };
-
-  #setCharts = () => {
-    if (this.#chart !== null) {
-      this.#chart = null;
-    }
-
-    const chartContainer = this.element.querySelector('.statistic__chart');
-    this.#chart = renderChart(chartContainer, this._data);
   };
 }

@@ -46,6 +46,16 @@ export default class PostCommentView extends SmartView {
     this.element.querySelector('.film-details__comment-input').addEventListener('keydown', this.#commentKeydownHandler);
   };
 
+  #setInnerHandlers = () => {
+    this.element.querySelector('.film-details__emoji-list').addEventListener('change', this.#emojiChangeHandler);
+    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
+  };
+
+  #disableForm = () => {
+    this.element.querySelector('.film-details__comment-input').disabled = true;
+    this.element.querySelector('.film-details__emoji-list').disabled = true;
+  };
+
   #commentKeydownHandler = (evt) => {
     if ((evt.ctrlKey || evt.metaKey) && evt.code === KeyboardKey.ENTER) {
       if (!this._data.emoji || !this._data.text) {
@@ -63,16 +73,6 @@ export default class PostCommentView extends SmartView {
       PostCommentView.parseDataToComment(this._data);
       this._callback.formSubmit(newComment);
     }
-  };
-
-  #disableForm = () => {
-    this.element.querySelector('.film-details__comment-input').disabled = true;
-    this.element.querySelector('.film-details__emoji-list').disabled = true;
-  };
-
-  #setInnerHandlers = () => {
-    this.element.querySelector('.film-details__emoji-list').addEventListener('change', this.#emojiChangeHandler);
-    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
   };
 
   #emojiChangeHandler = (evt) => {

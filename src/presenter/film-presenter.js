@@ -39,6 +39,12 @@ export default class FilmPresenter {
     this.#commentsModel.addObserver(this.#handleModelEvent);
   }
 
+  get comments() {
+    const comments = this.#commentsModel.comments;
+
+    return comments;
+  }
+
   init = (film) => {
     this.#film = film;
 
@@ -78,12 +84,6 @@ export default class FilmPresenter {
 
     remove(prevFilmCardComponent);
   };
-
-  get comments() {
-    const comments = this.#commentsModel.comments;
-
-    return comments;
-  }
 
   destroy = () => {
     remove(this.#filmCardComponent);
@@ -132,22 +132,6 @@ export default class FilmPresenter {
     }
   };
 
-  #handleCardClick = () => {
-    if (!document.body.contains(this.#filmPopupComponent.element)) {
-      document.addEventListener('keydown', this.#handleEscKeyDown);
-      this.#removePrevPopup();
-      this.#renderPopup();
-    }
-  };
-
-  #handleEscKeyDown = (evt) => {
-    if (evt.key === KeyboardKey.ESCAPE || evt.key === KeyboardKey.ESC) {
-      evt.preventDefault();
-      this.#removePopup();
-      document.removeEventListener('keydown', this.#handleEscKeyDown);
-    }
-  };
-
   #removePrevPopup = () => {
     if (document.body.querySelector('.film-details')) {
       document.body.querySelector('.film-details').remove();
@@ -184,6 +168,22 @@ export default class FilmPresenter {
     document.body.querySelector('.film-details').remove();
     document.body.classList.remove('hide-overflow');
     this.#mode = Mode.CARD;
+  };
+
+  #handleCardClick = () => {
+    if (!document.body.contains(this.#filmPopupComponent.element)) {
+      document.addEventListener('keydown', this.#handleEscKeyDown);
+      this.#removePrevPopup();
+      this.#renderPopup();
+    }
+  };
+
+  #handleEscKeyDown = (evt) => {
+    if (evt.key === KeyboardKey.ESCAPE || evt.key === KeyboardKey.ESC) {
+      evt.preventDefault();
+      this.#removePopup();
+      document.removeEventListener('keydown', this.#handleEscKeyDown);
+    }
   };
 
   #handleWatchlistClick = () => {

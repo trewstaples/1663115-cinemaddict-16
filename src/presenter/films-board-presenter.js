@@ -26,7 +26,6 @@ export default class FilmsBoardPresenter {
   #noFilmComponent = null;
   #profileComponent = null;
   #sortComponent = null;
-  #statsComponent = null;
   #showMoreButtonComponent = null;
 
   #renderedFilmsCount = FILMS_COUNT_PER_STEP;
