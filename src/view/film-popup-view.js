@@ -1,4 +1,4 @@
-import { UserAction } from '../utils/const.js';
+import { UserAction, Film } from '../utils/const.js';
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import { formatRuntime, formatReleaseDate } from '../utils/date.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
@@ -11,7 +11,7 @@ import PostCommentView from './post-comment-view.js';
 const renderFilmPopupTemplate = (film) => {
   const { info, userDetails } = film;
 
-  const genresNaming = info.genre.length > 1 ? 'Genres' : 'Genre';
+  const genresNaming = info.genre.length > Film.GENRE_MIN ? 'Genres' : 'Genre';
   const createGenreTemplate = (genre) => `<span class="film-details__genre">${genre}</span>`;
 
   const watchlistClassName = getClassName(userDetails.watchlist, 'film-details__control-button--active');

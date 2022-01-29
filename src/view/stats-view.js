@@ -5,12 +5,11 @@ import SmartView from './smart-view.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-const BAR_HEIGHT = 50;
-
 const ChartConfiguration = {
   TYPE: 'horizontalBar',
   BACKGROUND: '#ffe800',
   ANCHOR: 'start',
+  BAR_HEIGHT: 50,
   BAR_THICKNESS: 24,
   SIZE: 20,
   COLOR: '#ffffff',
@@ -35,7 +34,7 @@ const renderChart = (statisticCtx, films) => {
   const genres = Object.keys(sortedGenresStats);
   const genresCount = Object.values(sortedGenresStats);
 
-  statisticCtx.height = BAR_HEIGHT * genres.length;
+  statisticCtx.height = ChartConfiguration.BAR_HEIGHT * genres.length;
 
   return new Chart(statisticCtx, {
     plugins: [ChartDataLabels],

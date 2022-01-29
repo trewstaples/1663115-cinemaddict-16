@@ -1,10 +1,10 @@
-import { MenuItem } from '../utils/const.js';
+import { MenuItem, FilterType } from '../utils/const.js';
 import AbstractView from './abstract-view.js';
 
 const createFilterItemTemplate = (filter, currentFilterType, menuItem) => {
   const { type, name, count } = filter;
   return `<a href="#${type}" class="main-navigation__item ${type === currentFilterType && menuItem === MenuItem.FILMS ? 'main-navigation__item--active' : ''}" data-filter="${type}"> ${name} ${
-    type === 'all' ? '' : `<span data-filter="${type}" class="main-navigation__item-count">${count}</span>`
+    type === FilterType.ALL ? '' : `<span data-filter="${type}" class="main-navigation__item-count">${count}</span>`
   } </a>`;
 };
 

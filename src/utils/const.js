@@ -1,4 +1,10 @@
-export const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
+export const Film = {
+  RANK_NONE: 'None',
+  GENRE_MIN: 1,
+  DESCRIPTION_END: 139,
+  DESCRIPTION_MAX: 140,
+  EMOTIONS: ['smile', 'sleeping', 'puke', 'angry'],
+};
 
 export const Server = {
   END_POINT: 'https://16.ecmascript.pages.academy/cinemaddict',
