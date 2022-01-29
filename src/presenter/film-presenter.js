@@ -162,7 +162,7 @@ export default class FilmPresenter {
     this.#setPopupHandlers();
     this.#mode = Mode.POPUP;
 
-    if (this.comments.length === 0) {
+    if (!this.comments.length) {
       this.#commentsModel.init();
       return;
     }

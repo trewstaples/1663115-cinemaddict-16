@@ -10,7 +10,7 @@ import FooterView from './view/footer-stats-view.js';
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
-const footerStats = document.querySelector('.footer__statistics');
+const footerElement = document.querySelector('.footer__statistics');
 
 const filmsModel = new FilmsModel(new ApiService(Server.END_POINT, Server.AUTHORIZATION));
 const filterModel = new FilterModel();
@@ -20,8 +20,8 @@ const filmsBoardPresenter = new FilmsBoardPresenter(siteHeaderElement, siteMainE
 
 let statsComponent = null;
 
-const footerStatsComponent = new FooterView(filmsModel.films);
-render(footerStats, footerStatsComponent, RenderPosition.BEFOREEND);
+const footerComponent = new FooterView(filmsModel.films);
+render(footerElement, footerComponent, RenderPosition.BEFOREEND);
 
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
@@ -50,6 +50,6 @@ filterPresenter.init(handleSiteMenuClick);
 filmsBoardPresenter.init();
 filmsModel.init().finally(() => {
   filterPresenter.setMenuHandlers();
-  remove(footerStatsComponent);
-  render(footerStats, new FooterView(filmsModel.films), RenderPosition.BEFOREEND);
+  remove(footerComponent);
+  render(footerElement, new FooterView(filmsModel.films), RenderPosition.BEFOREEND);
 });

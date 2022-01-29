@@ -1,4 +1,4 @@
-import { StatsType, userRank } from '../utils/const.js';
+import { StatsType, userRank, Film } from '../utils/const.js';
 import { getUserRank, getGenres, getTopGenre, statisticFilter } from '../utils/stats.js';
 import { getTotalDuration, formatRuntime } from '../utils/date.js';
 import SmartView from './smart-view.js';
@@ -138,14 +138,14 @@ const renderStatsTemplate = (watchedFilms, currentFilter, filteredFilms, filters
     <ul class="statistic__text-list">
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">You watched</h4>
-        <p class="statistic__item-text">${filteredFilms.length} <span class="statistic__item-description">${filteredFilms.length === 1 ? 'movie' : 'movies'}</span></p>
+        <p class="statistic__item-text">${filteredFilms.length} <span class="statistic__item-description">${filteredFilms.length === Film.FILTERED_FILMS_AMOUNT ? 'movie' : 'movies'}</span></p>
       </li>
       <li class="statistic__text-item">
         <h4 class="statistic__item-title">Total duration</h4>
         <p class="statistic__item-text">${parseInt(hours, 10)} <span class="statistic__item-description">h</span> ${parseInt(minutes, 10)} <span class="statistic__item-description">m</span></p>
       </li>
       <li class="statistic__text-item">
-  ${filteredFilms.length !== 0 ? `<h4 class="statistic__item-title">Top genre</h4>
+  ${filteredFilms.length ? `<h4 class="statistic__item-title">Top genre</h4>
     <p class="statistic__item-text">${topGenre}</p>` : '' }
         </li>
     </ul>

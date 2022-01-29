@@ -114,13 +114,13 @@ export default class FilmPopupView extends SmartView {
     return renderFilmPopupTemplate(this.#film);
   }
 
-  get container() {
+  get commentInfoContainer() {
     this.#container = this.element.querySelector('.film-details__inner');
 
     return this.#container;
   }
 
-  get commentList() {
+  get commentListContainer() {
     this.#commentList = this.element.querySelector('.film-details__comments-list');
     return this.#commentList;
   }
@@ -205,7 +205,7 @@ export default class FilmPopupView extends SmartView {
   #renderCommentInfo = (comments) => {
     const prevCommentInfoComponent = this.#commentInfoComponent;
     this.#commentInfoComponent = new CommentInfoView(comments);
-    render(this.container, this.#commentInfoComponent, RenderPosition.BEFOREEND);
+    render(this.commentInfoContainer, this.#commentInfoComponent, RenderPosition.BEFOREEND);
     remove(prevCommentInfoComponent);
   };
 
@@ -214,7 +214,7 @@ export default class FilmPopupView extends SmartView {
     for (const comment of comments) {
       this.#commentComponent = new CommentView(comment);
       this.#commentComponent.setDeleteClickHandler(this.#handleDeleteCommentClick);
-      render(this.commentList, this.#commentComponent, RenderPosition.BEFOREEND);
+      render(this.commentListContainer, this.#commentComponent, RenderPosition.BEFOREEND);
       this.#comments.set(comment.id, this.#commentComponent);
     }
   };
@@ -232,7 +232,7 @@ export default class FilmPopupView extends SmartView {
     const prevPostCommentComponent = this.#postCommentComponent;
     this.#postCommentComponent = new PostCommentView();
     this.#postCommentComponent.setCommentKeydownHandler(this.#handleCommentKeydown);
-    render(this.commentList, this.#postCommentComponent, RenderPosition.AFTEREND);
+    render(this.commentListContainer, this.#postCommentComponent, RenderPosition.AFTEREND);
     remove(prevPostCommentComponent);
   };
 

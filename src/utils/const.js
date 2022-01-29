@@ -3,6 +3,7 @@ export const Film = {
   GENRE_MIN: 1,
   DESCRIPTION_END: 139,
   DESCRIPTION_MAX: 140,
+  FILTERED_FILMS_AMOUNT: 1,
   EMOTIONS: ['smile', 'sleeping', 'puke', 'angry'],
 };
 

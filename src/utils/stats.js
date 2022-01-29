@@ -43,7 +43,7 @@ export const getGenres = (films) => {
 };
 
 export const getTopGenre = (films) => {
-  if (films.length === 0) {
+  if (!films.length) {
     return '';
   }
 

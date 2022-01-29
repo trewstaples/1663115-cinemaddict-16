@@ -223,7 +223,7 @@ export default class FilmsBoardPresenter {
 
     this.#renderProfile();
 
-    if (filmsCount === 0) {
+    if (!filmsCount) {
       this.#renderNoFilm();
       return;
     }
