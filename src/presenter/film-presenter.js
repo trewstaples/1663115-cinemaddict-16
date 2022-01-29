@@ -1,4 +1,4 @@
-import { KeyboardKeys, UserAction, UpdateType, Mode, FilterType, AUTHORIZATION, END_POINT } from '../utils/const.js';
+import { KeyboardKey, UserAction, UpdateType, Mode, FilterType, AUTHORIZATION, END_POINT } from '../utils/const.js';
 import { render, replace, remove, RenderPosition } from '../utils/render.js';
 import AbstractView from '../view/abstract-view.js';
 import FilmCardView from '../view/film-card-view.js';
@@ -99,7 +99,7 @@ export default class FilmPresenter {
   };
 
   #handleEscKeyDown = (evt) => {
-    if (evt.key === KeyboardKeys.ESCAPE || evt.key === KeyboardKeys.ESC) {
+    if (evt.key === KeyboardKey.ESCAPE || evt.key === KeyboardKey.ESC) {
       evt.preventDefault();
       this.#removePopup();
       document.removeEventListener('keydown', this.#handleEscKeyDown);

@@ -1,4 +1,4 @@
-import { EMOTIONS, KeyboardKeys } from '../utils/const';
+import { EMOTIONS, KeyboardKey } from '../utils/const';
 import { createTemplateFromArray } from '../utils/films';
 import SmartView from './smart-view';
 
@@ -47,7 +47,7 @@ export default class PostCommentView extends SmartView {
   };
 
   #commentKeydownHandler = (evt) => {
-    if ((evt.ctrlKey || evt.metaKey) && evt.code === KeyboardKeys.ENTER) {
+    if ((evt.ctrlKey || evt.metaKey) && evt.code === KeyboardKey.ENTER) {
       if (!this._data.emoji || !this._data.text) {
         return;
       }

@@ -1,4 +1,4 @@
-import { StringFormats } from '../utils/const.js';
+import { StringFormat } from '../utils/const.js';
 import { formatRuntime } from '../utils/date.js';
 import { getClassName } from '../utils/films.js';
 import AbstractView from './abstract-view.js';
@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 const renderFilmTemplate = (film) => {
   const { info, userDetails, comments } = film;
   const description = info.description.length > 140 ? info.description.slice(0, 139).concat('...') : info.description;
-  const date = dayjs(info.release.date).format(StringFormats.RELEASE_YEAR);
+  const date = dayjs(info.release.date).format(StringFormat.RELEASE_YEAR);
 
   const watchlistClassName = getClassName(userDetails.watchlist, 'film-card__controls-item--active');
   const wactchedButtonClassName = getClassName(userDetails.alreadyWatched, 'film-card__controls-item--active');

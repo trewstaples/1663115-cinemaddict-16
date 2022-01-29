@@ -1,4 +1,4 @@
-export const KeyboardKeys = {
+export const KeyboardKey = {
   ESCAPE: 'Escape',
   ESC: 'Esc',
   ENTER: 'Enter',
@@ -8,7 +8,7 @@ export const KeyboardKeys = {
 
 export const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
-export const StringFormats = {
+export const StringFormat = {
   RELEASE_DATE: 'DD MMMM YYYY',
   RELEASE_YEAR: 'YYYY',
   COMMENT_DATE: 'YYYY/MM/D HH:mm',
@@ -59,7 +59,7 @@ export const Mode = {
   POPUP: 'POPUP',
 };
 
-export const userRanks = {
+export const userRank = {
   None: {
     MIN: 0,
     MAX: 0,

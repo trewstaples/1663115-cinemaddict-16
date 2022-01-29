@@ -1,4 +1,4 @@
-import { StatsType, userRanks } from '../utils/const.js';
+import { StatsType, userRank } from '../utils/const.js';
 import { getUserRank, getGenres, getTopGenre, statisticFilter } from '../utils/stats.js';
 import { getTotalDuration, formatRuntime } from '../utils/date.js';
 import SmartView from './smart-view.js';
@@ -114,7 +114,7 @@ const createStatsFilterTemplate = (filter, currentFilter) => {
 };
 
 const renderStatsTemplate = (watchedFilms, currentFilter, filteredFilms, filters) => {
-  const statsUserRank = getUserRank(watchedFilms.length, userRanks);
+  const statsUserRank = getUserRank(watchedFilms.length, userRank);
   const topGenre = getTopGenre(filteredFilms);
   const totalDuration = formatRuntime(getTotalDuration(filteredFilms));
   const hours = totalDuration.split(' ')[0];
