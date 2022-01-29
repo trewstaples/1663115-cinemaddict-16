@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 
-export const getClassName = (element, attribute) => (element ? attribute : '');
-
 export const createTemplateFromArray = (array, cb) => array.map((item) => cb(item)).join('');
+
+export const getClassName = (element, attribute) => (element ? attribute : '');
 
 const getWeightForNullDate = (dateA, dateB) => {
   if (dateA === null && dateB === null) {

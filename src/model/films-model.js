@@ -1,5 +1,5 @@
-import AbstractObservable from '../utils/abstract-observable.js';
 import { UpdateType } from '../utils/const.js';
+import AbstractObservable from '../utils/abstract-observable.js';
 
 export default class FilmsModel extends AbstractObservable {
   #films = [];

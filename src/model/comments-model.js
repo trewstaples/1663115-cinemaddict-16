@@ -1,5 +1,5 @@
-import AbstractObservable from '../utils/abstract-observable.js';
 import { UserAction } from '../utils/const.js';
+import AbstractObservable from '../utils/abstract-observable.js';
 
 export default class CommentsModel extends AbstractObservable {
   #comments = [];

@@ -1,4 +1,4 @@
-import { KeyboardKey, UserAction, UpdateType, Mode, FilterType, AUTHORIZATION, END_POINT } from '../utils/const.js';
+import { KeyboardKey, UserAction, UpdateType, Mode, FilterType, Server } from '../utils/const.js';
 import { render, replace, remove, RenderPosition } from '../utils/render.js';
 import AbstractView from '../view/abstract-view.js';
 import FilmCardView from '../view/film-card-view.js';
@@ -35,7 +35,7 @@ export default class FilmPresenter {
     this.#mode = Mode.CARD;
     this.#filmId = filmId;
 
-    this.#commentsModel = new CommentsModel(new ApiService(END_POINT, AUTHORIZATION, this.#filmId));
+    this.#commentsModel = new CommentsModel(new ApiService(Server.END_POINT, Server.AUTHORIZATION, this.#filmId));
     this.#commentsModel.addObserver(this.#handleModelEvent);
   }
 
@@ -98,10 +98,59 @@ export default class FilmPresenter {
     this.#filmPopupComponent.updateData(state, id);
   };
 
+  #handleViewAction = async (actionType, update) => {
+    switch (actionType) {
+      case UserAction.ADD_COMMENT:
+        this.setViewState(State.SAVING);
+        try {
+          await this.#commentsModel.addComment(actionType, update, this.#film.id);
+        } catch (err) {
+          this.setViewState(State.ABORTING);
+        }
+        break;
+      case UserAction.DELETE_COMMENT:
+        this.setViewState(State.DELETING, update);
+        try {
+          await this.#commentsModel.deleteComment(actionType, update);
+        } catch (err) {
+          this.setViewState(State.ABORTING, update);
+        }
+        break;
+    }
+  };
+
+  #handleModelEvent = (actionType, data) => {
+    switch (actionType) {
+      case UserAction.ADD_COMMENT:
+        this.#changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, { ...this.#film, comments: data.comments.map((comment) => comment.id) });
+        break;
+      case UserAction.DELETE_COMMENT:
+        this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment !== data) });
+        break;
+      case UserAction.INIT:
+        this.#filmPopupComponent.renderCommentList(this.comments);
+    }
+  };
+
+  #handleCardClick = () => {
+    if (!document.body.contains(this.#filmPopupComponent.element)) {
+      document.addEventListener('keydown', this.#handleEscKeyDown);
+      this.#removePrevPopup();
+      this.#renderPopup();
+    }
+  };
+
   #handleEscKeyDown = (evt) => {
     if (evt.key === KeyboardKey.ESCAPE || evt.key === KeyboardKey.ESC) {
       evt.preventDefault();
       this.#removePopup();
+      document.removeEventListener('keydown', this.#handleEscKeyDown);
+    }
+  };
+
+  #removePrevPopup = () => {
+    if (document.body.querySelector('.film-details')) {
+      document.body.querySelector('.film-details').remove();
       document.removeEventListener('keydown', this.#handleEscKeyDown);
     }
   };
@@ -135,55 +184,6 @@ export default class FilmPresenter {
     document.body.querySelector('.film-details').remove();
     document.body.classList.remove('hide-overflow');
     this.#mode = Mode.CARD;
-  };
-
-  #removePrevPopup = () => {
-    if (document.body.querySelector('.film-details')) {
-      document.body.querySelector('.film-details').remove();
-      document.removeEventListener('keydown', this.#handleEscKeyDown);
-    }
-  };
-
-  #handleCardClick = () => {
-    if (!document.body.contains(this.#filmPopupComponent.element)) {
-      document.addEventListener('keydown', this.#handleEscKeyDown);
-      this.#removePrevPopup();
-      this.#renderPopup();
-    }
-  };
-
-  #handleViewAction = async (actionType, update) => {
-    switch (actionType) {
-      case UserAction.ADD_COMMENT:
-        this.setViewState(State.SAVING);
-        try {
-          await this.#commentsModel.addComment(actionType, update, this.#film.id);
-        } catch (err) {
-          this.setViewState(State.ABORTING);
-        }
-        break;
-      case UserAction.DELETE_COMMENT:
-        this.setViewState(State.DELETING, update);
-        try {
-          await this.#commentsModel.deleteComment(actionType, update);
-        } catch (err) {
-          this.setViewState(State.ABORTING, update);
-        }
-        break;
-    }
-  };
-
-  #handleModelEvent = (actionType, data) => {
-    switch (actionType) {
-      case UserAction.ADD_COMMENT:
-        this.#changeData(UserAction.ADD_COMMENT, UpdateType.PATCH, { ...this.#film, comments: data.comments.map((comment) => comment.id) });
-        break;
-      case UserAction.DELETE_COMMENT:
-        this.#changeData(UserAction.DELETE_COMMENT, UpdateType.PATCH, { ...this.#film, comments: this.#film.comments.filter((comment) => comment !== data) });
-        break;
-      case UserAction.INIT:
-        this.#filmPopupComponent.renderCommentList(this.comments);
-    }
   };
 
   #handleWatchlistClick = () => {

@@ -1,6 +1,6 @@
-import AbstractView from './abstract-view.js';
 import { userRank } from '../utils/const.js';
 import { getUserRank } from '../utils/stats.js';
+import AbstractView from './abstract-view.js';
 
 const renderProfileTemplate = (watchedFilmsCount) => {
   const profileUserRank = getUserRank(watchedFilmsCount, userRank);

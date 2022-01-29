@@ -3,15 +3,14 @@ import { render, replace, remove, RenderPosition } from '../utils/render.js';
 import { sortFilmsByDate, sortFilmsByRating } from '../utils/films.js';
 import { SortType } from '../view/sort-view.js';
 import { filter } from '../utils/filter.js';
+import LoadingView from '../view/loading-view.js';
+import NoFilmView from '../view/no-film.js';
+import ProfileView from '../view/profile-view.js';
 import SortView from '../view/sort-view.js';
 import FilmsView from '../view/films-view.js';
 import FilmsListView from '../view/films-list-view.js';
-import NoFilmView from '../view/no-film.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FilmPresenter from './film-presenter.js';
-import ProfileView from '../view/profile-view.js';
-import StatsView from '../view/stats-view.js';
-import LoadingView from '../view/loading-view.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
@@ -20,7 +19,6 @@ export default class FilmsBoardPresenter {
   #mainContainer = null;
   #filmsModel = null;
   #filterModel = null;
-  #mode = 1;
 
   #filmsComponent = new FilmsView();
   #filmsListComponent = new FilmsListView();
@@ -81,54 +79,6 @@ export default class FilmsBoardPresenter {
     this.#filterModel.removeObserver(this.#handleModelEvent);
   };
 
-  #renderProfile = () => {
-    const prevProfileComponent = this.#profileComponent;
-
-    this.#profileComponent = new ProfileView(this.watchedFilms.length);
-
-    if (prevProfileComponent === null) {
-      render(this.#profileContainer, this.#profileComponent, RenderPosition.BEFOREEND);
-      return;
-    }
-
-    if (this.#profileContainer.contains(prevProfileComponent.element)) {
-      replace(this.#profileComponent, prevProfileComponent);
-    }
-    remove(prevProfileComponent);
-  };
-
-  #renderStats = () => {
-    this.#statsComponent = new StatsView();
-    render(this.#mainContainer, this.#statsComponent, RenderPosition.BEFOREEND);
-  };
-
-  #renderSort = () => {
-    this.#sortComponent = new SortView(this.#currentSortType);
-    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
-    render(this.#filmsComponent, this.#sortComponent, RenderPosition.BEFOREBEGIN);
-  };
-
-  #handleSortTypeChange = (sortType) => {
-    if (this.#currentSortType === sortType) {
-      return;
-    }
-
-    this.#currentSortType = sortType;
-    this.#clearFilmsBoard({ resetRenderedFilmsCount: true });
-    this.#renderFilmsBoard();
-  };
-
-  #renderFilms = (films) => {
-    films.forEach((film) => this.#renderFilm(film));
-  };
-
-  #renderFilm = (film) => {
-    const filmId = film.id;
-    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, this.#currentFilterType, this.#renderProfile, filmId);
-    filmPresenter.init(film);
-    this.#filmPresenter.set(film.id, filmPresenter);
-  };
-
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
@@ -164,10 +114,6 @@ export default class FilmsBoardPresenter {
     }
   };
 
-  #renderFilmsList = () => {
-    render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
-  };
-
   #renderLoading = () => {
     render(this.#filmsComponent, this.#loadingComponent, RenderPosition.BEFOREEND);
   };
@@ -175,6 +121,53 @@ export default class FilmsBoardPresenter {
   #renderNoFilm = () => {
     this.#noFilmComponent = new NoFilmView(this.#currentFilterType);
     render(this.#filmsComponent, this.#noFilmComponent, RenderPosition.BEFOREEND);
+  };
+
+  #renderProfile = () => {
+    const prevProfileComponent = this.#profileComponent;
+
+    this.#profileComponent = new ProfileView(this.watchedFilms.length);
+
+    if (prevProfileComponent === null) {
+      render(this.#profileContainer, this.#profileComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this.#profileContainer.contains(prevProfileComponent.element)) {
+      replace(this.#profileComponent, prevProfileComponent);
+    }
+    remove(prevProfileComponent);
+  };
+
+  #renderSort = () => {
+    this.#sortComponent = new SortView(this.#currentSortType);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+    render(this.#filmsComponent, this.#sortComponent, RenderPosition.BEFOREBEGIN);
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#currentSortType = sortType;
+    this.#clearFilmsBoard({ resetRenderedFilmsCount: true });
+    this.#renderFilmsBoard();
+  };
+
+  #renderFilmsList = () => {
+    render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
+  };
+
+  #renderFilms = (films) => {
+    films.forEach((film) => this.#renderFilm(film));
+  };
+
+  #renderFilm = (film) => {
+    const filmId = film.id;
+    const filmPresenter = new FilmPresenter(this.#filmsListComponent, this.#handleViewAction, this.#currentFilterType, this.#renderProfile, filmId);
+    filmPresenter.init(film);
+    this.#filmPresenter.set(film.id, filmPresenter);
   };
 
   #handleShowMoreButtonClick = () => {
@@ -232,12 +225,6 @@ export default class FilmsBoardPresenter {
 
     if (filmsCount === 0) {
       this.#renderNoFilm();
-      return;
-    }
-
-    if (this.#mode === 0) {
-      remove(this.#filmsComponent);
-      this.#renderStats();
       return;
     }
 

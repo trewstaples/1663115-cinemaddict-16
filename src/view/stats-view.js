@@ -5,6 +5,8 @@ import SmartView from './smart-view.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+const BAR_HEIGHT = 50;
+
 const ChartConfiguration = {
   TYPE: 'horizontalBar',
   BACKGROUND: '#ffe800',
@@ -16,8 +18,6 @@ const ChartConfiguration = {
   OFFSET: 40,
   PADDING: 100,
 };
-
-const BAR_HEIGHT = 50;
 
 const renderChart = (statisticCtx, films) => {
   const genresStats = getGenres(films);

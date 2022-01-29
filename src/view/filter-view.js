@@ -41,6 +41,11 @@ export default class FilterView extends AbstractView {
     this.element.querySelector('.main-navigation__items').addEventListener('click', this.#filterTypeChangeHandler);
   };
 
+  setMenuClickHandler = (callback) => {
+    this._callback.menuClick = callback;
+    this.element.addEventListener('click', this.#menuClickHandler);
+  };
+
   #filterTypeChangeHandler = (evt) => {
     evt.preventDefault();
 
@@ -49,11 +54,6 @@ export default class FilterView extends AbstractView {
     }
 
     this._callback.filterTypeChange(evt.target.dataset.filter);
-  };
-
-  setMenuClickHandler = (callback) => {
-    this._callback.menuClick = callback;
-    this.element.addEventListener('click', this.#menuClickHandler);
   };
 
   #menuClickHandler = (evt) => {

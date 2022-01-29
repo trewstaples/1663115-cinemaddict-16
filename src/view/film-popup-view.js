@@ -1,12 +1,12 @@
 import { UserAction } from '../utils/const.js';
-import { render, RenderPosition, remove } from '../utils/render.js';
 import { getClassName, createTemplateFromArray } from '../utils/films.js';
 import { formatRuntime, formatReleaseDate } from '../utils/date.js';
+import { render, RenderPosition, remove } from '../utils/render.js';
+import { State } from '../presenter/film-presenter.js';
 import SmartView from './smart-view.js';
 import CommentInfoView from './comment-info-view.js';
 import CommentView from './comments-view.js';
 import PostCommentView from './post-comment-view.js';
-import { State } from '../presenter/film-presenter.js';
 
 const renderFilmPopupTemplate = (film) => {
   const { info, userDetails } = film;
@@ -149,35 +149,57 @@ export default class FilmPopupView extends SmartView {
     }
   };
 
-  #setCommentAborting = (id) => {
-    const resetFormState = () => {
-      this.#comments.get(id).updateData({
-        isDisabled: true,
-        isDeleting: false,
-      });
-    };
-    this.#comments.get(id).shake(resetFormState);
+  restoreHandlers = () => {
+    this.setCloseClickHandler(this._callback.closeClick);
+    this.setWatchlistClickHandler(this._callback.watchlistClick);
+    this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setFavoriteClickHandler(this._callback.favoriteClick);
   };
 
-  #setPostCommentAborting = () => {
-    const resetFormState = () => {
-      this.#postCommentComponent.updateData({
-        isDisabled: false,
-        isSaving: false,
-      });
-    };
-    this.#postCommentComponent.shake(resetFormState);
+  setCloseClickHandler = (callback) => {
+    this._callback.closeClick = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeClickHandler);
   };
 
-  #removeCommentList = () => {
-    this.#comments.forEach((comment) => remove(comment));
-    this.#comments.clear();
+  setWatchlistClickHandler = (callback) => {
+    this._callback.watchlistClick = callback;
+    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#watchlistClickHandler);
+  };
+
+  setWatchedClickHandler = (callback) => {
+    this._callback.watchedClick = callback;
+    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#watchedClickHandler);
+  };
+
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favoriteClickHandler);
   };
 
   renderCommentList = (comments) => {
     this.#renderCommentInfo(comments);
     this.#renderComments(comments);
     this.#renderPostComment();
+  };
+
+  #closeClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closeClick();
+  };
+
+  #watchlistClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.watchlistClick();
+  };
+
+  #watchedClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  };
+
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
   };
 
   #renderCommentInfo = (comments) => {
@@ -201,6 +223,11 @@ export default class FilmPopupView extends SmartView {
     this.#changeCommentData(UserAction.DELETE_COMMENT, update);
   };
 
+  #removeCommentList = () => {
+    this.#comments.forEach((comment) => remove(comment));
+    this.#comments.clear();
+  };
+
   #renderPostComment = () => {
     const prevPostCommentComponent = this.#postCommentComponent;
     this.#postCommentComponent = new PostCommentView();
@@ -213,50 +240,23 @@ export default class FilmPopupView extends SmartView {
     this.#changeCommentData(UserAction.ADD_COMMENT, update);
   };
 
-  restoreHandlers = () => {
-    this.setCloseClickHandler(this._callback.closeClick);
-    this.setWatchlistClickHandler(this._callback.watchlistClick);
-    this.setWatchedClickHandler(this._callback.watchedClick);
-    this.setFavoriteClickHandler(this._callback.favoriteClick);
+  #setCommentAborting = (id) => {
+    const resetFormState = () => {
+      this.#comments.get(id).updateData({
+        isDisabled: true,
+        isDeleting: false,
+      });
+    };
+    this.#comments.get(id).shake(resetFormState);
   };
 
-  setCloseClickHandler = (callback) => {
-    this._callback.closeClick = callback;
-    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeClickHandler);
-  };
-
-  #closeClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.closeClick();
-  };
-
-  setWatchlistClickHandler = (callback) => {
-    this._callback.watchlistClick = callback;
-    this.element.querySelector('.film-details__control-button--watchlist').addEventListener('click', this.#watchlistClickHandler);
-  };
-
-  #watchlistClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.watchlistClick();
-  };
-
-  setWatchedClickHandler = (callback) => {
-    this._callback.watchedClick = callback;
-    this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#watchedClickHandler);
-  };
-
-  #watchedClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.watchedClick();
-  };
-
-  setFavoriteClickHandler = (callback) => {
-    this._callback.favoriteClick = callback;
-    this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#favoriteClickHandler);
-  };
-
-  #favoriteClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.favoriteClick();
+  #setPostCommentAborting = () => {
+    const resetFormState = () => {
+      this.#postCommentComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+      });
+    };
+    this.#postCommentComponent.shake(resetFormState);
   };
 }

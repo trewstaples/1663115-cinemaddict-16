@@ -1,23 +1,8 @@
-export const KeyboardKey = {
-  ESCAPE: 'Escape',
-  ESC: 'Esc',
-  ENTER: 'Enter',
-  CONTROL: 'Control',
-  COMMAND: 'Meta',
-};
-
 export const EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
-export const StringFormat = {
-  RELEASE_DATE: 'DD MMMM YYYY',
-  RELEASE_YEAR: 'YYYY',
-  COMMENT_DATE: 'YYYY/MM/D HH:mm',
-  RUNTIME_HOURS: 'H[h] mm[m]',
-};
-
-export const Runtime = {
-  MIN: 50,
-  MAX: 180,
+export const Server = {
+  END_POINT: 'https://16.ecmascript.pages.academy/cinemaddict',
+  AUTHORIZATION: 'Basic jfoiye98yfdc6',
 };
 
 export const UserAction = {
@@ -32,6 +17,16 @@ export const UpdateType = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   INIT: 'INIT',
+};
+
+export const MenuItem = {
+  FILMS: 'FILMS',
+  STATS: 'STATS',
+};
+
+export const Mode = {
+  CARD: 'CARD',
+  POPUP: 'POPUP',
 };
 
 export const FilterType = {
@@ -49,14 +44,24 @@ export const StatsType = {
   YEAR: 'year',
 };
 
-export const MenuItem = {
-  FILMS: 'FILMS',
-  STATS: 'STATS',
+export const StringFormat = {
+  RELEASE_DATE: 'DD MMMM YYYY',
+  RELEASE_YEAR: 'YYYY',
+  COMMENT_DATE: 'YYYY/MM/D HH:mm',
+  RUNTIME_HOURS: 'H[h] mm[m]',
 };
 
-export const Mode = {
-  CARD: 'CARD',
-  POPUP: 'POPUP',
+export const KeyboardKey = {
+  ESCAPE: 'Escape',
+  ESC: 'Esc',
+  ENTER: 'Enter',
+  CONTROL: 'Control',
+  COMMAND: 'Meta',
+};
+
+export const Runtime = {
+  MIN: 50,
+  MAX: 180,
 };
 
 export const userRank = {
@@ -77,6 +82,3 @@ export const userRank = {
     MAX: Infinity,
   },
 };
-
-export const AUTHORIZATION = 'Basic jfoiye98yfdc6';
-export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';

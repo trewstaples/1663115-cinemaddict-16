@@ -1,18 +1,18 @@
-import { MenuItem, AUTHORIZATION, END_POINT } from './utils/const.js';
+import { MenuItem, Server } from './utils/const.js';
 import { render, remove, RenderPosition } from './utils/render.js';
-import FilmsBoardPresenter from './presenter/films-board-presenter.js';
 import FilmsModel from './model/films-model.js';
 import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
+import FilmsBoardPresenter from './presenter/films-board-presenter.js';
+import ApiService from './api-service.js';
 import StatsView from './view/stats-view.js';
 import FooterView from './view/footer-stats-view.js';
-import ApiService from './api-service.js';
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const footerStats = document.querySelector('.footer__statistics');
 
-const filmsModel = new FilmsModel(new ApiService(END_POINT, AUTHORIZATION));
+const filmsModel = new FilmsModel(new ApiService(Server.END_POINT, Server.AUTHORIZATION));
 const filterModel = new FilterModel();
 
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);

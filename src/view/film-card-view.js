@@ -1,6 +1,6 @@
 import { StringFormat } from '../utils/const.js';
-import { formatRuntime } from '../utils/date.js';
 import { getClassName } from '../utils/films.js';
+import { formatRuntime } from '../utils/date.js';
 import AbstractView from './abstract-view.js';
 import dayjs from 'dayjs';
 
@@ -53,19 +53,9 @@ export default class FilmCardView extends AbstractView {
     this.element.querySelector('.film-card__link').addEventListener('click', this.#cardClickHandler);
   };
 
-  #cardClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.cardClick(this.#film);
-  };
-
   setWatchlistClickHandler = (callback) => {
     this._callback.watchlistClick = callback;
     this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#watchlistClickHandler);
-  };
-
-  #watchlistClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.watchlistClick();
   };
 
   setWatchedClickHandler = (callback) => {
@@ -73,14 +63,24 @@ export default class FilmCardView extends AbstractView {
     this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#watchedClickHandler);
   };
 
-  #watchedClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.watchedClick();
-  };
-
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
     this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#favoriteClickHandler);
+  };
+
+  #cardClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.cardClick(this.#film);
+  };
+
+  #watchlistClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.watchlistClick();
+  };
+
+  #watchedClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.watchedClick();
   };
 
   #favoriteClickHandler = (evt) => {

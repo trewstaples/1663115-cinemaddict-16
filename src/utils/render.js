@@ -7,6 +7,13 @@ export const RenderPosition = {
   AFTEREND: 'afterend',
 };
 
+export const createElement = (template) => {
+  const newElement = document.createElement('div');
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
 export const render = (container, element, place) => {
   const parent = container instanceof AbstractView ? container.element : container;
   const child = element instanceof AbstractView ? element.element : element;
@@ -44,13 +51,6 @@ export const replace = (newElement, oldElement) => {
   parent.replaceChild(newChild, oldChild);
 };
 
-export const createElement = (template) => {
-  const newElement = document.createElement('div');
-  newElement.innerHTML = template;
-
-  return newElement.firstChild;
-};
-
 export const remove = (component) => {
   if (component === null) {
     return;
@@ -64,6 +64,12 @@ export const remove = (component) => {
   component.removeElement();
 };
 
+export const renderCard = (component) => {
+  const popup = component instanceof AbstractView ? component.element : component;
+  document.body.removeChild(popup);
+  document.body.classList.remove('hide-overflow');
+};
+
 export const renderPopup = (component) => {
   if (document.body.querySelector('.film-details')) {
     document.body.querySelector('.film-details').remove();
@@ -71,10 +77,4 @@ export const renderPopup = (component) => {
   const popup = component instanceof AbstractView ? component.element : component;
   document.body.appendChild(popup);
   document.body.classList.add('hide-overflow');
-};
-
-export const renderCard = (component) => {
-  const popup = component instanceof AbstractView ? component.element : component;
-  document.body.removeChild(popup);
-  document.body.classList.remove('hide-overflow');
 };
