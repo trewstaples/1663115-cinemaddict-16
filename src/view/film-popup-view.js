@@ -1,5 +1,5 @@
 import { UserAction, Film } from '../utils/const.js';
-import { getClassName, createTemplateFromArray } from '../utils/films.js';
+import { getClassName, createTemplateFromItems } from '../utils/films.js';
 import { formatRuntime, formatReleaseDate } from '../utils/date.js';
 import { render, RenderPosition, remove } from '../utils/render.js';
 import { State } from '../presenter/film-presenter.js';
@@ -71,7 +71,7 @@ const renderFilmPopupTemplate = (film) => {
             <tr class="film-details__row">
               <td class="film-details__term">${genresNaming}</td>
               <td class="film-details__cell">
-                ${createTemplateFromArray(info.genre, createGenreTemplate)}
+                ${createTemplateFromItems(info.genre, createGenreTemplate)}
             </tr>
           </table>
 

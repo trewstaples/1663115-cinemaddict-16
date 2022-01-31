@@ -66,11 +66,6 @@ export const KeyboardKey = {
   COMMAND: 'Meta',
 };
 
-export const Runtime = {
-  MIN: 50,
-  MAX: 180,
-};
-
 export const userRank = {
   None: {
     MIN: 0,

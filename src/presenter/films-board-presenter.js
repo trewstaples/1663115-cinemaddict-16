@@ -4,7 +4,7 @@ import { sortFilmsByDate, sortFilmsByRating } from '../utils/films.js';
 import { SortType } from '../view/sort-view.js';
 import { filter } from '../utils/filter.js';
 import LoadingView from '../view/loading-view.js';
-import NoFilmView from '../view/no-film.js';
+import NoFilmView from '../view/no-film-view.js';
 import ProfileView from '../view/profile-view.js';
 import SortView from '../view/sort-view.js';
 import FilmsView from '../view/films-view.js';

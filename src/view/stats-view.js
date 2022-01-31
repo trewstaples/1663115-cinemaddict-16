@@ -24,8 +24,8 @@ const renderChart = (statisticCtx, films) => {
   const sortedGenresStats = Object.keys(genresStats)
     .sort((a, b) => genresStats[b] - genresStats[a])
     .reduce(
-      (sortedObj, key) => ({
-        ...sortedObj,
+      (sortedStats, key) => ({
+        ...sortedStats,
         [key]: genresStats[key],
       }),
       {},

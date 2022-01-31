@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-export const createTemplateFromArray = (array, cb) => array.map((item) => cb(item)).join('');
+export const createTemplateFromItems = (items, cb) => items.map((item) => cb(item)).join('');
 
 export const getClassName = (element, attribute) => (element ? attribute : '');
 

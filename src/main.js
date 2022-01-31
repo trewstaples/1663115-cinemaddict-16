@@ -6,7 +6,7 @@ import FilterPresenter from './presenter/filter-presenter.js';
 import FilmsBoardPresenter from './presenter/films-board-presenter.js';
 import ApiService from './api-service.js';
 import StatsView from './view/stats-view.js';
-import FooterView from './view/footer-stats-view.js';
+import FooterView from './view/footer-view.js';
 
 const siteHeaderElement = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');

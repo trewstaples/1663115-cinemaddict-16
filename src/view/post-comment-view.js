@@ -1,5 +1,5 @@
 import { Film, KeyboardKey } from '../utils/const';
-import { createTemplateFromArray } from '../utils/films';
+import { createTemplateFromItems } from '../utils/films';
 import SmartView from './smart-view';
 
 const postCommentTemplate = (data) => {
@@ -19,7 +19,7 @@ const postCommentTemplate = (data) => {
       <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isDisabled ? 'disabled' : ''} >${text}</textarea>
     </label>
     <div class="film-details__emoji-list">
-    ${createTemplateFromArray(Film.EMOTIONS, renderEmojiItemTemplate)}
+    ${createTemplateFromItems(Film.EMOTIONS, renderEmojiItemTemplate)}
     </div>
   </div>`;
 };
