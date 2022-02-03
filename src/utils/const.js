@@ -20,6 +20,7 @@ export const UserAction = {
 };
 
 export const UpdateType = {
+  BLOCK: 'BLOCK',
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',

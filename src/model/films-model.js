@@ -1,6 +1,8 @@
 import { UpdateType } from '../utils/const.js';
 import AbstractObservable from '../utils/abstract-observable.js';
 
+const BLOCK_FILMS_COUNT = 2;
+
 export default class FilmsModel extends AbstractObservable {
   #films = [];
   #apiService = null;
@@ -12,6 +14,20 @@ export default class FilmsModel extends AbstractObservable {
 
   get films() {
     return this.#films;
+  }
+
+  get topRatedFilms() {
+    return this.#films
+      .filter((film) => film.info.totalRating !== 0)
+      .sort((a, b) => b.info.totalRating - a.info.totalRating)
+      .slice(0, BLOCK_FILMS_COUNT);
+  }
+
+  get mostCommentedFilms() {
+    return this.#films
+      .filter((film) => film.comments.length !== 0)
+      .sort((a, b) => b.comments.length - a.comments.length)
+      .slice(0, BLOCK_FILMS_COUNT);
   }
 
   init = async () => {
