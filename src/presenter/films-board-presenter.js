@@ -13,6 +13,7 @@ import ShowMoreButtonView from '../view/show-more-button-view.js';
 import FilmPresenter from './film-presenter.js';
 
 const FILMS_COUNT_PER_STEP = 5;
+const MODE_MESSAGE = 'Replacing Block';
 
 export default class FilmsBoardPresenter {
   #profileContainer = null;
@@ -38,6 +39,7 @@ export default class FilmsBoardPresenter {
   #currentSortType = SortType.DEFAULT;
   #currentFilterType = FilterType.ALL;
   #isLoading = true;
+  #replacingMode = null;
 
   constructor(profileContainer, mainContainer, filmsModel, filterModel) {
     this.#profileContainer = profileContainer;
@@ -89,6 +91,9 @@ export default class FilmsBoardPresenter {
         break;
       case UserAction.ADD_COMMENT:
         this.#filmsModel.updateFilm(updateType, update);
+        if (!this.#filmsModel.mostCommentedFilms.find((film) => film.id === update.id)) {
+          this.#replacingMode = MODE_MESSAGE;
+        }
         break;
       case UserAction.DELETE_COMMENT:
         this.#filmsModel.updateFilm(updateType, update);
@@ -102,8 +107,12 @@ export default class FilmsBoardPresenter {
         this.#updateFilm(data);
         break;
       case UpdateType.BLOCK:
-        remove(this.#mostCommentedComponent);
-        this.#renderMostCommentedFilms();
+        if (!this.#filmsModel.mostCommentedFilms.find((film) => film.id === data.id) || this.#replacingMode === MODE_MESSAGE) {
+          remove(this.#mostCommentedComponent);
+          this.#renderMostCommentedFilms();
+          this.#replacingMode = null;
+        }
+
         this.#updateFilm(data);
         break;
       case UpdateType.MINOR:
@@ -213,13 +222,16 @@ export default class FilmsBoardPresenter {
     render(this.#filmsComponent, this.#sortComponent, RenderPosition.BEFOREBEGIN);
   };
 
+  #renderFilmsList = () => {
+    render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
+  };
+
   #renderFilms = (films, place, filmPresenter) => {
     films.forEach((film) => this.#renderFilm(film, place, filmPresenter));
   };
 
   #renderFilm = (film, place, filmsCloud) => {
-    const filmId = film.id;
-    const filmPresenter = new FilmPresenter(place, this.#handleViewAction, this.#currentFilterType, this.#renderProfile, filmId);
+    const filmPresenter = new FilmPresenter(place, this.#handleViewAction, this.#currentFilterType, this.#renderProfile);
     filmPresenter.init(film);
     filmsCloud.set(film.id, filmPresenter);
   };
@@ -266,9 +278,5 @@ export default class FilmsBoardPresenter {
     this.#currentSortType = sortType;
     this.#clearFilmsBoard({ resetRenderedFilmsCount: true });
     this.#renderFilmsBoard();
-  };
-
-  #renderFilmsList = () => {
-    render(this.#filmsComponent, this.#filmsListComponent, RenderPosition.BEFOREEND);
   };
 }

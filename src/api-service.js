@@ -10,18 +10,18 @@ export default class ApiService {
   #authorization = null;
   #filmId = null;
 
-  constructor(endPoint, authorization, filmId) {
+  constructor(endPoint, authorization) {
     this.#endPoint = endPoint;
     this.#authorization = authorization;
-    this.#filmId = filmId;
   }
 
   get films() {
     return this.#load({ url: 'movies' }).then(ApiService.parseResponse);
   }
 
-  get comments() {
-    return this.#load({ url: `/comments/${this.#filmId}` }).then(ApiService.parseResponse);
+  getComments (film) {
+    return this.#load({url: `comments/${film.id}`})
+      .then(ApiService.parseResponse);
   }
 
   updateFilm = async (film) => {
@@ -37,9 +37,9 @@ export default class ApiService {
     return parsedResponse;
   };
 
-  addComment = async (comment) => {
+  addComment = async (id, comment) => {
     const response = await this.#load({
-      url:`/comments/${this.#filmId}`,
+      url:`/comments/${id}`,
       method: Method.POST,
       body: JSON.stringify(this.#adaptCommentToServer(comment)),
       headers: new Headers({'Content-Type': 'application/json'}),

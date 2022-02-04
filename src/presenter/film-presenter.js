@@ -22,20 +22,18 @@ export default class FilmPresenter {
   #filmPopupComponent = null;
 
   #film = null;
-  #filmId = null;
   #commentsModel = null;
   #mode = null;
 
-  constructor(filmListComponent, changeData, currentFilter, changeWatchedFilms, filmId) {
+  constructor(filmListComponent, changeData, currentFilter, changeWatchedFilms) {
     this.#filmsListComponent = filmListComponent;
     this.#changeData = changeData;
     this.#currentFilter = currentFilter;
     this.#changeWatchedFilms = changeWatchedFilms;
 
     this.#mode = Mode.CARD;
-    this.#filmId = filmId;
 
-    this.#commentsModel = new CommentsModel(new ApiService(Server.END_POINT, Server.AUTHORIZATION, this.#filmId));
+    this.#commentsModel = new CommentsModel(new ApiService(Server.END_POINT, Server.AUTHORIZATION));
     this.#commentsModel.addObserver(this.#handleModelEvent);
   }
 
@@ -140,6 +138,8 @@ export default class FilmPresenter {
   };
 
   #renderPopup = () => {
+    this.#commentsModel.init(this.#film);
+
     const popup = this.#filmPopupComponent instanceof AbstractView ? this.#filmPopupComponent.element : this.#filmPopupComponent;
     document.body.classList.add('hide-overflow');
     document.body.appendChild(popup);
@@ -147,7 +147,7 @@ export default class FilmPresenter {
     this.#mode = Mode.POPUP;
 
     if (!this.comments.length) {
-      this.#commentsModel.init();
+      this.#commentsModel.init(this.#film);
       return;
     }
     this.#handleModelEvent(UserAction.INIT);
